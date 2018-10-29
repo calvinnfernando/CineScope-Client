@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import './App.css';
+import Header from './components/Header.js';
+import Carousel from './components/Carousel.js';
+
 
 class App extends Component {
 	constructor(props){
@@ -20,6 +23,8 @@ class App extends Component {
 	render(){
 		return (
 			<div className="App">
+				<Header />
+				<Carousel />
 	  		</div>
 		);
 	}

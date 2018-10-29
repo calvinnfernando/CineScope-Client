@@ -1,3 +1,60 @@
+/* Header */
+
+header {
+  background-color: rgb(238, 99, 56);
+}
+
+header a {
+  color: white;
+  font-size: 20px;
+}
+
+header a:hover {
+  text-decoration: none;
+  color: rgb(255, 206, 199);
+}
+
+#menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.menubutton {
+  position: relative;
+  margin: 0px 20px;
+}
+
+/* Dropdown */
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgb(194, 194, 194);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.menubutton:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  display: block;
+  text-align: left;
+}
+
+/* Carousel */
+
+.carousel {
+  height: 500px;
+}
+
+
+/* ReactJS Default */
+
 .App {
   text-align: center;
 }
