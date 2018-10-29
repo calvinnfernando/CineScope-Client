@@ -52,17 +52,6 @@ header a:hover {
   height: 500px;
 }
 
-.carousel-image {
-  position:absolute;
-  -webkit-transition: opacity 1s ease-in-out;
-  -moz-transition: opacity 1s ease-in-out;
-  -o-transition: opacity 1s ease-in-out;
-  transition: opacity 1s ease-in-out;
-}
-
-.transparent {
-  opacity: 0;
-}
 
 /* ReactJS Default */
 

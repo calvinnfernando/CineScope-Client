@@ -7,17 +7,17 @@ class Header extends Component {
         // This code borrowed from Codecademy. Maps links to their pages
         const pages = ['Home', 'Movies', 'New Releases', 'Comparitron'];
         const navLinks = pages.map(page => {
-            return <MenuButton name={page} link={'/'+page} />
+            return <MenuButton key={page} name={page} link={'/'+page} />
         });
 
 		return (
             // uses Bootstrap classes
-			<header class="container-fluid">
-                <div class = "row">
-                    <h1 class="col-sm-4">
+			<header className="container-fluid">
+                <div className="row">
+                    <h1 className="col-sm-4">
                         <a href=""><img src="" alt="Cinescope Logo" /></a>
                     </h1>
-                    <nav class="col-sm-8" id="menu">
+                    <nav className="col-sm-8" id="menu">
                         {navLinks}
                     </nav>
                 </div>

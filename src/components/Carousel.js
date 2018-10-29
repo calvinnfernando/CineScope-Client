@@ -1,7 +1,6 @@
 /* Used this website: https://dev.to/willamesoares/how-to-build-an-image-carousel-with-react--24na */
 
 import React, { Component } from 'react';
-import CarouselNav from './CarouselNav.js';
 // Gotta find an easier way to import multiple images
 import tmpbanner from './img/tmpbanner.png';
 import tmpbanner2 from './img/tmpbanner2.png';
@@ -49,11 +48,10 @@ class Carousel extends Component {
     
 	render(){
 		return (
-			<div class="carousel">
-                <img src={imgUrls[this.state.currentImageIndex]} />
+			<div className="carousel">
+                <img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />
 
                 {/* TODO: complete carousel navigation */}
-                <CarouselNav />
 	  		</div>
 		);
 	}
