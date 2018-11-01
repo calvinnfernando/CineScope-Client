@@ -9,7 +9,6 @@ const HomeStyle =  styled.div`
 
 class HomePage extends Component {
 	render(){
-    console.log("HOMEPAGE RENDERED")
 		return (
 			<HomeStyle>
 				<Header />

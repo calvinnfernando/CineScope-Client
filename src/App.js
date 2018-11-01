@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import createHistory from "history/createBrowserHistory";
 
 import firebase from 'firebase';
 

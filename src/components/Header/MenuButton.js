@@ -37,9 +37,9 @@ class MenuButton extends Component {
 
                 {/* Dropdown implemented in simple HTML and CSS */}
                 <DropdownContent>
-                    <a href=""> Menu item 1 </a>
-                    <a href=""> Menu item 2 </a>
-                    <a href=""> Menu item 3 </a>
+                    <a href="#"> Menu item 1 </a>
+                    <a href="#"> Menu item 2 </a>
+                    <a href="#"> Menu item 3 </a>
                 </DropdownContent>
             </MenuBtnStyle>
         );
