@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import firebase from 'firebase';
 
 import HomePage from './containers/HomePage';
+import UserPage from './containers/UserPage';
 
 class App extends Component {
 	constructor(props){
@@ -24,6 +25,7 @@ class App extends Component {
 		return (
 			<Switch>
 				<Route exact path="/" component={HomePage}/>
+				<Route path="/profile" component={UserPage}/>
 			</Switch>
 		);
 	}
