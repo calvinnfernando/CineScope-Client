@@ -88,12 +88,8 @@ class Carousel extends Component {
                     transitionAppearTimeout={1000}>
                     
                     {/*Possibly a new component for this later <BackgroundImage page={page} key={page} />*/}
-                    {/*<img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} key={imgUrls[this.state.currentImageIndex]} />*/}
-                    {
-                        this.state.imgUrls.map((image, i) => (
-                            <img key={i} src={image} alt={image}/>
-                        ))
-                    }
+                    <img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} key={imgUrls[this.state.currentImageIndex]} />
+                    
                 </CSSTransitionGroup>
                 </Animations>
                 {/*<img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />*/}
