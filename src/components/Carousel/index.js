@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'; // animation wrapper
+import CarouselImage from './CarouselImage.js';
 // Gotta find an easier way to import multiple images
 import tmpbanner from '../img/tmpbanner.png';
 import tmpbanner2 from '../img/tmpbanner2.png';
@@ -13,6 +14,7 @@ const imgUrls = [tmpbanner, tmpbanner2];
 // Styling
 const CarouselContainer = styled.div`
     height: 500px;
+    position: relative;
     overflow: hidden;
 `;
 
@@ -31,7 +33,28 @@ const Animations = styled.div`
         transform: translate(-100%);
         transition: transform 500ms ease-in-out;
     }
+    .fade-enter {
+        opacity: 0.01;
+      }
+      
+      .fade-enter.fade-enter-active {
+        opacity: 1;
+        transition: opacity 500ms ease-in 500ms;
+      }
+      
+      .fade-leave {
+        opacity: 1;
+      }
+      
+      .fade-leave.fade-leave-active {
+        opacity: 0.01;
+        transition: opacity 300ms ease-in;
+      }
 
+`;
+
+const Slide = styled.div`
+    
 `;
 
 
@@ -87,12 +110,9 @@ class Carousel extends Component {
                     transitionAppear={true} 
                     transitionAppearTimeout={1000}>
                     
-                    {/*Possibly a new component for this later <BackgroundImage page={page} key={page} />*/}
-                    <img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} key={imgUrls[this.state.currentImageIndex]} />
-                    
+                    <CarouselImage image={imgUrls[this.state.currentImageIndex]} key={this.state.currentImageIndex} />
                 </CSSTransitionGroup>
                 </Animations>
-                {/*<img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />*/}
 
                 {/* TODO: complete carousel navigation */}
             </CarouselContainer>
