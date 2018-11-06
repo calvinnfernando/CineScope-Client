@@ -1,6 +1,7 @@
 /* Used this website: https://dev.to/willamesoares/how-to-build-an-image-carousel-with-react--24na */
 
 import React, { Component } from 'react';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'; // animation wrapper
 // Gotta find an easier way to import multiple images
 import tmpbanner from '../img/tmpbanner.png';
 import tmpbanner2 from '../img/tmpbanner2.png';
@@ -12,6 +13,25 @@ const imgUrls = [tmpbanner, tmpbanner2];
 // Styling
 const CarouselContainer = styled.div`
     height: 500px;
+    overflow: hidden;
+`;
+
+const Animations = styled.div`
+    .carousel-enter {
+        transform: translate(100%);
+    }
+    .carousel-enter.carousel-enter-active {
+        transform: translate(0%);
+        transition: transform 500ms ease-in-out;
+    }
+    .carousel-leave {
+        transform: translate(0%);
+    }
+    .carousel-leave.carousel-leave-active {
+        transform: translate(-100%);
+        transition: transform 500ms ease-in-out;
+    }
+
 `;
 
 
@@ -41,6 +61,7 @@ class Carousel extends Component {
         this.setState({
             currentImageIndex: index
         });
+
     }
 
     /* As soon as it mounts, start a timer which changes slides periodically */
@@ -57,7 +78,25 @@ class Carousel extends Component {
 	render(){
 		return (
 			<CarouselContainer>
-                <img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />
+                <Animations>
+                <CSSTransitionGroup
+                    transitionName="carousel"
+                    transitionEnterTimeout={500}
+                    transitionLeaveTimeout={500}
+                    component="div"
+                    transitionAppear={true} 
+                    transitionAppearTimeout={1000}>
+                    
+                    {/*Possibly a new component for this later <BackgroundImage page={page} key={page} />*/}
+                    {/*<img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} key={imgUrls[this.state.currentImageIndex]} />*/}
+                    {
+                        this.state.imgUrls.map((image, i) => (
+                            <img key={i} src={image} alt={image}/>
+                        ))
+                    }
+                </CSSTransitionGroup>
+                </Animations>
+                {/*<img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />*/}
 
                 {/* TODO: complete carousel navigation */}
             </CarouselContainer>
