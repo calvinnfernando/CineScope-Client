@@ -21,6 +21,10 @@ const MenuItemsStyle = styled.nav`
     align-items: center;
 `;
 
+const AccountIconStyle = styled.div`
+    padding: 10px;
+`;
+
 
 class Header extends Component {
 
@@ -38,9 +42,13 @@ class Header extends Component {
                     <h1 className="col-sm-4">
                         <a href=""><img src="" alt="Cinescope Logo" /></a>
                     </h1>
-                    <MenuItemsStyle className="col-sm-8">
+                    <MenuItemsStyle className="col-sm-6">
                         {navLinks}
                     </MenuItemsStyle>
+                    <AccountIconStyle className="col-sm-2">
+                        {/* NOTE: the link to this must be set to user profile */}
+                        <MenuButton name={"account"} />
+                    </AccountIconStyle>
                 </div>
             </HeaderContainerStyle>
         );
