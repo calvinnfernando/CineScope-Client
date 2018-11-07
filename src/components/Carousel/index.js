@@ -33,23 +33,6 @@ const Animations = styled.div`
         transform: translate(-100%);
         transition: transform 500ms ease-in-out;
     }
-    .fade-enter {
-        opacity: 0.01;
-      }
-      
-      .fade-enter.fade-enter-active {
-        opacity: 1;
-        transition: opacity 500ms ease-in 500ms;
-      }
-      
-      .fade-leave {
-        opacity: 1;
-      }
-      
-      .fade-leave.fade-leave-active {
-        opacity: 0.01;
-        transition: opacity 300ms ease-in;
-      }
 
 `;
 
