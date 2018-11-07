@@ -36,11 +36,6 @@ const Animations = styled.div`
 
 `;
 
-const Slide = styled.div`
-    
-`;
-
-
 class Carousel extends Component {
 	constructor(props){
         super(props);
