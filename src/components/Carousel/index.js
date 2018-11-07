@@ -2,10 +2,18 @@
 
 import React, { Component } from 'react';
 // Gotta find an easier way to import multiple images
-import tmpbanner from './img/tmpbanner.png';
-import tmpbanner2 from './img/tmpbanner2.png';
+import tmpbanner from '../img/tmpbanner.png';
+import tmpbanner2 from '../img/tmpbanner2.png';
+
+import styled from 'styled-components';
 
 const imgUrls = [tmpbanner, tmpbanner2];
+
+// Styling
+const CarouselContainer = styled.div`
+    height: 500px;
+`;
+
 
 class Carousel extends Component {
 	constructor(props){
@@ -48,11 +56,11 @@ class Carousel extends Component {
     
 	render(){
 		return (
-			<div className="carousel">
+			<CarouselContainer>
                 <img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />
 
                 {/* TODO: complete carousel navigation */}
-	  		</div>
+            </CarouselContainer>
 		);
 	}
 }
