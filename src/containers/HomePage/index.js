@@ -13,7 +13,7 @@ class HomePage extends Component {
 			<HomeStyle>
 				<Header />
 				<Carousel />
-	  	</HomeStyle>
+	  		</HomeStyle>
 		);
 	}
 }
