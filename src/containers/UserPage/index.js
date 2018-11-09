@@ -8,7 +8,7 @@ import antman from './antman.jpg';
 import heart from './heart.png';
 
 import MovieThumbnail from './MovieThumbnail';
-import Post from './Post';
+import ActivityFeed from './ActivityFeed';
 
 const Profile = styled.div`
   border: 1px solid #dddfe2;
@@ -83,7 +83,7 @@ class UserPage extends Component {
       return <MovieThumbnail movieTitle={movie.title} imgsrc={movie.imgsrc}/>
     });
     const pList = postList.map((post)=> {
-      return <Post description={post.description} date={post.date}/>
+      return <ActivityFeed description={post.description} date={post.date}/>
     })
 		return (
       <div className="container-fluid row mx-auto" style={{ backgroundColor: '#F0F0F0'}}>
@@ -125,7 +125,7 @@ class UserPage extends Component {
 
               <Box>
                 <Title>
-                  Posts
+                  Activity Feed
                 </Title>
                 {pList}
               </Box>
