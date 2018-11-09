@@ -65,15 +65,12 @@ const IconContainerStyle = styled.div`
 class MenuButton extends Component {
 
     render() {
-        if (this.props.name == "account") {
-
-        }
         return (
             <MenuBtnStyle>
                 {/* Creates a link with provided name and link */}
                 <a href={this.props.link} >
                     {/* renders text or account icon */
-                    this.props.name == "account" ? (<IconContainerStyle>
+                    this.props.name === "account" ? (<IconContainerStyle>
                         <AccountIcon src={profilepic}/>
                     </IconContainerStyle>) : this.props.name
                     }
