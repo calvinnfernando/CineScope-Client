@@ -1,4 +1,16 @@
 import React, { Component } from 'react';
+/*import {
+	  Collapse,
+	  Navbar,
+	  NavbarToggler,
+	  NavbarBrand,
+	  Nav,
+	  NavItem,
+	  NavLink,
+	  UncontrolledDropdown,
+	  DropdownToggle,
+	  DropdownMenu,
+	  DropdownItem } from 'reactstrap';*/
 import MenuButton from './MenuButton.js';
 import styled from 'styled-components';
 import logo from '../img/logo.svg';
