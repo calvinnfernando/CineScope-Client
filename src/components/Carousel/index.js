@@ -2,8 +2,8 @@
 
 import React, { Component } from 'react';
 // Gotta find an easier way to import multiple images
-import tmpbanner from '../img/tmpbanner.png';
-import tmpbanner2 from '../img/tmpbanner2.png';
+import tmpbanner from '../img/avengers.jpg';
+import tmpbanner2 from '../img/avengers2.jpg';
 
 import styled from 'styled-components';
 

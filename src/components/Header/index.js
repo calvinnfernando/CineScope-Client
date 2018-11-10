@@ -56,7 +56,7 @@ class Header extends Component {
                     </MenuItemsStyle>
                     <AccountIconStyle className="col-sm-2">
                         {/* NOTE: the link to this must be set to user profile */}
-                        <MenuButton name={"account"} />
+                        <a href="/profile"><MenuButton name={"account"} /></a>
                     </AccountIconStyle>
                 </div>
             </HeaderContainerStyle>
