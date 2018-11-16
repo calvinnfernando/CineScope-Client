@@ -1,68 +1,87 @@
-/* Used this website: https://dev.to/willamesoares/how-to-build-an-image-carousel-with-react--24na */
+"Used template from: https://reactstrap.github.io/components/carousel/"
+import React, {Component} from 'react';
+import {
+    Carousel,
+    CarouselItem,
+    CarouselControl,
+    CarouselIndicators,
+} from 'reactstrap';
 
-import React, { Component } from 'react';
-// Gotta find an easier way to import multiple images
-import tmpbanner from '../img/tmpbanner.png';
-import tmpbanner2 from '../img/tmpbanner2.png';
+import banner from '../img/avengers.jpg';
+import banner2 from '../img/avengers2.jpg';
+import banner3 from '../img/stranger.jpg';
 
-import styled from 'styled-components';
+const items = [
+    {src: banner},
+    {src: banner2},
+    {src: banner3}
+];
 
-const imgUrls = [tmpbanner, tmpbanner2];
-
-// Styling
-const CarouselContainer = styled.div`
-    height: 500px;
-`;
-
-
-class Carousel extends Component {
-	constructor(props){
+class MainCarousel extends Component {
+    constructor(props) {
         super(props);
-        
-        this.state = {
-            currentImageIndex: 0
-        };
-
-        this.setSlide = this.setSlide.bind(this);
+        this.state = {activeIndex: 0};
+        this.next = this.next.bind(this);
+        this.previous = this.previous.bind(this);
+        this.goToIndex = this.goToIndex.bind(this);
+        this.onExiting = this.onExiting.bind(this);
+        this.onExited = this.onExited.bind(this);
     }
-    
-    /* Sets the current slide based on index */
-    setSlide (index) {
-        // checks if the slide index goes out of bounds
-        const lastIndex = imgUrls.length - 1;
-        const firstIndex = 0;
-        if (index > lastIndex) {
-            index = firstIndex;
-        } 
-        else if (index < firstIndex) {
-            index = lastIndex;
-        }
 
-        this.setState({
-            currentImageIndex: index
+    onExiting() {
+        this.animating = true;
+    }
+
+    onExited() {
+        this.animating = false;
+    }
+
+    next() {
+        if (this.animating) return;
+        const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
+        this.setState({activeIndex: nextIndex});
+    }
+
+    previous() {
+        if (this.animating) return;
+        const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
+        this.setState({activeIndex: nextIndex});
+    }
+
+    goToIndex(newIndex) {
+        if (this.animating) return;
+        this.setState({activeIndex: newIndex});
+    }
+
+    render() {
+        const {activeIndex} = this.state;
+
+        const slides = items.map((item) => {
+            return (
+                <CarouselItem
+                    onExiting={this.onExiting}
+                    onExited={this.onExited}
+                    key={item.src}
+                >
+                    <img src={item.src}/>
+                </CarouselItem>
+            );
         });
-    }
 
-    /* As soon as it mounts, start a timer which changes slides periodically */
-    componentDidMount() {
-        setInterval(
-            function() {
-                var { currentImageIndex } = this.state;
-                this.setSlide(currentImageIndex + 1)
-            }
-            .bind(this),
-            4000);
+        return (
+            <Carousel
+                activeIndex={activeIndex}
+                next={this.next}
+                previous={this.previous}
+            >
+                <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex}/>
+                {slides}
+                <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous}/>
+                <CarouselControl direction="next" directionText="Next" onClickHandler={this.next}/>
+            </Carousel>
+        );
     }
-    
-	render(){
-		return (
-			<CarouselContainer>
-                <img src={imgUrls[this.state.currentImageIndex]} alt={imgUrls[this.state.currentImageIndex]} />
-
-                {/* TODO: complete carousel navigation */}
-            </CarouselContainer>
-		);
-	}
 }
 
-export default Carousel;
+
+export default MainCarousel;

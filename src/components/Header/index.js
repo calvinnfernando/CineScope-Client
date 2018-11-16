@@ -1,64 +1,80 @@
-import React, { Component } from 'react';
+"Used template from https://reactstrap.github.io/components/navbar/"
+import React, {Component} from 'react';
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    Nav,
+    NavItem,
+    NavLink,
+} from 'reactstrap';
+
 import MenuButton from './MenuButton.js';
 import styled from 'styled-components';
 import logo from '../img/logo.svg';
 
-const HeaderContainerStyle = styled.header`
-    background-color: rgb(238, 99, 56);
-    a {
-        color: white;
-        font-size: 20px;
-    }
-
-    a:hover {
-        text-decoration: none;
-        color: rgb(255, 206, 199);
-    }
-`;
-
-const MenuItemsStyle = styled.nav`
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-`;
-
 const LogoStyle = styled.div`
-    margin: 10px auto;
-
-    img {
-        height: 60px;
-    }
+margin: 10px auto;
+img {
+	height: 60px;
+}
 `;
 
 const AccountIconStyle = styled.div`
-    padding: 10px;
+padding: 10px;
 `;
 
+class Header extends React.Component {
 
-class Header extends Component {
+    constructor(props) {
+        super(props);
 
-    render(){
-        // This code borrowed from Codecademy. Maps links to their pages
-        const pages = ['Home', 'Movies', 'New Releases', 'Comparitron'];
-        const navLinks = pages.map(page => {
-            return <MenuButton key={page} name={page} link={'/'+page} />
+        this.toggle = this.toggle.bind(this);
+        this.state = {
+            isOpen: false
+        };
+    }
+
+    toggle() {
+        this.setState({
+            isOpen: !this.state.isOpen
         });
+    }
 
+    render() {
         return (
-            // uses Bootstrap classes
-            <HeaderContainerStyle className="container-fluid">
-                <div className="row">
-                    <LogoStyle className="col-sm-4">
-                        <a href="/"><img src={logo} alt="Cinescope Logo" /></a>
+            <div>
+                {/*Setting the color and setting display adjustments*/}
+                <Navbar color="warning" light expand="md">
+                    {/*Logo; redirects back to main page*/}
+                    <LogoStyle className="col-sm-2">
+                        <a href="/"><img src={logo}/></a>
                     </LogoStyle>
-                    <MenuItemsStyle className="col-sm-6">
-                        {navLinks}
-                    </MenuItemsStyle>
+                    {/*Compresses navbar buttons into a toggler if the window is too small*/}
+                    <NavbarToggler onClick={this.toggle}/>
+                    {/*Navbar contents*/}
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav className="mr-auto" navbar>
+                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                                <NavLink href="/">Home</NavLink>
+                            </NavItem>
+                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                                <NavLink href="/Movies">Movies</NavLink>
+                            </NavItem>
+                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                                <NavLink href="/New_Releases">New Releases</NavLink>
+                            </NavItem>
+                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                                <NavLink href="/Comparitron">Comparitron</NavLink>
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                    {/*User profile picture*/}
                     <AccountIconStyle className="col-sm-2">
-                        <a href="/profile"><MenuButton name={"account"} /></a>
+                        <a href="/profile"><MenuButton name={"account"}/></a>
                     </AccountIconStyle>
-                </div>
-            </HeaderContainerStyle>
+                </Navbar>
+            </div>
         );
     }
 }
