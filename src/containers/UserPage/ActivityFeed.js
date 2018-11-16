@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import profpic from './profpic-sponge.webp';
 
-const PostStyle = styled.div`
+const ActivityFeedStyle = styled.div`
   margin: 10px;
 `;
 
@@ -21,9 +21,9 @@ const SmallProfile = styled.img`
   width: 50px;
 `;
 
-const Post = (props) => {
+const ActivityFeed = (props) => {
   return (
-    <PostStyle className='row m-3'> 
+    <ActivityFeedStyle className='row m-3'> 
       <div className='col-'>
         <SmallProfile src={profpic} alt='' />
       </div>
@@ -31,8 +31,8 @@ const Post = (props) => {
         <Description>{props.description}</Description>
         <XSmallText>{props.date}</XSmallText>
       </div>
-    </PostStyle>
+    </ActivityFeedStyle>
   )
 }
 
-export default Post;
+export default ActivityFeed;

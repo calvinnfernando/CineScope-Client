@@ -71,7 +71,6 @@ class Header extends React.Component {
                     </Collapse>
                     {/*User profile picture*/}
                     <AccountIconStyle className="col-sm-2">
-                        {/* NOTE: the link to this must be set to user profile */}
                         <a href="/profile"><MenuButton name={"account"}/></a>
                     </AccountIconStyle>
                 </Navbar>
