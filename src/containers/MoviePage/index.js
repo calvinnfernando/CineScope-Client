@@ -31,8 +31,8 @@ class MoviePage extends Component {
             <h1>Iron Man 3</h1>
             <img src={TestImage} alt='test' style={{width: 300}}/>
             <div style={{justifyContent: "center"}}>
-              <button onClick={this.handleThumbsUp} style={{border: "none"}}><img src={ThumbsUp} alt=''/></button>
-              <button onClick={this.handleThumbsDown} style={{border: "none"}}><img src={ThumbsDown} alt=''/></button>
+              <button onClick={this.handleThumbsUp} style={{border: "none", cursor: "pointer"}}><img src={ThumbsUp} alt=''/></button>
+              <button onClick={this.handleThumbsDown} style={{border: "none", cursor: "pointer"}}><img src={ThumbsDown} alt=''/></button>
             </div>
           </div>
         </div>
