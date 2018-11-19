@@ -22,6 +22,7 @@ const OverlayContent = styled.div`
     text-align: center; 
     margin: 30px auto 0px; 
     background-color: #767676; 
+    box-shadow: 2px 8px 10px rgba(0, 0, 0, .3);
 `;
 
 class TrailerModal extends Component {
