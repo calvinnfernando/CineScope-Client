@@ -7,15 +7,15 @@ const HomeStyle = styled.div`
   text-align: center;
 `;
 
+document.body.style = 'background: #232323;';
+
 class HomePage extends Component {
     render() {
         return (
-            <div style={{backgroundColor: '#232323'}}>
-                <HomeStyle>
-                    <Header/>
-                    <Carousel/>
-                </HomeStyle>
-            </div>
+            <HomeStyle>
+                <Header/>
+                <Carousel/>
+            </HomeStyle>
         );
     }
 }
