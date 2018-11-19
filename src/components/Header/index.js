@@ -59,7 +59,7 @@ class Header extends React.Component {
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
-                                <NavLink href="/Movies">Movies</NavLink>
+                                <NavLink href="/all-movies">Movies</NavLink>
                             </NavItem>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
                                 <NavLink href="/New_Releases">New Releases</NavLink>
