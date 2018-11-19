@@ -7,6 +7,8 @@ const HomeStyle = styled.div`
   text-align: center;
 `;
 
+document.body.style = 'background: #232323;';
+
 class HomePage extends Component {
     render() {
         return (
