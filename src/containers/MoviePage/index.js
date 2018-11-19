@@ -132,7 +132,7 @@ class MoviePage extends Component {
               </MovieLeftStyle>
               <MovieRightStyle className="col-8">
                 <h1>Iron Man 3</h1>
-                <h2>2013</h2>
+                <h3>2013 | PG-13</h3>
                 <AddButtonsStyle>
                   <AddToFavorites>
                     Star button here
