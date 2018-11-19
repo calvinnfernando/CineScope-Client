@@ -18,6 +18,12 @@ const MovieInfoStyle = styled.div`
   padding: 5%;
 `;
 
+const MoviePosterStyle = styled.div`
+  img {
+    box-shadow: 2px 8px 10px rgba(0, 0, 0, .3);
+  }
+`;
+
 const MovieLeftStyle = styled.div`
   padding: 10px;
   text-align: center;
@@ -123,7 +129,9 @@ class MoviePage extends Component {
           <MovieInfoStyle className="container">
             <div className="row">
               <MovieLeftStyle className="col-4">
-                <img src={TestImage} alt='test' style={{ width: 300 }} />
+                <MoviePosterStyle>
+                  <img src={TestImage} alt='test' style={{ width: 300 }} />
+                </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
                   <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
                   <button onClick={this.handleThumbsDown} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsDown} alt='' /></button>
