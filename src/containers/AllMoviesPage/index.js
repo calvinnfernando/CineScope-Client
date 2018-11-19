@@ -1,11 +1,21 @@
 import React, {Component} from 'react';
 import Movies from '../../components/MovieLists/Movies';
-//import styled from 'styled-components';
+import Header from '../../components/Header';
+import styled from 'styled-components';
+
+const StyledMovies = styled.div`
+    padding: 10px;
+`;
 
 class AllMoviesPage extends Component {
     render() {
         return (
-            <Movies/>
+            <div>
+                <Header/>
+                <StyledMovies className="container">
+                    <Movies/>
+                </StyledMovies>
+            </div>
         );
     }
 }
