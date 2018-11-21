@@ -133,7 +133,7 @@ class MoviePage extends Component {
         <WhiteBoxStyle>
           <MovieInfoStyle className="container">
             <div className="row">
-              <MovieLeftStyle className="col-4">
+              <MovieLeftStyle className="col-md-4">
                 <MoviePosterStyle>
                   <img src={TestImage} alt='test' />
                 </MoviePosterStyle>
@@ -143,7 +143,7 @@ class MoviePage extends Component {
                   <h4>Average rating: 7/10</h4>
                 </div>
               </MovieLeftStyle>
-              <MovieRightStyle className="col-8">
+              <MovieRightStyle className="col-md-8">
                 <h1>Iron Man 3</h1>
                 <h3>2013 | PG-13</h3>
                 <AddButtonsStyle>

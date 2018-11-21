@@ -68,21 +68,21 @@ class Ratings extends Component {
                 <h2>Ratings</h2>
                 <RatingsStyle className="row">
 
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <h3>Rotten Tomatoes</h3>
                         <RatingStyle>
                             <RottenTomatoesIcon />
                             <RatingTextStyle><h4><a href={this.props.rottenTomatoesLink}>{this.props.rottenTomatoes}% liked it</a></h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <h3>Rotten Tomatoes</h3>
                         <RatingStyle>
                             <MetacriticIcon>{this.props.metacritic}</MetacriticIcon>
                             <RatingTextStyle><h4><a href={this.props.metacriticLink}>Metascore</a></h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <h3>IMDb</h3>
                         <RatingStyle>
                             <ImdbIcon />
