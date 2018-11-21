@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
 import UserPage from './containers/UserPage';
+import MoviePage from './containers/MoviePage'
 
 class App extends Component {
 	constructor(props){
@@ -28,6 +29,7 @@ class App extends Component {
 				<Route exact path="/" component={HomePage}/>
 				<Route path="/login" component={LoginPage}/>
 				<Route path="/profile" component={UserPage}/>
+				<Route path="/movie" component={MoviePage}/>
 			</Switch>
 		);
 	}
