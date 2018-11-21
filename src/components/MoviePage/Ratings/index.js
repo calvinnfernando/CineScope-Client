@@ -76,7 +76,7 @@ class Ratings extends Component {
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
-                        <h3>Rotten Tomatoes</h3>
+                        <h3>Metacritic</h3>
                         <RatingStyle>
                             <MetacriticIcon>{this.props.metacritic}</MetacriticIcon>
                             <RatingTextStyle><h4><a href={this.props.metacriticLink}>Metascore</a></h4></RatingTextStyle>
