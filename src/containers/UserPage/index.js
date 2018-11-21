@@ -212,6 +212,7 @@ class UserPage extends Component {
                       {mList}
                     </MovieList>
                   </Box>
+                  
                   <Box>
                     <Title>
                       <Icon src={watchLater} alt='watchLater'/>
@@ -221,9 +222,7 @@ class UserPage extends Component {
                       {mList}
                     </MovieList>
                   </Box>
-                </div>
 
-                <div className="right-div col">
                   <Box>
                     <Title>
                       <Icon src={watched} alt='watched'/>
