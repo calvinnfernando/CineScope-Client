@@ -23,6 +23,7 @@ const MovieInfoStyle = styled.div`
 
 const MoviePosterStyle = styled.div`
   img {
+    width: 80%;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, .3);
   }
 `;
@@ -43,14 +44,15 @@ const MovieRightStyle = styled.div`
 const AddButtonsStyle = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   margin: 15px auto;
 `;
 
-const AddToFavorites = styled.div`
+const AddToFavorites = styled.span`
   margin-right: 8px;
 `;
 
-const AddToWatchList = styled.div`
+const AddToWatchList = styled.span`
   margin-right: 8px;
   padding: 8px 12px;
   border-radius: 8px;
@@ -64,7 +66,7 @@ const AddToWatchList = styled.div`
   }
 `;
 
-const TrailerButton = styled.div`
+const TrailerButton = styled.span`
   margin-right: 8px;
   padding: 8px 12px;
   border-radius: 8px;
@@ -80,7 +82,7 @@ const TrailerButton = styled.div`
 
 const CompareButtonStyle = styled.div`
   position: absolute;
-  right: 0px;
+  right: 2%;
   bottom: 0px;
   padding: 8px 12px;
   border-radius: 8px;
@@ -133,7 +135,7 @@ class MoviePage extends Component {
             <div className="row">
               <MovieLeftStyle className="col-4">
                 <MoviePosterStyle>
-                  <img src={TestImage} alt='test' style={{ width: 300 }} />
+                  <img src={TestImage} alt='test' />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
                   <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
