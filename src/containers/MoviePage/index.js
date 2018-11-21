@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import Header from '../../components/Header'
-import TrailerModal from '../../components/TrailerModal'
+import TrailerModal from '../../components/MoviePage/TrailerModal'
+import Ratings from '../../components/MoviePage/Ratings'
+import Reviews from '../../components/MoviePage/Reviews'
+import RelatedMovies from '../../components/MoviePage/RelatedMovies'
 import styled from 'styled-components'
 import TestImage from './ironman3.jpg'
 import ThumbsUp from './thumbsup.png'
@@ -20,7 +23,7 @@ const MovieInfoStyle = styled.div`
 
 const MoviePosterStyle = styled.div`
   img {
-    box-shadow: 2px 8px 10px rgba(0, 0, 0, .3);
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, .3);
   }
 `;
 
@@ -164,6 +167,13 @@ class MoviePage extends Component {
                 </Link>
               </MovieRightStyle>
             </div>
+            <hr></hr>
+            {/* Must replace the props with real data */}
+            <Ratings rottenTomatoes={80} rottenTomatoesLink={'https://www.rottentomatoes.com/m/iron_man_3'} metacritic={62} metacriticLink={'https://www.metacritic.com/movie/iron-man-3'} imdbRating={7.2} imdbLink={'https://www.imdb.com/title/tt1300854/?ref_=nv_sr_1'}/>
+            <hr></hr>
+            <Reviews />
+            <hr></hr>
+            <RelatedMovies />
           </MovieInfoStyle>
         </WhiteBoxStyle>
         {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} />}
