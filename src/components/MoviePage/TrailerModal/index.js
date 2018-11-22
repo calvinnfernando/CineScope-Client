@@ -31,7 +31,7 @@ class TrailerModal extends Component {
         return (
             <Overlay onClick={this.props.closeTrailer}>
                 <OverlayContent>
-                    <iframe height="480" width="640"
+                    <iframe height="480" width="640" title="Trailer"
                         src="https://www.youtube.com/embed/oYSD2VQagc4">
                     </iframe>
                 </OverlayContent>

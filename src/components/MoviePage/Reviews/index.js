@@ -17,14 +17,10 @@ const ReviewsStyle = styled.div`
 
 class Reviews extends Component {
 
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         const reviews = ['This is not a real review.', 'This review will be replaced.', 'Review needed here.'];
         const reviewsToDisplay = reviews.map(review => { 
-            return <div><p>{review}</p><br></br></div>
+            return <div key={review}><p>{review}</p><br></br></div>
         }); 
 
         return (

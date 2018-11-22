@@ -1,5 +1,5 @@
 "Used template from https://reactstrap.github.io/components/navbar/"
-import React, {Component} from 'react';
+import React from 'react';
 import {
     Collapse,
     Navbar,
@@ -48,7 +48,7 @@ class Header extends React.Component {
                 <Navbar color="warning" light expand="md">
                     {/*Logo; redirects back to main page*/}
                     <LogoStyle className="col-sm-2">
-                        <a href="/"><img src={logo}/></a>
+                        <a href="/"><img src={logo} alt='Cinescope logo' /></a>
                     </LogoStyle>
                     {/*Compresses navbar buttons into a toggler if the window is too small*/}
                     <NavbarToggler onClick={this.toggle}/>
@@ -71,7 +71,7 @@ class Header extends React.Component {
                     </Collapse>
                     {/*User profile picture*/}
                     <AccountIconStyle className="col-sm-2">
-                        <a href="/profile"><MenuButton name={"account"}/></a>
+                        <MenuButton name={"account"} />
                     </AccountIconStyle>
                 </Navbar>
             </div>

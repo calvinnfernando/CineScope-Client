@@ -58,10 +58,6 @@ const RatingTextStyle = styled.div`
 
 class Ratings extends Component {
 
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         return (
             <div>

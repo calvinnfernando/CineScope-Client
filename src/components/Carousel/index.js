@@ -63,7 +63,7 @@ class MainCarousel extends Component {
                     onExited={this.onExited}
                     key={item.src}
                 >
-                    <img src={item.src}/>
+                    <img src={item.src} alt='Carousel item'/>
                 </CarouselItem>
             );
         });

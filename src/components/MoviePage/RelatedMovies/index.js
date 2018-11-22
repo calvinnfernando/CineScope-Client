@@ -17,15 +17,11 @@ const RelatedMovieStyle = styled.div`
 `;
 
 class RelatedMovies extends Component {
-
-    constructor(props) {
-        super(props)
-    }
-
+    
     render() {
         const relatedMovies = ['falseimage', 'needimage', 'imghere'];
         const moviesToDisplay = relatedMovies.map(relatedMovie => { 
-            return <RelatedMovieStyle>
+            return <RelatedMovieStyle key={relatedMovie}>
                 <img src="" alt={relatedMovie} />
                 <a href="">Movie Title</a>
                 </RelatedMovieStyle>
