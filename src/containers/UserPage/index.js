@@ -123,7 +123,7 @@ class UserPage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      displayHighlights: props.location.state.highlights,
+      displayHighlights: true,
     };
   }
 
