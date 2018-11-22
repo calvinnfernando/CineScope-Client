@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import profilepic from '../img/profpic-sponge.webp';
@@ -68,19 +69,19 @@ class MenuButton extends Component {
         return (
             <MenuBtnStyle>
                 {/* Creates a link with provided name and link */}
-                <a href={this.props.link} >
+                <Link to={{ pathname: '/profile', state: { highlights: true } }}>
                     {/* renders text or account icon */
                     this.props.name === "account" ? (<IconContainerStyle>
                         <AccountIcon src={profilepic}/>
                     </IconContainerStyle>) : this.props.name
                     }
-                </a>
+                </Link>
 
                 {/* Dropdown implemented in simple HTML and CSS */}
                 <DropdownContent>
-                    <a href="#"> Menu item 1 </a>
-                    <a href="#"> Menu item 2 </a>
-                    <a href="#"> Menu item 3 </a>
+                    <Link to={{ pathname: '/profile', state: { highlights: true } }}>Highlights</Link>
+                    <Link to={{ pathname: '/profile', state: { highlights: false } }}>Watchlists</Link>
+                    {/* <a href="#"> Menu item 3 </a> */}
                 </DropdownContent>
             </MenuBtnStyle>
         );

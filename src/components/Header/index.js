@@ -59,7 +59,7 @@ class Header extends React.Component {
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
-                                <NavLink href="/Movies">Movies</NavLink>
+                                <NavLink href="/all-movies">Movies</NavLink>
                             </NavItem>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
                                 <NavLink href="/New_Releases">New Releases</NavLink>
@@ -71,7 +71,7 @@ class Header extends React.Component {
                     </Collapse>
                     {/*User profile picture*/}
                     <AccountIconStyle className="col-sm-2">
-                        <MenuButton name={"account"} />
+                        <MenuButton name={"account"} link={"/profile"} />
                     </AccountIconStyle>
                 </Navbar>
             </div>
