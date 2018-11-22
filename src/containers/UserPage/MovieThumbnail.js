@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const XSmallText = styled.p`
@@ -11,7 +11,7 @@ const Thumbnail = styled.img`
 
 const MovieThumbnail = (props) => {
   return(
-    <div className="col-4">
+    <div className="col-3">
       <div className="row">
         <Thumbnail src={props.imgsrc} alt='' className="mx-auto"/>
       </div>
