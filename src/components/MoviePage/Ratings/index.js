@@ -68,21 +68,21 @@ class Ratings extends Component {
                         <h3>Rotten Tomatoes</h3>
                         <RatingStyle>
                             <RottenTomatoesIcon />
-                            <RatingTextStyle><h4><a href={this.props.rottenTomatoesLink}>{this.props.rottenTomatoes}% liked it</a></h4></RatingTextStyle>
+                            <RatingTextStyle><h4>{this.props.rottenTomatoes}% liked it</h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
                         <h3>Metacritic</h3>
                         <RatingStyle>
                             <MetacriticIcon>{this.props.metacritic}</MetacriticIcon>
-                            <RatingTextStyle><h4><a href={this.props.metacriticLink}>Metascore</a></h4></RatingTextStyle>
+                            <RatingTextStyle><h4>Metascore</h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
                         <h3>IMDb</h3>
                         <RatingStyle>
                             <ImdbIcon />
-                            <RatingTextStyle><h4><a href={this.props.imdbLink}>{this.props.imdbRating}/10 stars</a></h4></RatingTextStyle>
+                            <RatingTextStyle><h4>{this.props.imdbRating}/10 stars</h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
                 </RatingsStyle>

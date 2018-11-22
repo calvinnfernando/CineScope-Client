@@ -139,18 +139,18 @@ class MoviePage extends Component {
         imdb_id: movie.imdb_id
       });
       MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
+        const rottenTomatoes = 80; // replace with movie.Ratings. ... get rotten tomatoes 
         this.setState({
-          rated: movie.Rated
+          rated: movie.Rated,
+          rotten_tomatoes: rottenTomatoes,
+          metascore: movie.Metascore,
+          imdb_rating: movie.imdbRating
         });
       });
     });
     
   }
   render() {
-    console.log("Movie title: ");
-    console.log(this.state.title);
-    console.log(this.state.video);
-    console.log(this.state.rated);
 
     return (
       <div>
@@ -197,7 +197,7 @@ class MoviePage extends Component {
             </div>
             <hr></hr>
             {/* Must replace the props with real data */}
-            <Ratings rottenTomatoes={80} rottenTomatoesLink={'https://www.rottentomatoes.com/m/iron_man_3'} metacritic={62} metacriticLink={'https://www.metacritic.com/movie/iron-man-3'} imdbRating={7.2} imdbLink={'https://www.imdb.com/title/tt1300854/?ref_=nv_sr_1'} />
+            <Ratings rottenTomatoes={80} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews />
             <hr></hr>
