@@ -136,15 +136,21 @@ class MoviePage extends Component {
         poster: movie.poster_path,
         year: year,
         vote_average: movie.vote_average,
+        imdb_id: movie.imdb_id
       });
-    })
-
+      MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
+        this.setState({
+          rated: movie.Rated
+        });
+      });
+    });
     
   }
   render() {
     console.log("Movie title: ");
     console.log(this.state.title);
-    console.log(this.state.poster);
+    console.log(this.state.video);
+    console.log(this.state.rated);
 
     return (
       <div>
@@ -165,7 +171,7 @@ class MoviePage extends Component {
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">
                 <h1>{this.state.title}</h1>
-                <h3>{this.state.year} | PG-13</h3>
+                <h3>{this.state.year} | {this.state.rated}</h3>
                 <AddButtonsStyle>
                   <AddToFavorites>
                     Star button here

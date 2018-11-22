@@ -1,4 +1,4 @@
-//const API_KEY = "612c3338";
+const OMDB_API_KEY = "612c3338";
 const API_KEY = '772550390f45ddb8fbac999e8b90ad9e';
 
 /* if (search === "") {
@@ -10,6 +10,13 @@ const API_KEY = '772550390f45ddb8fbac999e8b90ad9e';
         .then(response => response.json())
         .then(myJson => {return myJson.Search});
 } */
+
+const loadMoviesDataOMDb = async (imdb_id) => {
+    return fetch(`http://www.omdbapi.com/?i=${imdb_id}&apikey=${OMDB_API_KEY}`)
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error))
+        .then(myJson => {return myJson});
+}
 
 const loadMoviesData = async (type, query, page) => {
     console.log(page);
@@ -58,6 +65,15 @@ class MovieService {
     static getSingleMovie = async (movie_id) => {
         try {
             var res = await loadMoviesData("movie", movie_id, "nopage");
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    static getSingleMovieOMDb = async (imdb_id) => {
+        try {
+            var res = await loadMoviesDataOMDb(imdb_id);
             return res;
         } catch (err) {
             console.log(err);
