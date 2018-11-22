@@ -68,10 +68,10 @@ class Movies extends Component {
     }
 
     toggle() {
-  this.setState({
-    dropdownOpen: !this.state.dropdownOpen
-  });
-}
+      this.setState({
+        dropdownOpen: !this.state.dropdownOpen
+      });
+    }
 
     // Sorting options
     mostPopular() { this.setState({sortOption: '0'}); }
