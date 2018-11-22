@@ -4,6 +4,7 @@ import TrailerModal from '../../components/MoviePage/TrailerModal'
 import Ratings from '../../components/MoviePage/Ratings'
 import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
+import MovieService from '../../services/MovieService.js'
 import styled from 'styled-components'
 import TestImage from './ironman3.jpg'
 import ThumbsUp from './thumbsup.png'
@@ -96,8 +97,6 @@ const CompareButtonStyle = styled.div`
   }
 `;
 
-
-
 class MoviePage extends Component {
   constructor(props) {
     super(props)
@@ -126,7 +125,27 @@ class MoviePage extends Component {
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
+  componentDidMount() {
+    const movieID = parseInt(this.props.match.params.id);
+    // replace id with movieID
+    MovieService.getSingleMovie(353081).then((movie) => {
+      const year = movie.release_date.split("-")[0];
+      this.setState({ 
+        title: movie.title,
+        overview: movie.overview,
+        poster: movie.poster_path,
+        year: year,
+        vote_average: movie.vote_average,
+      });
+    })
+
+    
+  }
   render() {
+    console.log("Movie title: ");
+    console.log(this.state.title);
+    console.log(this.state.poster);
+
     return (
       <div>
         <Header />
@@ -135,17 +154,18 @@ class MoviePage extends Component {
             <div className="row">
               <MovieLeftStyle className="col-md-4">
                 <MoviePosterStyle>
-                  <img src={TestImage} alt='test' />
+                  <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.state.poster}`} 
+                  alt={this.state.title} onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
                   <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
                   <button onClick={this.handleThumbsDown} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsDown} alt='' /></button>
-                  <h4>Average rating: 7/10</h4>
+                  <h4>Average rating: {this.state.vote_average}/10</h4>
                 </div>
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">
-                <h1>Iron Man 3</h1>
-                <h3>2013 | PG-13</h3>
+                <h1>{this.state.title}</h1>
+                <h3>{this.state.year} | PG-13</h3>
                 <AddButtonsStyle>
                   <AddToFavorites>
                     Star button here
@@ -160,7 +180,7 @@ class MoviePage extends Component {
                     &#9658; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
-                <p>This is a dummy description of the movie. Plagued with worry and insomnia since saving New York from destruction, Tony Stark (Robert Downey Jr.), now, is more dependent on the suits that give him his Iron Man persona -- so much so that every aspect of his life is affected, including his relationship with Pepper (Gwyneth Paltrow). After a malevolent enemy known as the Mandarin (Ben Kingsley) reduces his personal world to rubble, Tony must rely solely on instinct and ingenuity to avenge his losses and protect the people he loves.</p>
+                <p>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
@@ -171,7 +191,7 @@ class MoviePage extends Component {
             </div>
             <hr></hr>
             {/* Must replace the props with real data */}
-            <Ratings rottenTomatoes={80} rottenTomatoesLink={'https://www.rottentomatoes.com/m/iron_man_3'} metacritic={62} metacriticLink={'https://www.metacritic.com/movie/iron-man-3'} imdbRating={7.2} imdbLink={'https://www.imdb.com/title/tt1300854/?ref_=nv_sr_1'}/>
+            <Ratings rottenTomatoes={80} rottenTomatoesLink={'https://www.rottentomatoes.com/m/iron_man_3'} metacritic={62} metacriticLink={'https://www.metacritic.com/movie/iron-man-3'} imdbRating={7.2} imdbLink={'https://www.imdb.com/title/tt1300854/?ref_=nv_sr_1'} />
             <hr></hr>
             <Reviews />
             <hr></hr>
