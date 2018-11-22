@@ -8,6 +8,7 @@ const HomeStyle = styled.div`
 `;
 
 class HomePage extends Component {
+
     render() {
         return (
             <div style={{backgroundColor: '#232323'}}>
