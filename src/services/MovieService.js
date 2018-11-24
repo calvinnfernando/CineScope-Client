@@ -25,6 +25,12 @@ const loadMoviesData = async (type, query, page) => {
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
             .then(myJson => {return myJson.results});
+    } else if (type === "recommended") {
+        const url= `https://api.themoviedb.org/3/movie/${query}/recommendations?api_key=${API_KEY}&page=${page}`;
+        return fetch(url)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(myJson => {return myJson.results});
     }
 } 
 
@@ -43,6 +49,15 @@ class MovieService {
         try {
             var res = await loadMoviesData("search", query, page);
             console.log("search: ", res);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    static getRecommendedMovies = async (query, page = 1) => {
+        try {
+            var res = await loadMoviesData("recommended", query, page);
             return res;
         } catch (err) {
             console.log(err);
