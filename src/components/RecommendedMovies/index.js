@@ -41,8 +41,7 @@ class RecommendedMovies extends Component {
     render() {
         const {
             movies,
-            activeItemIndex,
-            query
+            activeItemIndex
         } = this.state;
 
         const moviesArray = movies.map(movie => (<MovieCard key={movie.id} movie={movie} />));
@@ -52,13 +51,12 @@ class RecommendedMovies extends Component {
                 <RecommendedText><h2>Recommended Movies</h2></RecommendedText>
                 <div className="d-flex flex-row mt-2">
                     <div className="col-sm-12">
-
                         <ItemsCarousel
                             // Placeholder configurations
                             enablePlaceholder
                             numberOfPlaceholderItems={5}
                             minimumPlaceholderTime={1000}
-                            placeholderItem={<div style={{ height: 200, background: '#900' }}>Placeholder</div>}
+                            placeholderItem={<div style={{ height: 300, width: 200, background: '#900' }}>Placeholder</div>}
 
                             // Carousel configurations
                             numberOfCards={4}

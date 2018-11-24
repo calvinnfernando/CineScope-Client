@@ -12,7 +12,6 @@ const API_KEY = '772550390f45ddb8fbac999e8b90ad9e';
 } */
 
 const loadMoviesData = async (type, query, page) => {
-    console.log(page);
     if (type === "popular" || query === "") {
         const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${page}`;
         return fetch(url)

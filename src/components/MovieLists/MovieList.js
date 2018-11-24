@@ -5,7 +5,6 @@ import '../../styles/components/movieCard.css';
 
 const MovieList = (props) => {
   const moviesArray = props.movies.map(movie => (<MovieCard key={movie.id} movie={movie} />));
-  console.log(props);
    return (
     <div className="card-deck">
       {moviesArray}
