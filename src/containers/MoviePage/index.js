@@ -126,10 +126,10 @@ class MoviePage extends Component {
   }
   componentDidMount() {
     const { location } = this.props;
-    const ghettoID = parseInt(location.pathname.split('/')[2]);
-    MovieService.getSingleMovie(ghettoID).then((movie) => {
+    const movieID = parseInt(location.pathname.split('/')[2]);
+    MovieService.getSingleMovie(movieID).then((movie) => {
       const year = movie.release_date.split("-")[0];
-      this.setState({ 
+      this.setState({
         title: movie.title,
         overview: movie.overview,
         poster: movie.poster_path,
@@ -150,6 +150,9 @@ class MoviePage extends Component {
           rated = "Not yet rated";
         }
         this.setState({
+          director: movie.Director,
+          actors: movie.Actors,
+          runtime: movie.Runtime,
           rated: rated,
           rotten_tomatoes: rottenTomatoes,
           metascore: movie.Metascore,
@@ -157,7 +160,21 @@ class MoviePage extends Component {
         });
       });
     });
-    
+    MovieService.getMovieRecommendations(movieID).then((movies) => {
+      const relatedMovies = movies.slice(0, 3);
+      this.setState({ relatedMovies: relatedMovies });
+    })
+    MovieService.getMovieVideos(movieID).then((videos) => {
+      var trailerVideo = "";
+      for (const video of videos) {
+        if (video.type === "Trailer" && video.site === "YouTube") {
+          trailerVideo = video;
+          break;
+        }
+      }
+      this.setState({ trailerVideo: trailerVideo });
+    })
+
   }
 
   render() {
@@ -170,8 +187,8 @@ class MoviePage extends Component {
             <div className="row">
               <MovieLeftStyle className="col-md-4">
                 <MoviePosterStyle>
-                  <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.state.poster}`} 
-                  alt={this.state.title} onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} />
+                  <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.state.poster}`}
+                    alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
                   <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
@@ -181,7 +198,7 @@ class MoviePage extends Component {
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">
                 <h1>{this.state.title}</h1>
-                <h3>{this.state.year} | {this.state.rated}</h3>
+                <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
                   <AddToFavorites>
                     Star button here
@@ -196,6 +213,7 @@ class MoviePage extends Component {
                     &#9658; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
+                <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
                 <p>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
@@ -211,10 +229,10 @@ class MoviePage extends Component {
             <hr></hr>
             <Reviews />
             <hr></hr>
-            <RelatedMovies />
+            <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>
         </WhiteBoxStyle>
-        {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} />}
+        {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} video={this.state.trailerVideo} />}
 
       </div>
     );

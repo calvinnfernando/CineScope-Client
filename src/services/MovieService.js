@@ -38,6 +38,18 @@ const loadMoviesData = async (type, query, page) => {
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
             .then(myJson => { return myJson });
+    } else if (type === "movie recommended") {
+        const url = `https://api.themoviedb.org/3/movie/${query}/recommendations?api_key=${API_KEY}&language=en-US&page${page}`;
+        return fetch(url)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(myJson => { return myJson.results });
+    } else if (type === "movie video") {
+        const url = `https://api.themoviedb.org/3/movie/${query}/videos?api_key=${API_KEY}&language=en-US`;
+        return fetch(url)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(myJson => { return myJson.results });
     }
 }
 
@@ -74,6 +86,24 @@ class MovieService {
     static getSingleMovieOMDb = async (imdb_id) => {
         try {
             var res = await loadMoviesDataOMDb(imdb_id);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    static getMovieRecommendations = async (movie_id, page = 1) => {
+        try { 
+            var res = await loadMoviesData("movie recommended", movie_id, page);
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    static getMovieVideos = async (movie_id) => {
+        try { 
+            var res = await loadMoviesData("movie video", movie_id, "nopage");
             return res;
         } catch (err) {
             console.log(err);

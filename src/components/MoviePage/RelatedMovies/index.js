@@ -10,26 +10,38 @@ const RelatedMoviesStyle = styled.div`
         text-decoration: none;
         color: #777;
     }
+    
 `;
 
 const RelatedMovieStyle = styled.div`
+    width: 33%;
+    font-size: 24px;
+    text-align: center;
 
+    img {
+        max-width: 60%;
+    }
 `;
 
 class RelatedMovies extends Component {
-    
+
     render() {
-        const relatedMovies = ['falseimage', 'needimage', 'imghere'];
-        const moviesToDisplay = relatedMovies.map(relatedMovie => { 
-            return <RelatedMovieStyle key={relatedMovie}>
-                <img src="" alt={relatedMovie} />
-                <a href="">Movie Title</a>
-                </RelatedMovieStyle>
-        }); 
+        if (!this.props.movies) {
+            return <h2>No related movies.</h2>
+        }
+        const moviesToDisplay = this.props.movies.map(relatedMovie => {
+            return <RelatedMovieStyle key={relatedMovie.id}>
+                <a href={'/movie/' + relatedMovie.id}>
+                    <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${relatedMovie.poster_path}`}
+                        onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt={relatedMovie} />
+                    <div>{relatedMovie.title}</div>
+                </a>
+            </RelatedMovieStyle>
+        });
 
         return (
             <div>
-                <h2>RelatedMovies</h2>
+                <h2>Related Movies</h2>
                 <RelatedMoviesStyle className="row">
                     {moviesToDisplay}
                 </RelatedMoviesStyle>
