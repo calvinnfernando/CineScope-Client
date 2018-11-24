@@ -145,8 +145,12 @@ class MoviePage extends Component {
             rottenTomatoes = source.Value;
           }
         }
+        var rated = movie.Rated;
+        if (rated === "N/A") {
+          rated = "Not yet rated";
+        }
         this.setState({
-          rated: movie.Rated,
+          rated: rated,
           rotten_tomatoes: rottenTomatoes,
           metascore: movie.Metascore,
           imdb_rating: movie.imdbRating
@@ -157,7 +161,6 @@ class MoviePage extends Component {
   }
 
   render() {
-    
 
     return (
       <div>
