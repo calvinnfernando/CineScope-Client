@@ -68,7 +68,7 @@ class Ratings extends Component {
                         <h3>Rotten Tomatoes</h3>
                         <RatingStyle>
                             <RottenTomatoesIcon />
-                            <RatingTextStyle><h4>{this.props.rottenTomatoes}% liked it</h4></RatingTextStyle>
+                            <RatingTextStyle><h4>{this.props.rottenTomatoes} liked it</h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">

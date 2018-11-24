@@ -6,7 +6,6 @@ import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
 import MovieService from '../../services/MovieService.js'
 import styled from 'styled-components'
-import TestImage from './ironman3.jpg'
 import ThumbsUp from './thumbsup.png'
 import ThumbsDown from './thumbsdown.png'
 import { Link } from 'react-router-dom';
@@ -126,9 +125,11 @@ class MoviePage extends Component {
     this.setState({ displayTrailer: false });
   }
   componentDidMount() {
-    const movieID = parseInt(this.props.match.params.id);
+    const { location } = this.props;
+    const ghettoID = parseInt(location.pathname.split('/')[2]);
+    //const movieID = parseInt(this.props.match.params.id);
     // replace id with movieID
-    MovieService.getSingleMovie(353081).then((movie) => {
+    MovieService.getSingleMovie(ghettoID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({ 
         title: movie.title,
@@ -139,7 +140,13 @@ class MoviePage extends Component {
         imdb_id: movie.imdb_id
       });
       MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
-        const rottenTomatoes = 80; // replace with movie.Ratings. ... get rotten tomatoes 
+        const ratings = movie.Ratings;
+        var rottenTomatoes = "N/A";
+        for (const source of ratings) {
+          if (source.Source === "Rotten Tomatoes") {
+            rottenTomatoes = source.Value;
+          }
+        }
         this.setState({
           rated: movie.Rated,
           rotten_tomatoes: rottenTomatoes,
@@ -150,7 +157,9 @@ class MoviePage extends Component {
     });
     
   }
+
   render() {
+    
 
     return (
       <div>
@@ -197,7 +206,7 @@ class MoviePage extends Component {
             </div>
             <hr></hr>
             {/* Must replace the props with real data */}
-            <Ratings rottenTomatoes={80} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
+            <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews />
             <hr></hr>
