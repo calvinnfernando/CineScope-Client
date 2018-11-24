@@ -127,8 +127,6 @@ class MoviePage extends Component {
   componentDidMount() {
     const { location } = this.props;
     const ghettoID = parseInt(location.pathname.split('/')[2]);
-    //const movieID = parseInt(this.props.match.params.id);
-    // replace id with movieID
     MovieService.getSingleMovie(ghettoID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({ 
