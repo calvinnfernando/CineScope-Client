@@ -16,7 +16,8 @@ import logo from '../img/logo.svg';
 const LogoStyle = styled.div`
 margin: 10px auto;
 img {
-	height: 60px;
+    height: 60px;
+    max-width: 100%;
 }
 `;
 
@@ -47,22 +48,19 @@ class Header extends React.Component {
                 {/*Setting the color and setting display adjustments*/}
                 <Navbar color="warning" light expand="md">
                     {/*Logo; redirects back to main page*/}
-                    <LogoStyle className="col-sm-2">
+                    <LogoStyle className="col-md-2">
                         <a href="/"><img src={logo} alt='CineScope' /></a>
                     </LogoStyle>
                     {/*Compresses navbar buttons into a toggler if the window is too small*/}
                     <NavbarToggler onClick={this.toggle}/>
                     {/*Navbar contents*/}
-                    <Collapse isOpen={this.state.isOpen} navbar>
+                    <Collapse className="col-md-8" isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
-                                <NavLink href="/all-movies">Movies</NavLink>
-                            </NavItem>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
-                                <NavLink href="/New_Releases">New Releases</NavLink>
+                                <NavLink href="/all-movies">All Movies</NavLink>
                             </NavItem>
                             <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
                                 <NavLink href="/Comparitron">Comparitron</NavLink>
@@ -70,7 +68,7 @@ class Header extends React.Component {
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
-                    <AccountIconStyle className="col-sm-2">
+                    <AccountIconStyle className="col-md-2">
                         <MenuButton name={"account"} link={"/profile"} />
                     </AccountIconStyle>
                 </Navbar>
