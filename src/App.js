@@ -8,6 +8,7 @@ import LoginPage from './containers/LoginPage';
 import UserPage from './containers/UserPage';
 import MoviePage from './containers/MoviePage';
 import AllMoviesPage from './containers/AllMoviesPage';
+import ComparitronPage from './containers/ComparitronPage';
 
 class App extends Component {
 	constructor(props){
@@ -32,6 +33,7 @@ class App extends Component {
 				<Route path="/profile" component={UserPage}/>
 				<Route path="/movie" component={MoviePage}/>
 				<Route path="/all-movies" component={AllMoviesPage}/>
+				<Route path="/Comparitron" component={ComparitronPage}/>
 			</Switch>
 		);
 	}
