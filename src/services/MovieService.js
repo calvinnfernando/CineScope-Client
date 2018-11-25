@@ -53,6 +53,7 @@ const loadMoviesData = async (type, query, page) => {
     }
 }
 
+
 class MovieService {
     static getPopularMovies = async (query = "", page = 1) => {
         try {
@@ -73,7 +74,7 @@ class MovieService {
             console.log(err);
         }
     }
-
+    
     static getSingleMovie = async (movie_id) => {
         try {
             var res = await loadMoviesData("movie", movie_id, "nopage");

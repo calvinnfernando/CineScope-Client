@@ -33,7 +33,6 @@ class App extends Component {
 				<Route path="/movie" component={MoviePage}/>
 				<Route path="/movie/:id" component={MoviePage} />
 				<Route path="/all-movies" component={AllMoviesPage}/>
-
 			</Switch>
 		);
 	}
