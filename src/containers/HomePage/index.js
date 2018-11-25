@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Header from '../../components/Header';
 import Carousel from '../../components/Carousel';
+import RecommendedMovies from '../../components/RecommendedMovies';
 import styled from 'styled-components';
 
 const HomeStyle = styled.div`
@@ -12,12 +13,11 @@ document.body.style = 'background: #232323;';
 class HomePage extends Component {
     render() {
         return (
-            <div style={{backgroundColor: '#232323'}}>
-                <HomeStyle>
-                    <Header/>
-                    <Carousel/>
-                </HomeStyle>
-            </div>
+            <HomeStyle>
+                <Header/>
+                <Carousel/>
+                <RecommendedMovies/>
+            </HomeStyle>
         );
     }
 }

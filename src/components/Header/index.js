@@ -48,7 +48,7 @@ class Header extends React.Component {
                 <Navbar color="warning" light expand="md">
                     {/*Logo; redirects back to main page*/}
                     <LogoStyle className="col-sm-2">
-                        <a href="/"><img src={logo} alt='Cinescope logo' /></a>
+                        <a href="/"><img src={logo} alt='CineScope' /></a>
                     </LogoStyle>
                     {/*Compresses navbar buttons into a toggler if the window is too small*/}
                     <NavbarToggler onClick={this.toggle}/>
