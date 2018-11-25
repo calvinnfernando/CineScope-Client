@@ -161,7 +161,7 @@ class MoviePage extends Component {
       });
     });
     MovieService.getMovieRecommendations(movieID).then((movies) => {
-      const relatedMovies = movies.slice(0, 3);
+      const relatedMovies = movies.slice(0, 4);
       this.setState({ relatedMovies: relatedMovies });
     })
     MovieService.getMovieVideos(movieID).then((videos) => {

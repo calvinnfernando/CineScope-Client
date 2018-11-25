@@ -14,12 +14,12 @@ const RelatedMoviesStyle = styled.div`
 `;
 
 const RelatedMovieStyle = styled.div`
-    width: 33%;
+    width: 25%;
     font-size: 24px;
     text-align: center;
 
     img {
-        max-width: 60%;
+        max-width: 50%;
     }
 `;
 
