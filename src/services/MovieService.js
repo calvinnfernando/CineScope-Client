@@ -38,7 +38,7 @@ const loadMoviesData = async (type, query, page) => {
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
             .then(myJson => { return myJson });
-    } else if (type === "movie recommended") {
+    } else if (type === "movie similar") {
         const url = `https://api.themoviedb.org/3/movie/${query}/similar?api_key=${API_KEY}&language=en-US&page${page}`;
         return fetch(url)
             .then(response => response.json())
@@ -93,9 +93,9 @@ class MovieService {
         }
     }
 
-    static getMovieRecommendations = async (movie_id, page = 1) => {
+    static getSimilarMovies = async (movie_id, page = 1) => {
         try { 
-            var res = await loadMoviesData("movie recommended", movie_id, page);
+            var res = await loadMoviesData("movie similar", movie_id, page);
             return res;
         } catch (err) {
             console.log(err);

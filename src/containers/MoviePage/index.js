@@ -160,7 +160,7 @@ class MoviePage extends Component {
         });
       });
     });
-    MovieService.getMovieRecommendations(movieID).then((movies) => {
+    MovieService.getSimilarMovies(movieID).then((movies) => {
       const relatedMovies = movies.slice(0, 4);
       this.setState({ relatedMovies: relatedMovies });
     })
