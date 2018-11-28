@@ -4,8 +4,8 @@ import TrailerModal from '../../components/MoviePage/TrailerModal'
 import Ratings from '../../components/MoviePage/Ratings'
 import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
+import MovieService from '../../services/MovieService.js'
 import styled from 'styled-components'
-import TestImage from './ironman3.jpg'
 import ThumbsUp from './thumbsup.png'
 import ThumbsDown from './thumbsdown.png'
 import { Link } from 'react-router-dom';
@@ -96,8 +96,6 @@ const CompareButtonStyle = styled.div`
   }
 `;
 
-
-
 class MoviePage extends Component {
   constructor(props) {
     super(props)
@@ -126,7 +124,61 @@ class MoviePage extends Component {
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
+  componentDidMount() {
+    const { location } = this.props;
+    const movieID = parseInt(location.pathname.split('/')[2]);
+    MovieService.getSingleMovie(movieID).then((movie) => {
+      const year = movie.release_date.split("-")[0];
+      this.setState({
+        title: movie.title,
+        overview: movie.overview,
+        poster: movie.poster_path,
+        year: year,
+        vote_average: movie.vote_average,
+        imdb_id: movie.imdb_id
+      });
+      MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
+        const ratings = movie.Ratings;
+        var rottenTomatoes = "N/A";
+        for (const source of ratings) {
+          if (source.Source === "Rotten Tomatoes") {
+            rottenTomatoes = source.Value;
+          }
+        }
+        var rated = movie.Rated;
+        if (rated === "N/A") {
+          rated = "Not yet rated";
+        }
+        this.setState({
+          director: movie.Director,
+          actors: movie.Actors,
+          runtime: movie.Runtime,
+          rated: rated,
+          rotten_tomatoes: rottenTomatoes,
+          metascore: movie.Metascore,
+          imdb_rating: movie.imdbRating
+        });
+      });
+    });
+    MovieService.getSimilarMovies(movieID).then((movies) => {
+      const relatedMovies = movies.slice(0, 4);
+      this.setState({ relatedMovies: relatedMovies });
+    })
+    MovieService.getMovieVideos(movieID).then((videos) => {
+      var trailerVideo = "";
+      for (const video of videos) {
+        if (video.type === "Trailer" && video.site === "YouTube") {
+          trailerVideo = video;
+          break;
+        }
+      }
+      this.setState({ trailerVideo: trailerVideo });
+    })
+
+  }
+
   render() {
+
     return (
       <div>
         <Header />
@@ -135,17 +187,18 @@ class MoviePage extends Component {
             <div className="row">
               <MovieLeftStyle className="col-md-4">
                 <MoviePosterStyle>
-                  <img src={TestImage} alt='test' />
+                  <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.state.poster}`}
+                    alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
                   <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
                   <button onClick={this.handleThumbsDown} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsDown} alt='' /></button>
-                  <h4>Average rating: 7/10</h4>
+                  <h4>Average rating: {this.state.vote_average}/10</h4>
                 </div>
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">
-                <h1>Iron Man 3</h1>
-                <h3>2013 | PG-13</h3>
+                <h1>{this.state.title}</h1>
+                <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
                   <AddToFavorites>
                     Star button here
@@ -160,7 +213,8 @@ class MoviePage extends Component {
                     &#9658; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
-                <p>This is a dummy description of the movie. Plagued with worry and insomnia since saving New York from destruction, Tony Stark (Robert Downey Jr.), now, is more dependent on the suits that give him his Iron Man persona -- so much so that every aspect of his life is affected, including his relationship with Pepper (Gwyneth Paltrow). After a malevolent enemy known as the Mandarin (Ben Kingsley) reduces his personal world to rubble, Tony must rely solely on instinct and ingenuity to avenge his losses and protect the people he loves.</p>
+                <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
+                <p>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
@@ -171,14 +225,14 @@ class MoviePage extends Component {
             </div>
             <hr></hr>
             {/* Must replace the props with real data */}
-            <Ratings rottenTomatoes={80} rottenTomatoesLink={'https://www.rottentomatoes.com/m/iron_man_3'} metacritic={62} metacriticLink={'https://www.metacritic.com/movie/iron-man-3'} imdbRating={7.2} imdbLink={'https://www.imdb.com/title/tt1300854/?ref_=nv_sr_1'}/>
+            <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews />
             <hr></hr>
-            <RelatedMovies />
+            <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>
         </WhiteBoxStyle>
-        {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} />}
+        {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} video={this.state.trailerVideo} />}
 
       </div>
     );
