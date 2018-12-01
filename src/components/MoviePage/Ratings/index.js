@@ -50,6 +50,7 @@ const RatingStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 `;
 
 const RatingTextStyle = styled.div`
@@ -57,6 +58,18 @@ const RatingTextStyle = styled.div`
 `;
 
 class Ratings extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            hasRottenTomatoes: true
+        }
+    }
+
+    componentDidMount() {
+        if (!this.props.rottenTomatoes || this.props.rottenTomatoes === 'N/A') {
+            this.setState({ hasRottenTomatoes: false });
+        }
+    }
 
     render() {
         return (
@@ -68,21 +81,23 @@ class Ratings extends Component {
                         <h3>Rotten Tomatoes</h3>
                         <RatingStyle>
                             <RottenTomatoesIcon />
-                            <RatingTextStyle><h4><a href={this.props.rottenTomatoesLink}>{this.props.rottenTomatoes}% liked it</a></h4></RatingTextStyle>
+                            <RatingTextStyle><h4>
+                                {this.state.hasRottenTomatoes ? this.props.rottenTomatoes + ' liked it' : 'No rating available'}</h4>
+                            </RatingTextStyle>
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
                         <h3>Metacritic</h3>
                         <RatingStyle>
                             <MetacriticIcon>{this.props.metacritic}</MetacriticIcon>
-                            <RatingTextStyle><h4><a href={this.props.metacriticLink}>Metascore</a></h4></RatingTextStyle>
+                            <RatingTextStyle><h4>Metascore</h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
                         <h3>IMDb</h3>
                         <RatingStyle>
                             <ImdbIcon />
-                            <RatingTextStyle><h4><a href={this.props.imdbLink}>{this.props.imdbRating}/10 stars</a></h4></RatingTextStyle>
+                            <RatingTextStyle><h4>{this.props.imdbRating}/10 stars</h4></RatingTextStyle>
                         </RatingStyle>
                     </div>
                 </RatingsStyle>
