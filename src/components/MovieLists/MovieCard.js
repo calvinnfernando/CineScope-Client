@@ -5,11 +5,15 @@ import '../../styles/components/movieCard.css';
 const MovieCard = (props) => (
   <div className="movie-card">
       <div className="movie-card card">
-          <img className="card-img-top movie-img" 
-            src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${props.movie.poster_path}`} alt="" width="200" height="300" />
-          <div className="card-img-overlay movie-description">
-            <p className="card-text">{props.movie.title}</p>
-          </div>
+          <img className="card-img-top movie-img"
+            src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${props.movie.poster_path}`}
+            onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="300" />
+           
+            <a href={"/movie/" + parseInt(props.movie.id)}>
+              <div className="card-img-overlay movie-description">
+                  <p className="card-text">{props.movie.title}</p>
+              </div>
+            </a>
       </div>
   </div>
 );

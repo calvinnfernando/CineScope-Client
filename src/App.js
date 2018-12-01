@@ -32,6 +32,7 @@ class App extends Component {
 				<Route path="/login" component={LoginPage}/>
 				<Route path="/profile" component={UserPage}/>
 				<Route path="/movie" component={MoviePage}/>
+				<Route path="/movie/:id" component={MoviePage} />
 				<Route path="/all-movies" component={AllMoviesPage}/>
 				<Route path="/Comparitron" component={ComparitronPage}/>
 			</Switch>
