@@ -139,6 +139,10 @@ class ComparitronPage extends Component {
     this.setState({
       list: list
     });
+
+    if(list.length == 0) {
+      this.setState({movies: []});
+    }
   }
 
   removeMovie(item) {
