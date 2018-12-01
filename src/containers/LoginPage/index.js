@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
+import { SignUpLink } from '../SignUpPage';
 
 const FullScreen = styled.div`
   height: 100vh;
@@ -23,6 +24,14 @@ const Form = styled.form`
   right: 0;
 
   margin: auto;
+`;
+
+const Error = styled.div`
+  display: block;
+  background-color: rgba(255, 0, 0, 0.2);
+  border-radius: 5px;
+  text-align: center;
+  padding: 5px;
 `;
 
 const LoginPage = () => (
@@ -62,6 +71,7 @@ class SignInFormBase extends Component {
   };
 
 	render(){
+    const error = this.state.error;
 		return (
       <Form onSubmit={this.onSubmit}>
         <div className="d-flex flex-column p-5">
@@ -84,10 +94,10 @@ class SignInFormBase extends Component {
             className="form-control w-100 mb-4"
             value="Log in"
             />
-          {/* <button type="button" className="btn btn-primary btn-md btn-block">
-            Login with Facebook</button>
-          <button type="button" className="btn btn-md btn-block text-white" style={{backgroundColor: "purple"}}>Login with Instagram</button>
-          <button type="button" className="btn btn-md btn-block" style={{backgroundColor: "lightblue"}}>Login with Twitter</button> */}
+          {SignUpLink()}
+          {
+            error && <Error>Email or password you enter does not match our record. Please retry.</Error>
+          }
         </div>
       </Form>
 		);

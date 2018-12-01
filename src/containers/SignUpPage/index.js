@@ -5,8 +5,17 @@ import { compose } from 'recompose';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import * as ROLES from '../../constants/roles';
+import styled from 'styled-components';
 
 import { Form, FullScreen } from '../LoginPage';
+
+const Error = styled.div`
+  display: block;
+  background-color: rgba(255, 0, 0, 0.2);
+  border-radius: 5px;
+  text-align: center;
+  padding: 5px;
+`;
 
 const SignUpPage = () => (
   <FullScreen className="container-fluid">
@@ -32,6 +41,7 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = event => {
+    event.preventDefault();
     const { username, email, passwordOne} = this.state;
     const displayName = username;
 
@@ -120,10 +130,10 @@ class SignUpFormBase extends Component {
             type="password"
             placeholder="Confirm Password"
           />
-          <button disabled={isInvalid} type="submit">
+          <button disabled={isInvalid}>
             Sign Up
           </button>
-          {error && <p>{error.message}</p>}
+          {error && <Error>{error.message}</Error>}
         </div>
       </Form>
     );

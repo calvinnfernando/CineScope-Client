@@ -22,7 +22,7 @@ class Firebase {
 
   // *** Auth API ***
 
-  doCreateUserWithEmailAndPassword = (email, password) =>
+  doCreateUserWithEmailAndPassword = (email, password) => 
     this.auth.createUserWithEmailAndPassword(email, password);
 
   doSignInWithEmailAndPassword = (email, password) =>
@@ -56,7 +56,6 @@ class Firebase {
               email: authUser.email,
               ...dbUser,
             };
-
             next(authUser);
           });
       } else {

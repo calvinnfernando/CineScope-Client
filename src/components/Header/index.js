@@ -77,7 +77,7 @@ class Header extends React.Component {
                     {
                         authUser => authUser
                             ? <AccountIconStyle>
-                                {authUser.email} logged in <br/>
+                                {authUser.username} logged in <br/>
                                 <SignOutButton/>
                               </AccountIconStyle>
                             : <AccountIconStyle><a href="/login">Login</a></AccountIconStyle>
