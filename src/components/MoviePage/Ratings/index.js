@@ -58,32 +58,20 @@ const RatingTextStyle = styled.div`
 `;
 
 class Ratings extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            hasRottenTomatoes: true
-        }
-    }
-
-    componentDidMount() {
-        if (!this.props.rottenTomatoes || this.props.rottenTomatoes === 'N/A') {
-            this.setState({ hasRottenTomatoes: false });
-        }
-    }
-
+  
     render() {
         return (
             <div>
                 <h2>Ratings</h2>
                 <RatingsStyle className="row">
-
                     <div className="col-md-4">
                         <h3>Rotten Tomatoes</h3>
                         <RatingStyle>
                             <RottenTomatoesIcon />
-                            <RatingTextStyle><h4>
-                                {this.state.hasRottenTomatoes ? this.props.rottenTomatoes + ' liked it' : 'No rating available'}</h4>
-                            </RatingTextStyle>
+                            {this.props.rottenTomatoes && this.props.rottenTomatoes !== 'N/A' ? (
+                            <RatingTextStyle><h4>{this.props.rottenTomatoes + ' liked it'}</h4> </RatingTextStyle> ) :
+                            (<RatingTextStyle><h4>{'No rating available'}</h4></RatingTextStyle>
+                            )}
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
