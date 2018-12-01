@@ -85,29 +85,30 @@ class Movies extends Component {
 
     render() {
         return (
-            <div className="container-fluid" >
-                <div className="row">
-                    <div className="col-sm-12">
-                        <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                        <DropdownToggle caret>Sort</DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={this.mostPopular}>Most Popular</DropdownItem>
-                            <DropdownItem onClick={this.leastPopular}>Least Popular</DropdownItem>
-                            <DropdownItem onClick={this.a_zSorting}>Alphabetical (A-Z)</DropdownItem>
-                            <DropdownItem onClick={this.z_aSorting}>Alphabetical (Z-A)</DropdownItem>
-                            <DropdownItem onClick={this.newest}>Newest</DropdownItem>
-                            <DropdownItem onClick={this.oldest}>Oldest</DropdownItem>
-                        </DropdownMenu>
-                        </ButtonDropdown>
-                        <div className="md-form mt-0">
-                          <input className="form-control" onInput={this.handleInput} type="text" placeholder="Search" aria-label="Search movie title" />
-                        </div>
-                    </div>
+            <div className="jumbotron jumbotron-fluid">
+              <div className="container-fluid">
+                <p class="h1" align="center">MOVIES</p>
+                <div className="col-sm-12 text-right">
+                  <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <DropdownToggle caret>Sort</DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={this.mostPopular}>Most Popular</DropdownItem>
+                      <DropdownItem onClick={this.leastPopular}>Least Popular</DropdownItem>
+                      <DropdownItem onClick={this.a_zSorting}>Alphabetical (A-Z)</DropdownItem>
+                      <DropdownItem onClick={this.z_aSorting}>Alphabetical (Z-A)</DropdownItem>
+                      <DropdownItem onClick={this.newest}>Newest</DropdownItem>
+                      <DropdownItem onClick={this.oldest}>Oldest</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
                 </div>
+                <div className="col-sm-6 mt-4">
+                  <input className="form-control" onInput={this.handleInput} type="text" placeholder="Search" aria-label="Search movie title" />
+                </div>
+              </div>
                 <div className="d-flex flex-row mt-2">
-                    <div className="col-sm-12">
-                        <MovieList sortOption={this.state.sortOption} movies={this.state.movies}/>
-                    </div>
+                  <div className="col-sm-12 text-center">
+                      <MovieList sortOption={this.state.sortOption} movies={this.state.movies}/>
+                  </div>
                 </div>
             </div>
         );
