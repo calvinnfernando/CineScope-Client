@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Nav, Navbar, NavItem, NavLink } from 'reactstrap';
+import ComparitronMovieList from '../../components/CompareMovies/ComparitronMovieList';
+import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
 
 const ComparitronLogo = styled.p`
@@ -81,6 +83,13 @@ const MovieSelection = styled.li`
   padding-left: 15px;
 `;
 
+const ComparitronMovieHolder = styled.div`
+  background-color: #feeecd;
+  width: 100%;
+  height: 82%;
+  overflow-y: scroll;
+`;
+
 
 class ComparitronPage extends Component {
   constructor(props) {
@@ -88,7 +97,8 @@ class ComparitronPage extends Component {
     this.state = {
       movieSelections: ["Star Wars", "Avatar"],
       chartSelections: [],
-      list: [],
+      list: [], // tag list
+      movies: [],
       movieInput: ''
     }
   }
@@ -108,6 +118,12 @@ class ComparitronPage extends Component {
       });
       form.reset();
     }
+
+    var query = newItem;
+    MovieService.getSearchMovies(query).then((movies) => {
+      //oldMovies = 
+      this.setState({movies: movies, query: query});
+    })
   }
 
   removeItem(item) {
@@ -195,6 +211,9 @@ class ComparitronPage extends Component {
                     ))}
                 </ul>
               </form>
+              <ComparitronMovieHolder>
+                <ComparitronMovieList movies={this.state.movies} />
+              </ComparitronMovieHolder>
             </Sidebars>
             <MainContent></MainContent>
             <Sidebars>
