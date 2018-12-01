@@ -101,7 +101,7 @@ class Movies extends Component {
                     </DropdownMenu>
                   </ButtonDropdown>
                 </div>
-                <div className="col-sm-6 mt-4">
+                <div className="col-sm-12 mt-4">
                   <input className="form-control" onInput={this.handleInput} type="text" placeholder="Search" aria-label="Search movie title" />
                 </div>
               </div>
