@@ -36,7 +36,7 @@ const loadMoviesData = async (type, query, page) => {
         return fetch(url)
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
-            .then(myJson => {return myJson.results});
+            .then(myJson => {return myJson.results})
             .then(myJson => { return myJson.results });
     } else if (type === "movie") {
         const url = `https://api.themoviedb.org/3/movie/${query}?api_key=${API_KEY}&language=en-US`;
