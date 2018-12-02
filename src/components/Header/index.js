@@ -70,6 +70,7 @@ class Header extends React.Component {
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
+                    
                     <AuthUserContext.Consumer>
                     {
                         authUser => authUser
