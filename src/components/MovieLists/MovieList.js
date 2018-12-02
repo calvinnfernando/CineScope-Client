@@ -34,7 +34,6 @@ const MovieList = (props) => {
       break;
     }
   }
-  console.log(props);
    return (
     <div className="card-deck">
       {moviesArray}

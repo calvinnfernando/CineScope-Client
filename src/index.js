@@ -7,10 +7,14 @@ import { BrowserRouter } from 'react-router-dom';
 // For bootstrap
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+import Firebase, { FirebaseContext } from './components/Firebase';
+
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <FirebaseContext.Provider value={new Firebase()}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </FirebaseContext.Provider>
   ,document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

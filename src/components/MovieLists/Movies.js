@@ -55,7 +55,7 @@ class Movies extends Component {
      */
     handleScroll(event) {
         let percentageScrolled = getScrollDownPercentage(window);
-        if (percentageScrolled > .8) {
+        if (percentageScrolled > 0.8) {
             const nextPage = this.state.currentPage + 1;
             MovieService.getSearchMovies(this.state.query, nextPage)
                 .then((movies) => this.state.movies.concat(movies))
