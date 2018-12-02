@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { compose } from 'recompose';
 import Header from '../../components/Header';
 import wallpaper from './wallpaper-sponge.jpg';
 import profilepic from './profpic-sponge.webp';
@@ -14,6 +15,9 @@ import watched from './watched.png';
 import MovieThumbnail from './MovieThumbnail';
 import ActivityFeed from './ActivityFeed';
 import FriendsThumbnail from './FriendsThumbnail';
+
+import { withFirebase } from '../../components/Firebase';
+import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
 const ProfileStyle =  styled.div`
   background-color: #F0F0F0;
@@ -123,6 +127,7 @@ class UserPage extends Component {
     super(props);
     this.state = {
       displayHighlights: true,
+      user: null,
     };
   }
 
@@ -136,6 +141,7 @@ class UserPage extends Component {
     const fList = friendsList.map((friend, count)=> {
       return <FriendsThumbnail key={friend.name + count.toString()} friendName={friend.name}/>
     });
+    
 		return (
       <ProfileStyle>
         <Header />
@@ -147,7 +153,7 @@ class UserPage extends Component {
                 <Banner src={wallpaper} />
                 <div className="container-fluid row">
                   <Img src={profilepic}/>
-                  <Name>SpongeBob Squarepants</Name>
+                  <Name>{this.state.authUser.displayName}</Name>
                   <HighlightsButton type="button" className="btn btn-light" onClick={() => {
                     this.setState({ displayHighlights: true });
                   }}>
@@ -174,9 +180,9 @@ class UserPage extends Component {
                       <Icon src={introicon} alt='into'/>
                       Intro
                     </Title>
-                    <SmallText>Lives in San Diego, California</SmallText>
-                    <SmallText>Loves action movies</SmallText>
-                    <SmallText>June 12 1997</SmallText>
+                    <SmallText>Lives {this.state.authUser.liveIn}</SmallText>
+                    <SmallText>{this.state.authUser.bio}</SmallText>
+                    <SmallText>{this.state.authUser.birthday}</SmallText>
                   </Box>
                   <Box>
                     <Title>
@@ -248,4 +254,4 @@ class UserPage extends Component {
 	}
 }
 
-export default UserPage;
+export default compose(withFirebase, withAuthentication)(UserPage);
