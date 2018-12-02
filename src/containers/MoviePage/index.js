@@ -261,6 +261,7 @@ class MoviePage extends Component {
         const title = this.state.title;
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
+        const id = this.state.id;
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
@@ -268,7 +269,7 @@ class MoviePage extends Component {
             alert('Movie is exist, need to change the button appearance');
           } else {
             this.firebaseref.child('favoriteList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
 
@@ -292,6 +293,7 @@ class MoviePage extends Component {
         const title = this.state.title;
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
+        const id = this.state.id;
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
@@ -299,7 +301,7 @@ class MoviePage extends Component {
             alert('Movie is exist, need to change the button appearance');
           } else {
             this.firebaseref.child('watchedList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
 
@@ -324,6 +326,7 @@ class MoviePage extends Component {
         const title = this.state.title;
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
+        const id = this.state.id;
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
@@ -331,7 +334,7 @@ class MoviePage extends Component {
             alert('Movie is exist, need to change the button appearance');
           } else {
             this.firebaseref.child('watchLaterList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
 

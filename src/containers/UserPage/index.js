@@ -20,6 +20,23 @@ import firebase from 'firebase';
 import { withFirebase } from '../../components/Firebase';
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
+import '../../styles/components/movieCard.css';
+
+const MovieCard = (props) => (
+  <div className="movie-card">
+      <div className="movie-card card">
+          <img className="card-img-top movie-img"
+            src={"http://image.tmdb.org/t/p/w185"+props.poster}
+            onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+            <a href={"/movie/" + parseInt(props.movie_id)}>
+              <div className="card-img-overlay movie-description">
+                  <p className="card-text">{props.movie_title}</p>
+              </div>
+            </a>
+      </div>
+  </div>
+);
+
 const ProfileStyle =  styled.div`
   background-color: #232323;
   color: #232323;
@@ -151,7 +168,7 @@ class UserPage extends Component {
       snapshot.forEach(child => {
         console.log(child.val().poster);
         this.setState({
-          watchedList: this.state.watchedList.concat([child.val().poster]),
+          watchedList: this.state.watchedList.concat([child.val()]),
         });
       });
     });
@@ -160,7 +177,7 @@ class UserPage extends Component {
       snapshot.forEach(child => {
         console.log(child.val().poster);
         this.setState({
-          favoriteList: this.state.favoriteList.concat([child.val().poster]),
+          favoriteList: this.state.favoriteList.concat([child.val()]),
         });
       });
     });
@@ -169,7 +186,7 @@ class UserPage extends Component {
       snapshot.forEach(child => {
         console.log(child.val().poster);
         this.setState({
-          laterList: this.state.laterList.concat([child.val().poster]),
+          laterList: this.state.laterList.concat([child.val()]),
         });
       });
     });
@@ -215,6 +232,8 @@ let wList = this.state.watchedList.map((movie, count) => {
     const pList = postList.map((post, count)=> {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date}/>
     });
+
+    console.log(this.state.watchedList);
 
 		return (
       <ProfileStyle>
@@ -277,6 +296,11 @@ let wList = this.state.watchedList.map((movie, count) => {
                       </EditListButton>
                     </Title>
                     <MovieList className='row'>
+                    <MovieCard poster={this.state.favoriteList[0].poster} movie_title={this.state.favoriteList[0].title} id={this.state.favoriteList[0].id} />
+                    <MovieCard poster={this.state.favoriteList[1].poster} movie_title={this.state.favoriteList[1].title} id={this.state.favoriteList[1].id} />
+                    <MovieCard poster={this.state.favoriteList[2].poster} movie_title={this.state.favoriteList[2].title} id={this.state.favoriteList[2].id} />
+                    <MovieCard poster={this.state.favoriteList[3].poster} movie_title={this.state.favoriteList[3].title} id={this.state.favoriteList[3].id} />
+                    <MovieCard poster={this.state.favoriteList[4].poster} movie_title={this.state.favoriteList[4].title} id={this.state.favoriteList[4].id} />
                     <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[0]}
                     onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
                     <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[1]}
