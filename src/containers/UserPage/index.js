@@ -4,9 +4,9 @@ import { compose } from 'recompose';
 import Header from '../../components/Header';
 import wallpaper from './wallpaper-sponge.jpg';
 import profilepic from './profpic-sponge.webp';
-import introicon from './intro-icon.jpeg';
 import ironman3 from './ironman3.jpg';
 import antman from './antman.jpg';
+import introicon from './intro-icon.png';
 import heart from './heart.png';
 import friends from './friends.png';
 import watchLater from './watch-later.png';
@@ -20,12 +20,13 @@ import { withFirebase } from '../../components/Firebase';
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
 const ProfileStyle =  styled.div`
-  background-color: #F0F0F0;
+  background-color: #232323;
+  color: #232323;
 `;
 
 const Profile = styled.div`
-  border: 1px solid #dddfe2;
-  background-color: white;  
+  border: 1px solid #999999;
+  background-color: #787878;  
   margin-bottom: 12px;
 `;
 
@@ -41,7 +42,7 @@ const Img = styled.img`
   height: 168px;
   position: relative;
   margin-top: -100px;
-  border: 5px solid white;
+  border: 5px solid #787878;
 `;
 
 const Name = styled.h3`
@@ -51,8 +52,8 @@ const Name = styled.h3`
 
 const Box = styled.div`
   margin: 7px 0px 7px 0px;
-  background-color: white;
-  border: 1px solid #dddfe2;
+  background-color: #787878;
+  border: 1px solid #999999;
   box-sizing: border-box;
   padding: 5px;
 `;
@@ -61,6 +62,11 @@ const Title = styled.p`
   font-size: 1.1em;
   margin-left: 15px;
   margin-top: 10px;
+`;
+
+const EditListButton = styled.button`
+  position: absolute;
+  right: 40px;
 `;
 
 const SmallText = styled.p`
@@ -99,12 +105,24 @@ const FriendList = styled.div`
   padding-left: 12%;
 `;
 
-const movieList = [
-  {title: 'Iron Man 3', imgsrc: ironman3},
-  {title: 'Ant Man', imgsrc: antman},
-  {title: 'Ant Man', imgsrc: antman},
-  {title: 'Iron Man 3', imgsrc: ironman3},
-];
+// let favoriteList = [
+//   {title: 'Iron Man 3', imgsrc: ironman3},
+//   {title: 'Ant Man', imgsrc: antman},
+//   {title: 'Ant Man', imgsrc: antman},
+// ];
+
+// let laterList = [
+//   {title: 'Iron Man 3', imgsrc: ironman3},
+//   {title: 'Ant Man', imgsrc: antman},
+//   {title: 'Iron Man 3', imgsrc: ironman3},
+// ];
+
+// let watchedList = [
+//   {title: 'Iron Man 3', imgsrc: ironman3},
+//   {title: 'Ant Man', imgsrc: antman},
+//   {title: 'Ant Man', imgsrc: antman},
+//   {title: 'Iron Man 3', imgsrc: ironman3},
+// ];
 
 const postList = [
   {title: "a post", description:"Just watched Ant Man", date:'Oct 31 2018'},
@@ -126,14 +144,74 @@ class UserPage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      displayHighlights: true,
+      displayHighlights: props.location.state.highlights,
+      editFav: false,
+      editLater: false,
+      editWatched: false,
+      favoriteList: [
+        {title: 'Iron Man 3', imgsrc: ironman3},
+        {title: 'Ant Man', imgsrc: antman},
+        {title: 'Ant Man', imgsrc: antman},
+      ],
+      laterList: [
+        {title: 'Iron Man 3', imgsrc: ironman3},
+        {title: 'Ant Man', imgsrc: antman},
+        {title: 'Iron Man 3', imgsrc: ironman3},
+      ],
+      watchedList: [
+        {title: 'Iron Man 3', imgsrc: ironman3},
+        {title: 'Ant Man', imgsrc: antman},
+        {title: 'Ant Man', imgsrc: antman},
+        {title: 'Iron Man 3', imgsrc: ironman3},
+      ],
       user: null,
     };
+
+    this.deleteFav = this.deleteFav.bind(this);
+    this.deleteLater = this.deleteLater.bind(this);
+    this.deleteWatched = this.deleteWatched.bind(this);
+  }
+
+  deleteFav(i){
+    this.state.favoriteList.splice(i, 1);
+    let newFavList = this.state.favoriteList;
+    this.setState({ favoriteList: newFavList });
+  }
+
+  deleteLater(i){
+    this.state.laterList.splice(i, 1);
+    let newLaterList = this.state.laterList;
+    this.setState({ laterList: newLaterList });
+  }
+
+  deleteWatched(i){
+    this.state.watchedList.splice(i, 1);
+    let newWatchedList = this.state.watchedList;
+    this.setState({ watchedList: newWatchedList });
   }
 
   render(){
-    const mList = movieList.map((movie, count) => {
-      return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} imgsrc={movie.imgsrc}/>
+
+    let favList = this.state.favoriteList.map((movie, count) => {
+      if (this.state.editFav){
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
+      } else {
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
+      }
+    });
+    let wlList = this.state.laterList.map((movie, count) => {
+      if (this.state.editLater){
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
+      } else {
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
+      }
+    });
+    let wList = this.state.watchedList.map((movie, count) => {
+      if (this.state.editWatched){
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+      } else {
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+      }
     });
     const pList = postList.map((post, count)=> {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date}/>
@@ -153,13 +231,13 @@ class UserPage extends Component {
                 <Banner src={wallpaper} />
                 <div className="container-fluid row">
                   <Img src={profilepic}/>
-                  <Name>{this.state.authUser.displayName}</Name>
-                  <HighlightsButton type="button" className="btn btn-light" onClick={() => {
+                  <Name>SpongeBob Squarepants</Name>
+                  <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: true });
                   }}>
                     Highlights
                   </HighlightsButton>
-                  <WatchlistsButton type="button" className="btn btn-light" onClick={() => {
+                  <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: false });
                   }}>
                     Watchlists
@@ -212,31 +290,45 @@ class UserPage extends Component {
                   <Box>
                     <Title>
                       <Icon src={heart} alt='heart'/>
-                      Favourites:
+                      Favorites:
+                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                        this.setState({ editFav: (this.state.editFav) ? false : true });
+                      }}>
+                        { (this.state.editFav) ? "Done" : "Edit" }
+                      </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                      {mList}
+                      {favList}
                     </MovieList>
                   </Box>
+                  
                   <Box>
                     <Title>
                       <Icon src={watchLater} alt='watchLater'/>
                       Watch Later:
+                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                        this.setState({ editLater: (this.state.editLater) ? false : true });
+                      }}>
+                        { (this.state.editLater) ? "Done" : "Edit" }
+                      </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                      {mList}
+                      {wlList}
                     </MovieList>
                   </Box>
-                </div>
 
-                <div className="right-div col">
                   <Box>
                     <Title>
                       <Icon src={watched} alt='watched'/>
                       Watched:
+                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                        this.setState({ editWatched: (this.state.editWatched) ? false : true });
+                      }}>
+                        { (this.state.editWatched) ? "Done" : "Edit" }
+                      </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                      {mList}
+                      {wList}
                     </MovieList>
                   </Box>
                 </div>

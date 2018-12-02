@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import profilepic from '../img/profpic-sponge.webp';
@@ -6,9 +7,9 @@ import profilepic from '../img/profpic-sponge.webp';
 const DropdownContent = styled.div`
     display: none;
     position: absolute;
-    background-color: rgb(194, 194, 194);
+    background-color: #FFF;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 2px 4px 8px 0px rgba(0,0,0,0.3);
     padding: 12px 16px;
     z-index: 1;
 `;
@@ -16,6 +17,7 @@ const DropdownContent = styled.div`
 const MenuBtnStyle = styled.div`
     position: relative;
     margin: 0px 20px;
+    font-size: 20px;
 
     &:hover ${DropdownContent} {
         display: block;
@@ -24,6 +26,12 @@ const MenuBtnStyle = styled.div`
     a {
         display: block;
         text-align: left;
+        color: #777;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: #f4c542;
     }
 `;
 
@@ -68,19 +76,19 @@ class MenuButton extends Component {
         return (
             <MenuBtnStyle>
                 {/* Creates a link with provided name and link */}
-                <a href={this.props.link} >
+                <Link to={{ pathname: '/profile', state: { highlights: true } }}>
                     {/* renders text or account icon */
                     this.props.name === "account" ? (<IconContainerStyle>
                         <AccountIcon src={profilepic}/>
                     </IconContainerStyle>) : this.props.name
                     }
-                </a>
+                </Link>
 
                 {/* Dropdown implemented in simple HTML and CSS */}
                 <DropdownContent>
-                    <a href="#"> Menu item 1 </a>
-                    <a href="#"> Menu item 2 </a>
-                    <a href="#"> Menu item 3 </a>
+                    <Link to={{ pathname: '/profile', state: { highlights: true } }}>Highlights</Link>
+                    <Link to={{ pathname: '/profile', state: { highlights: false } }}>Watchlists</Link>
+                    {/* <a href="#"> Menu item 3 </a> */}
                 </DropdownContent>
             </MenuBtnStyle>
         );
