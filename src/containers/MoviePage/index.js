@@ -133,7 +133,7 @@ class MoviePage extends Component {
     //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.firebaseref = firebase.database().ref(`users/${user.uid}`); 
+        this.firebaseref = firebase.database().ref(`users/${user.uid}`);
       } else {
         console.log("Not Signed In");
       }
@@ -145,7 +145,7 @@ class MoviePage extends Component {
   }
   // Dropdown stuff
   setMovieRating(rating) {
-    this.setState({dropdownValue: rating, invalidRating: false})
+    this.setState({ dropdownValue: rating, invalidRating: false })
   }
   toggle() {
     this.setState({
@@ -153,19 +153,59 @@ class MoviePage extends Component {
     });
   }
   rateMovie() {
-    if(this.state.dropdownValue == 0) {
-      this.setState({invalidRating: true});
+    if (this.state.dropdownValue == 0) {
+      this.setState({ invalidRating: true });
       return;
     }
+    
+    var rating = this.state.dropdownValue;
 
-    MovieService.getSessionId().then((id) => {
+    /*MovieService.getSessionId().then((id) => {
       console.log(id);
       const rating = this.state.dropdownValue;
       const movieID = this.state.movie_id;
-      MovieService.postRating(rating,movieID,id).then(()=> {
-        this.setState({ratingPostedMessage: true});
+      MovieService.postRating(rating, movieID, id).then(() => {
+        this.setState({ ratingPostedMessage: true });
       });
+    });*/
+
+    var ratingRef = firebase.database().ref('movies/' + this.state.movie_id);
+    var newNumberOfRatings = 0;
+    var newSumOfRatings = 0;
+    ratingRef.on('value', function (snapshot) {
+      var firebaseRating = snapshot.val();
+      if (firebaseRating) {
+        if (firebaseRating.numberOfRatings) {
+          newNumberOfRatings = firebaseRating.numberOfRatings;
+        }
+        else {
+          newNumberOfRatings = 0;
+        }
+        if (firebaseRating.sumOfRatings) {
+          newSumOfRatings = firebaseRating.sumOfRatings;
+        }
+        else {
+          newSumOfRatings = 0;
+        }
+      }
     });
+
+    // increase the number of ratings so far
+    newNumberOfRatings = newNumberOfRatings + 1;
+    newSumOfRatings = newSumOfRatings + rating;
+
+    var newRating = Math.round(newSumOfRatings / newNumberOfRatings*10)/10; // https://stackoverflow.com/questions/661562/how-to-format-a-float-in-javascript
+
+    firebase.database().ref('movies/' + this.state.movie_id).set({
+      sumOfRatings: newSumOfRatings,
+      rating: newRating,
+      numberOfRatings: newNumberOfRatings
+    });
+    
+    firebase.database().ref('movies/' + this.state.movie_id).on('value', function (snapshot) {
+      console.log(snapshot.val());
+    });
+    
 
   }
   // Trailer stuff
@@ -258,6 +298,16 @@ class MoviePage extends Component {
       const movieReviews = reviews.slice(0, 8);
       this.setState({ reviews: movieReviews });
     });
+
+    var ratingRef = firebase.database().ref('movies/' + movieID);
+    var refToThis = this;
+    ratingRef.on('value', function (snapshot) {
+      var firebaseRating = snapshot.val();
+      if (firebaseRating) {
+        refToThis.setState({vote_average: firebaseRating.rating});
+      }
+    });
+
   } // end componentDidMount
 
   /**
@@ -292,7 +342,7 @@ class MoviePage extends Component {
         const imdb_id = this.state.imdb_id;
 
         this.firebaseref.child('watchedList').child(imdb_id)
-          .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id });
       } else {
         console.log("Not Signed In");
       }
@@ -329,7 +379,7 @@ class MoviePage extends Component {
                     alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
-                <h4>Average rating: {this.state.vote_average}/10</h4>
+                  <h4>Average rating: {this.state.vote_average}/10</h4>
                   <RateStyle>Rate This Movie: </RateStyle>
                   <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>{this.state.dropdownValue == 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
@@ -346,9 +396,9 @@ class MoviePage extends Component {
                       <DropdownItem onClick={() => this.setMovieRating(10)}>10</DropdownItem>
                     </DropdownMenu>
                   </ButtonDropdown>
-                  <br/>
+                  <br />
                   <button onClick={this.rateMovie}>Submit</button>
-                  <br/>
+                  <br />
                   {this.state.invalidRating && 'Please select a rating.'}
                   {this.state.ratingPostedMessage && 'Your rating has been posted!'}
                 </div>
@@ -371,7 +421,7 @@ class MoviePage extends Component {
                     </TrailerButton>
                 </AddButtonsStyle>
                 <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
-                <p style={{marginBottom: "2rem"}}>{this.state.overview}</p>
+                <p style={{ marginBottom: "2rem" }}>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
