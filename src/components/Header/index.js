@@ -12,6 +12,8 @@ import {
 import MenuButton from './MenuButton.js';
 import styled from 'styled-components';
 import logo from '../img/logo.svg';
+import SignOutButton from '../SignOut';
+import { AuthUserContext } from '../Sessions';
 
 const LogoStyle = styled.div`
 margin: 10px auto;
@@ -45,7 +47,7 @@ class Header extends React.Component {
     render() {
         return (
             <div>
-                {/*Setting the color and setting display adjustments*/}
+                {/* Setting the color and setting display adjustments */}
                 <Navbar color="warning" light expand="md">
                     {/*Logo; redirects back to main page*/}
                     <LogoStyle className="col-md-2">
@@ -68,9 +70,16 @@ class Header extends React.Component {
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
-                    <AccountIconStyle className="col-md-2">
-                        <MenuButton name={"account"} link={"/profile"} />
-                    </AccountIconStyle>
+                    <AuthUserContext.Consumer>
+                    {
+                        authUser => authUser
+                            ? <AccountIconStyle>
+                                {authUser.username} logged in <br/>
+                                <SignOutButton/>
+                              </AccountIconStyle>
+                            : <AccountIconStyle><a href="/login">Login</a></AccountIconStyle>
+                    }
+                    </AuthUserContext.Consumer>
                 </Navbar>
             </div>
         );
