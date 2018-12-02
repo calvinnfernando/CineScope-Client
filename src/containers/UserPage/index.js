@@ -27,7 +27,7 @@ const ProfileStyle =  styled.div`
 
 const Profile = styled.div`
   border: 1px solid #999999;
-  background-color: #787878;  
+  background-color: #787878;
   margin-bottom: 12px;
 `;
 
@@ -46,11 +46,6 @@ const Img = styled.img`
   border: 5px solid #787878;
 `;
 
-
-const EditListButton = styled.button`
-  position: absolute;
-  right: 40px;
-`;
 
 const EditListButton = styled.button`
   position: absolute;
@@ -81,7 +76,7 @@ const WatchlistsButton = styled.button`
 `;
 
 const MovieList = styled.div`
-  
+
 `;
 
 const FriendList = styled.div`
@@ -146,7 +141,7 @@ const friendsList = [
 class UserPage extends Component {
   constructor(props){
     super(props);
-    this.state = 
+    this.state = {
       displayHighlights: (props.location.state) ? props.location.state.highlights : true,
       editFav: false,
       editLater: false,
@@ -227,7 +222,7 @@ class UserPage extends Component {
         <Header />
         <div className="container-fluid row mx-auto">
           <div className="col-2"></div>
-          <div className="col-8"> 
+          <div className="col-8">
             <Profile>
               <div>
                 <Banner src={wallpaper} />
@@ -295,7 +290,7 @@ class UserPage extends Component {
                       {favList}
                     </MovieList>
                   </Box>
-                  
+
                   <Box>
                     <Title>
                       <Icon src={watchLater} alt='watchLater'/>
@@ -331,7 +326,7 @@ class UserPage extends Component {
             )}
 
             </div>
-            {/* end of main body */} 
+            {/* end of main body */}
           </div>
           <div className="col-2"></div>
         </div>
