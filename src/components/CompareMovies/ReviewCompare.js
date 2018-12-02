@@ -19,7 +19,7 @@ class ReviewCompare extends Component{
 
     return(
       <div style={{ overflow: "hidden", margin: 0 }}>
-        HI
+        
       </div>
     );
   }

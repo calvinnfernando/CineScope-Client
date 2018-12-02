@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Nav, Navbar, NavItem, NavLink } from 'reactstrap';
+import { Navbar } from 'reactstrap';
 import ComparitronMovieList from '../../components/CompareMovies/ComparitronMovieList';
 import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
-import CompareMovies from '../../components/CompareMovies';
+import ReviewCompare from '../../components/CompareMovies/ReviewCompare';
 
 const ComparitronLogo = styled.p`
   font-size: 25px;
