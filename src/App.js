@@ -7,6 +7,7 @@ import UserPage from './containers/UserPage';
 
 import SignUpPage from './containers/SignUpPage';
 import MoviePage from './containers/MoviePage'
+import AllMoviesPage from './containers/AllMoviesPage';
 
 import { withAuthentication } from './components/Sessions';
 
@@ -17,6 +18,7 @@ const App = () => (
 		<Route path="/register" component={SignUpPage}/>
 		<Route path="/profile" component={UserPage}/>
 		<Route path="/movie" component={MoviePage}/>
+		<Route path="/all-movies" component={AllMoviesPage}/>
 	</Switch>
 );
 
