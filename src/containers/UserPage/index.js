@@ -79,10 +79,6 @@ const MovieList = styled.div`
 
 `;
 
-const FriendList = styled.div`
-  padding-left: 12%;
-`;
-
 const Box = styled.div`
   margin: 7px 0px 7px 0px;
   background-color: #787878;
@@ -108,15 +104,6 @@ const postList = [
   {title: "a post", description:"Just watched Iron Man 3", date:'Nov 2 2018'},
   {title: "a post", description:"Just watched Fast and Furious 12", date:'Nov 3 2018'},
   {title: "a post", description:"Just watched Beauty and The Beast", date:'Nov 4 2018'},
-];
-
-const friendsList = [
-  {name: 'Patrick Star'},
-  {name: 'Spongebob'},
-  {name: 'Spongebob'},
-  {name: 'Patrick Star'},
-  {name: 'Spongebob'},
-  {name: 'Patrick Star'},
 ];
 
 class UserPage extends Component {
@@ -190,6 +177,15 @@ class UserPage extends Component {
 });
 }
 
+//Testing out removing firebase data
+/*handleRemove(movieKey) {
+  firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    let key = movieKey
+    return firebase.database().ref('users/' + user.uid + '/watchedList' + key).remove();
+  }
+}*/
+
 /*    old render functions
 let wList = this.state.watchedList.map((movie, count) => {
       if (this.state.editWatched){
@@ -219,10 +215,7 @@ let wList = this.state.watchedList.map((movie, count) => {
     const pList = postList.map((post, count)=> {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date}/>
     });
-    const fList = friendsList.map((friend, count)=> {
-      return <FriendsThumbnail key={friend.name + count.toString()} friendName={friend.name}/>
-    })
-    
+
 		return (
       <ProfileStyle>
         <Header />
@@ -257,15 +250,6 @@ let wList = this.state.watchedList.map((movie, count) => {
               <div className="row">
                 <div className="left-div col">
                   <UserDescription/>
-                  <Box>
-                    <Title>
-                      <Icon src={friends} alt='friends'/>
-                      Friends:
-                    </Title>
-                    <FriendList className="row">
-                      {fList}
-                    </FriendList>
-                  </Box>
                 </div>
 
                 <div className="right-div col">
