@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { compose } from 'recompose';
 import Header from '../../components/Header';
 import wallpaper from './wallpaper-sponge.jpg';
 import profilepic from './profpic-sponge.webp';
 import ironman3 from './ironman3.jpg';
 import antman from './antman.jpg';
-import introicon from './intro-icon.png';
 import heart from './heart.png';
 import friends from './friends.png';
 import watchLater from './watch-later.png';
@@ -14,6 +14,11 @@ import watched from './watched.png';
 import MovieThumbnail from './MovieThumbnail';
 import ActivityFeed from './ActivityFeed';
 import FriendsThumbnail from './FriendsThumbnail';
+import Name from '../../components/Name';
+import UserDescription from '../../components/UserDescription';
+
+import { withFirebase } from '../../components/Firebase';
+import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
 const ProfileStyle =  styled.div`
   background-color: #232323;
@@ -41,23 +46,10 @@ const Img = styled.img`
   border: 5px solid #787878;
 `;
 
-const Name = styled.h3`
-  max-width: 30%;
-  margin-left: 10px;
-`;
 
-const Box = styled.div`
-  margin: 7px 0px 7px 0px;
-  background-color: #787878;
-  border: 1px solid #999999;
-  box-sizing: border-box;
-  padding: 5px;
-`;
-
-const Title = styled.p`
-  font-size: 1.1em;
-  margin-left: 15px;
-  margin-top: 10px;
+const EditListButton = styled.button`
+  position: absolute;
+  right: 40px;
 `;
 
 const EditListButton = styled.button`
@@ -71,11 +63,6 @@ const SmallText = styled.p`
   margin-bottom: 5px;
 `;
 
-const Icon = styled.img`
-  height: 20px;
-  width: 20px;
-  margin-right: 5px;
-`;
 
 const HighlightsButton = styled.button`
   position: absolute;
@@ -99,6 +86,26 @@ const MovieList = styled.div`
 
 const FriendList = styled.div`
   padding-left: 12%;
+`;
+
+const Box = styled.div`
+  margin: 7px 0px 7px 0px;
+  background-color: #787878;
+  border: 1px solid #999999;
+  box-sizing: border-box;
+  padding: 5px;
+`;
+
+const Title = styled.p`
+  font-size: 1.1em;
+  margin-left: 15px;
+  margin-top: 10px;
+`;
+
+const Icon = styled.img`
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
 `;
 
 // let favoriteList = [
@@ -139,8 +146,8 @@ const friendsList = [
 class UserPage extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      displayHighlights: props.location.state.highlights,
+    this.state = 
+      displayHighlights: (props.location.state) ? props.location.state.highlights : true,
       editFav: false,
       editLater: false,
       editWatched: false,
@@ -214,6 +221,7 @@ class UserPage extends Component {
     const fList = friendsList.map((friend, count)=> {
       return <FriendsThumbnail key={friend.name + count.toString()} friendName={friend.name}/>
     });
+
 		return (
       <ProfileStyle>
         <Header />
@@ -225,7 +233,7 @@ class UserPage extends Component {
                 <Banner src={wallpaper} />
                 <div className="container-fluid row">
                   <Img src={profilepic}/>
-                  <Name>SpongeBob Squarepants</Name>
+                  <Name/>
                   <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: true });
                   }}>
@@ -247,15 +255,7 @@ class UserPage extends Component {
 
               <div className="row">
                 <div className="left-div col">
-                  <Box>
-                    <Title>
-                      <Icon src={introicon} alt='into'/>
-                      Intro
-                    </Title>
-                    <SmallText>Lives in San Diego, California</SmallText>
-                    <SmallText>Loves action movies</SmallText>
-                    <SmallText>June 12 1997</SmallText>
-                  </Box>
+                  <UserDescription/>
                   <Box>
                     <Title>
                       <Icon src={friends} alt='friends'/>
@@ -340,4 +340,4 @@ class UserPage extends Component {
 	}
 }
 
-export default UserPage;
+export default compose(withAuthentication)(UserPage);
