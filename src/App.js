@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
 import UserPage from './containers/UserPage';
+
 import SignUpPage from './containers/SignUpPage';
 import MoviePage from './containers/MoviePage'
 

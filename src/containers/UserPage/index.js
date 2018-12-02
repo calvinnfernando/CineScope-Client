@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import Header from '../../components/Header';
 import wallpaper from './wallpaper-sponge.jpg';
 import profilepic from './profpic-sponge.webp';
-import introicon from './intro-icon.jpeg';
 import ironman3 from './ironman3.jpg';
 import antman from './antman.jpg';
+import introicon from './intro-icon.png';
 import heart from './heart.png';
 import friends from './friends.png';
 import watchLater from './watch-later.png';
@@ -16,12 +16,13 @@ import ActivityFeed from './ActivityFeed';
 import FriendsThumbnail from './FriendsThumbnail';
 
 const ProfileStyle =  styled.div`
-  background-color: #F0F0F0;
+  background-color: #232323;
+  color: #232323;
 `;
 
 const Profile = styled.div`
-  border: 1px solid #dddfe2;
-  background-color: white;  
+  border: 1px solid #999999;
+  background-color: #787878;  
   margin-bottom: 12px;
 `;
 
@@ -37,7 +38,7 @@ const Img = styled.img`
   height: 168px;
   position: relative;
   margin-top: -100px;
-  border: 5px solid white;
+  border: 5px solid #787878;
 `;
 
 const Name = styled.h3`
@@ -47,8 +48,8 @@ const Name = styled.h3`
 
 const Box = styled.div`
   margin: 7px 0px 7px 0px;
-  background-color: white;
-  border: 1px solid #dddfe2;
+  background-color: #787878;
+  border: 1px solid #999999;
   box-sizing: border-box;
   padding: 5px;
 `;
@@ -122,7 +123,7 @@ class UserPage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      displayHighlights: true,
+      displayHighlights: props.location.state.highlights,
     };
   }
 
@@ -148,12 +149,12 @@ class UserPage extends Component {
                 <div className="container-fluid row">
                   <Img src={profilepic}/>
                   <Name>SpongeBob Squarepants</Name>
-                  <HighlightsButton type="button" className="btn btn-light" onClick={() => {
+                  <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: true });
                   }}>
                     Highlights
                   </HighlightsButton>
-                  <WatchlistsButton type="button" className="btn btn-light" onClick={() => {
+                  <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: false });
                   }}>
                     Watchlists
@@ -212,6 +213,7 @@ class UserPage extends Component {
                       {mList}
                     </MovieList>
                   </Box>
+                  
                   <Box>
                     <Title>
                       <Icon src={watchLater} alt='watchLater'/>
@@ -221,9 +223,7 @@ class UserPage extends Component {
                       {mList}
                     </MovieList>
                   </Box>
-                </div>
 
-                <div className="right-div col">
                   <Box>
                     <Title>
                       <Icon src={watched} alt='watched'/>
