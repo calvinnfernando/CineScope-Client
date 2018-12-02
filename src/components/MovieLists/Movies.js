@@ -36,7 +36,7 @@ class Movies extends Component {
     }
 
     /**
-     * This method handle the input for the search bar
+     * This method handles the input for the search bar
      *
      * @param {Event} event
      */
@@ -48,21 +48,18 @@ class Movies extends Component {
     }
 
     /**
-     * This method handle when the user has scrolled down
+     * This method handles when the user has scrolled down
      * This method must load an additional movie list
      *
      * @param {Event} event
      */
     handleScroll(event) {
-        //console.log(nextPage);
         let percentageScrolled = getScrollDownPercentage(window);
         if (percentageScrolled > .8) {
             const nextPage = this.state.currentPage + 1;
-            console.log(nextPage);
             MovieService.getSearchMovies(this.state.query, nextPage)
                 .then((movies) => this.state.movies.concat(movies))
                 .then((newMovies) => this.setState({movies: newMovies}));
-
             this.setState({currentPage: this.state.currentPage + 1});
         }
     }
@@ -80,8 +77,6 @@ class Movies extends Component {
     z_aSorting() { this.setState({sortOption: '3'}); }
     newest() { this.setState({sortOption: '4'}); }
     oldest() { this.setState({sortOption: '5'}); }
-
-//<DropdownItem onClick={this.handleScroll}>Next Page Test</DropdownItem>
 
     render() {
         return (
