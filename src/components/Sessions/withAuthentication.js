@@ -14,6 +14,7 @@ const withAuthentication = Component => {
     }
 
     componentDidMount() {
+      console.log("DIDMOUNT BITCH");
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           if (authUser) {
@@ -26,7 +27,6 @@ const withAuthentication = Component => {
                 if (dbUser && !dbUser.roles) {
                   dbUser.roles = [];
                 }
-    
                 // merge auth and db user
                 authUser = {
                   uid: authUser.uid,
@@ -34,6 +34,8 @@ const withAuthentication = Component => {
                   ...dbUser,
                 };
                 this.setState({authUser});
+                console.log("UPDATED");
+                console.log(this.state);
               });
           }
           else {

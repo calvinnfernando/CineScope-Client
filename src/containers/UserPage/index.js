@@ -6,7 +6,6 @@ import wallpaper from './wallpaper-sponge.jpg';
 import profilepic from './profpic-sponge.webp';
 import ironman3 from './ironman3.jpg';
 import antman from './antman.jpg';
-import introicon from './intro-icon.png';
 import heart from './heart.png';
 import friends from './friends.png';
 import watchLater from './watch-later.png';
@@ -15,6 +14,8 @@ import watched from './watched.png';
 import MovieThumbnail from './MovieThumbnail';
 import ActivityFeed from './ActivityFeed';
 import FriendsThumbnail from './FriendsThumbnail';
+import Name from '../../components/Name';
+import UserDescription from '../../components/UserDescription';
 
 import { withFirebase } from '../../components/Firebase';
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
@@ -45,41 +46,13 @@ const Img = styled.img`
   border: 5px solid #787878;
 `;
 
-const Name = styled.h3`
-  max-width: 30%;
-  margin-left: 10px;
-`;
-
-const Box = styled.div`
-  margin: 7px 0px 7px 0px;
-  background-color: #787878;
-  border: 1px solid #999999;
-  box-sizing: border-box;
-  padding: 5px;
-`;
-
-const Title = styled.p`
-  font-size: 1.1em;
-  margin-left: 15px;
-  margin-top: 10px;
-`;
 
 const EditListButton = styled.button`
   position: absolute;
   right: 40px;
 `;
 
-const SmallText = styled.p`
-  font-size: 0.8em;
-  margin-left: 15px;
-  margin-bottom: 5px;
-`;
 
-const Icon = styled.img`
-  height: 20px;
-  width: 20px;
-  margin-right: 5px;
-`;
 
 const HighlightsButton = styled.button`
   position: absolute;
@@ -103,6 +76,26 @@ const MovieList = styled.div`
 
 const FriendList = styled.div`
   padding-left: 12%;
+`;
+
+const Box = styled.div`
+  margin: 7px 0px 7px 0px;
+  background-color: #787878;
+  border: 1px solid #999999;
+  box-sizing: border-box;
+  padding: 5px;
+`;
+
+const Title = styled.p`
+  font-size: 1.1em;
+  margin-left: 15px;
+  margin-top: 10px;
+`;
+
+const Icon = styled.img`
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
 `;
 
 // let favoriteList = [
@@ -144,7 +137,7 @@ class UserPage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      displayHighlights: props.location.state.highlights,
+      displayHighlights: (props.location.state) ? props.location.state.highlights : true,
       editFav: false,
       editLater: false,
       editWatched: false,
@@ -164,9 +157,7 @@ class UserPage extends Component {
         {title: 'Ant Man', imgsrc: antman},
         {title: 'Iron Man 3', imgsrc: ironman3},
       ],
-      user: null,
     };
-
     this.deleteFav = this.deleteFav.bind(this);
     this.deleteLater = this.deleteLater.bind(this);
     this.deleteWatched = this.deleteWatched.bind(this);
@@ -219,7 +210,7 @@ class UserPage extends Component {
     const fList = friendsList.map((friend, count)=> {
       return <FriendsThumbnail key={friend.name + count.toString()} friendName={friend.name}/>
     });
-    
+
 		return (
       <ProfileStyle>
         <Header />
@@ -231,7 +222,7 @@ class UserPage extends Component {
                 <Banner src={wallpaper} />
                 <div className="container-fluid row">
                   <Img src={profilepic}/>
-                  <Name>SpongeBob Squarepants</Name>
+                  <Name/>
                   <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: true });
                   }}>
@@ -253,15 +244,7 @@ class UserPage extends Component {
 
               <div className="row">
                 <div className="left-div col">
-                  <Box>
-                    <Title>
-                      <Icon src={introicon} alt='into'/>
-                      Intro
-                    </Title>
-                    <SmallText>Lives {this.state.authUser.liveIn}</SmallText>
-                    <SmallText>{this.state.authUser.bio}</SmallText>
-                    <SmallText>{this.state.authUser.birthday}</SmallText>
-                  </Box>
+                  <UserDescription/>
                   <Box>
                     <Title>
                       <Icon src={friends} alt='friends'/>
@@ -346,4 +329,4 @@ class UserPage extends Component {
 	}
 }
 
-export default compose(withFirebase, withAuthentication)(UserPage);
+export default compose(withAuthentication)(UserPage);
