@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Nav, Navbar, NavItem, NavLink } from 'reactstrap';
 import logo from '../../components/img/logo.svg';
+import CompareMovies from '../../components/CompareMovies';
 
 const ComparitronLogo = styled.p`
   font-size: 25px;
@@ -179,7 +180,7 @@ class ComparitronPage extends Component {
                 <input
                   style={{ borderRadius: 20, borderWidth: 0, outline: "none", paddingLeft: 15, width: "100%" }}
                   type="search"
-                  placeholder="Enter a movie"
+                  placeholder="Enter a search tag"
                   value={this.state.movieInput}
                   onChange={event => this.setState({ movieInput: event.target.value })}/>
                 <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
@@ -196,7 +197,11 @@ class ComparitronPage extends Component {
                 </ul>
               </form>
             </Sidebars>
-            <MainContent></MainContent>
+            <MainContent>
+              {this.state.chartSelections.map(item => (
+                <CompareMovies chartType={item} movies={this.state.movieSelections} />
+              ))}
+            </MainContent>
             <Sidebars>
               <p style={{ paddingTop: 15, fontFamily: "Calibri", fontWeight: "bold", color: "gray" }}>SELECT CHARTS</p>
               <ReviewSelection id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</ReviewSelection>
