@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import SignOutButton from '../SignOut';
 
 import profilepic from '../img/profile.svg';
 
@@ -55,22 +56,74 @@ const IconContainerStyle = styled.div`
       }
 `;
 
+const WrapperDropdown = styled.div`
+    /* Size and position */
+    position: relative; 
+    width: 200px;
+    padding: 10px;
+    margin: 0 auto;
+
+    /* Styles */
+    color: #fff;
+    outline: none;
+`;
+
+const Dropdown = styled.ul`
+    /* Size & position */
+    position: relative;
+
+    /* Styles */
+    background: #fff;
+    font-weight: normal; /* Overwrites previous font-weight: bold; */
+
+    /* Hiding */
+    opacity: 0;
+    pointer-events: none;
+
+    &:active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+`;
+
+const ItemMenu = styled.li`
+    display: block;
+    text-decoration: none;
+    color: #9e9e9e;
+    padding: 10px 20px;
+
+    &:hover {
+        background: #f3f8f8;
+    }
+`;
+
 class MenuButton extends Component {
+    constructor() {
+        super();
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(event) {
+        alert("tes");
+    }
 
     render() {
         return (
             <MenuBtnStyle>
-                {/* Creates a link with provided name and link */}
-                <Link to={{ pathname: '/profile', state: { highlights: true } }}>
-                    {/* renders text or account icon */
-                    this.props.name === "account" ? (<IconContainerStyle>
-                        <AccountIcon src={profilepic}/>
-                    </IconContainerStyle>) : this.props.name
+                <WrapperDropdown >
+                    {   /* renders text or account icon */
+                        this.props.name === "account" ? (<IconContainerStyle onClick={this.handleClick}>
+                            <AccountIcon src={profilepic} />
+                        </IconContainerStyle>) : this.props.name
                     }
-                </Link>
+                    <Dropdown>
+                        <ItemMenu><Link to={{ pathname: '/profile', state: { highlights: true } }}>User Page</Link></ItemMenu>
+                        <ItemMenu><SignOutButton /></ItemMenu>
+                    </Dropdown>
+                </WrapperDropdown>
             </MenuBtnStyle>
         );
-      }
+    }
 
 }
 

@@ -75,8 +75,9 @@ class Header extends React.Component {
                         authUser => authUser
                             ? <AccountIconStyle>
                                 Welcome {authUser.username}! <br/>
+{/* REMEMBER THIS, FIX SIGN OUT BUTTON */}
                                 <MenuButton name={"account"} />
-                                <SignOutButton/>
+                                {/*<SignOutButton/>*/}
                               </AccountIconStyle>
                             : <AccountIconStyle><a href="/login">Login</a></AccountIconStyle>
                     }
