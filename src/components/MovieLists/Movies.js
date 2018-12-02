@@ -82,7 +82,7 @@ class Movies extends Component {
         return (
             <div className="jumbotron jumbotron-fluid">
               <div className="container-fluid">
-                <p class="h1" align="center">MOVIES</p>
+                <p className="h1" align="center">MOVIES</p>
                 <div className="col-sm-12 text-right">
                   <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>Sort</DropdownToggle>
