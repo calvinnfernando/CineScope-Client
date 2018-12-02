@@ -55,6 +55,12 @@ const loadMoviesData = async (type, query, page) => {
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
             .then(myJson => { return myJson.results });
+    } else if (type === "movie reviews") {
+        const url = `https://api.themoviedb.org/3/movie/${query}/reviews?api_key=${API_KEY}&language=en-US`;
+        return fetch(url)
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(myJson => { return myJson.results });
     }
 }
 
@@ -131,6 +137,15 @@ class MovieService {
             console.log(err);
         }
 
+    }
+
+    static getMovieReviews = async (movie_id) => {
+        try {
+            var res = await loadMoviesData("movie reviews", movie_id, "nopage");
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     static getSessionId = async () => {

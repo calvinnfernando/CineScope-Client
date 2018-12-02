@@ -204,6 +204,10 @@ class MoviePage extends Component {
       }
       this.setState({ trailerVideo: trailerVideo });
     })
+    MovieService.getMovieReviews(movieID).then((reviews) => {
+      const movieReviews = reviews.slice(0, 8);
+      this.setState({ reviews: movieReviews });
+    })
 
   }
 
@@ -276,7 +280,7 @@ class MoviePage extends Component {
             {/* Must replace the props with real data */}
             <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
-            <Reviews />
+            <Reviews reviews={this.state.reviews} />
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>
