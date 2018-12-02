@@ -24,20 +24,20 @@ import '../../styles/components/movieCard.css';
 
 const MovieCard = (props) => (
   <div className="movie-card">
-      <div className="movie-card card">
-          <img className="card-img-top movie-img"
-            src={"http://image.tmdb.org/t/p/w185"+props.poster}
-            onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-            <a href={"/movie/" + parseInt(props.movie_id)}>
-              <div className="card-img-overlay movie-description">
-                  <p className="card-text">{props.movie_title}</p>
-              </div>
-            </a>
-      </div>
+    <div className="movie-card card">
+      <img className="card-img-top movie-img"
+        src={"http://image.tmdb.org/t/p/w185" + props.poster}
+        onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="298" />
+      <a href={"/movie/" + parseInt(props.movie_id)}>
+        <div className="card-img-overlay movie-description">
+          <p className="card-text">{props.movie_title}</p>
+        </div>
+      </a>
+    </div>
   </div>
 );
 
-const ProfileStyle =  styled.div`
+const ProfileStyle = styled.div`
   background-color: #232323;
   color: #232323;
 `;
@@ -117,14 +117,14 @@ const Icon = styled.img`
 `;
 
 const postList = [
-  {title: "a post", description:"Just watched Ant Man", date:'Oct 31 2018'},
-  {title: "a post", description:"Just watched Iron Man 3", date:'Nov 2 2018'},
-  {title: "a post", description:"Just watched Fast and Furious 12", date:'Nov 3 2018'},
-  {title: "a post", description:"Just watched Beauty and The Beast", date:'Nov 4 2018'},
+  { title: "a post", description: "Just watched Ant Man", date: 'Oct 31 2018' },
+  { title: "a post", description: "Just watched Iron Man 3", date: 'Nov 2 2018' },
+  { title: "a post", description: "Just watched Fast and Furious 12", date: 'Nov 3 2018' },
+  { title: "a post", description: "Just watched Beauty and The Beast", date: 'Nov 4 2018' },
 ];
 
 class UserPage extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       displayHighlights: (props.location.state) ? props.location.state.highlights : true,
@@ -141,101 +141,119 @@ class UserPage extends Component {
     this.deleteWatched = this.deleteWatched.bind(this);
   }
 
-  deleteFav(i){
+  deleteFav(i) {
     this.state.favoriteList.splice(i, 1);
     let newFavList = this.state.favoriteList;
     this.setState({ favoriteList: newFavList });
   }
 
-  deleteLater(i){
+  deleteLater(i) {
     this.state.laterList.splice(i, 1);
     let newLaterList = this.state.laterList;
     this.setState({ laterList: newLaterList });
   }
 
-  deleteWatched(i){
+  deleteWatched(i) {
     this.state.watchedList.splice(i, 1);
     let newWatchedList = this.state.watchedList;
     this.setState({ watchedList: newWatchedList });
   }
 
-  componentWillMount(){
+  componentWillMount() {
     // Authentication Stuff
     firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const watchedRef = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
+        watchedRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            console.log(child.val());
+            if (child.val()) {
+              this.setState({
+                favoriteList: this.state.favoriteList.concat([child.val()]),
+              });
+            }
+          });
+        });
+        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
+        favoritesRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            console.log(child.val());
+            if (child.val()) {
+              this.setState({
+                favoriteList: this.state.favoriteList.concat([child.val()]),
+              });
+            }
+
+          });
+        });
+        const laterRef = firebase.database().ref().child('users/' + user.uid + '/watchLaterList').orderByKey();
+        laterRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            console.log(child.val());
+            if (child.val()) {
+              this.setState({
+                favoriteList: this.state.favoriteList.concat([child.val()]),
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  //Testing out removing firebase data
+  /*handleRemove(movieKey) {
+    firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-    const watchedRef = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
-    watchedRef.once('value').then((snapshot) => {
-      snapshot.forEach(child => {
-        console.log(child.val().poster);
-        this.setState({
-          watchedList: this.state.watchedList.concat([child.val()]),
-        });
+      let key = movieKey
+      return firebase.database().ref('users/' + user.uid + '/watchedList' + key).remove();
+    }
+  }*/
+
+  /*    old render functions
+  let wList = this.state.watchedList.map((movie, count) => {
+        if (this.state.editWatched){
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+        } else {
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+        }
       });
-    });
-    const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
-    favoritesRef.once('value').then((snapshot) => {
-      snapshot.forEach(child => {
-        console.log(child.val().poster);
-        this.setState({
-          favoriteList: this.state.favoriteList.concat([child.val()]),
-        });
+      let favList = this.state.favoriteList.map((movie, count) => {
+        if (this.state.editFav){
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
+        } else {
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
+        }
       });
-    });
-    const laterRef = firebase.database().ref().child('users/' + user.uid + '/watchLaterList').orderByKey();
-    laterRef.once('value').then((snapshot) => {
-      snapshot.forEach(child => {
-        console.log(child.val().poster);
-        this.setState({
-          laterList: this.state.laterList.concat([child.val()]),
-        });
+      let wlList = this.state.laterList.map((movie, count) => {
+        if (this.state.editLater){
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
+        } else {
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
+        }
       });
-    });
-  }
-});
-}
+      */
 
-//Testing out removing firebase data
-/*handleRemove(movieKey) {
-  firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    let key = movieKey
-    return firebase.database().ref('users/' + user.uid + '/watchedList' + key).remove();
-  }
-}*/
+  render() {
 
-/*    old render functions
-let wList = this.state.watchedList.map((movie, count) => {
-      if (this.state.editWatched){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-      }
+    const pList = postList.map((post, count) => {
+      return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date} />
     });
-    let favList = this.state.favoriteList.map((movie, count) => {
-      if (this.state.editFav){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
-      }
-    });
-    let wlList = this.state.laterList.map((movie, count) => {
-      if (this.state.editLater){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-      }
-    });
-    */
 
-  render(){
+    const favoriteMovies = this.state.favoriteList.map((movieData) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} />
+    })
+    const watchedMovies = this.state.watchedList.map((movieData) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} />
+    })
+    const watchLaterMovies = this.state.laterList.map((movieData) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} />
+    })
 
-    const pList = postList.map((post, count)=> {
-      return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date}/>
-    });
 
     console.log(this.state.watchedList);
 
-		return (
+    return (
       <ProfileStyle>
         <Header />
         <div className="container-fluid row mx-auto">
@@ -245,8 +263,8 @@ let wList = this.state.watchedList.map((movie, count) => {
               <div>
                 <Banner src={wallpaper} />
                 <div className="container-fluid row">
-                  <Img src={profilepic}/>
-                  <Name/>
+                  <Img src={profilepic} />
+                  <Name />
                   <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
                     this.setState({ displayHighlights: true });
                   }}>
@@ -264,107 +282,75 @@ let wList = this.state.watchedList.map((movie, count) => {
             {/* start of main body */}
             <div>
 
-            {this.state.displayHighlights ? (
+              {this.state.displayHighlights ? (
 
-              <div className="row">
-                <div className="left-div col">
-                  <UserDescription/>
+                <div className="row">
+                  <div className="left-div col">
+                    <UserDescription />
+                  </div>
+
+                  <div className="right-div col">
+                    <Box>
+                      <Title>
+                        Activity Feed
+                    </Title>
+                      {pList}
+                    </Box>
+                  </div>
                 </div>
 
-                <div className="right-div col">
-                  <Box>
-                    <Title>
-                      Activity Feed
-                    </Title>
-                    {pList}
-                  </Box>
-                </div>
-              </div>
+              ) : (
 
-            ) : (
-
-              <div className="row">
-                <div className="left-div col">
-                  <Box>
-                    <Title>
-                      <Icon src={heart} alt='heart'/>
-                      Favorites:
+                  <div className="row">
+                    <div className="left-div col">
+                      <Box>
+                        <Title>
+                          <Icon src={heart} alt='heart' />
+                          Favorites:
                       <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                        this.setState({ editFav: (this.state.editFav) ? false : true });
-                      }}>
-                        { (this.state.editFav) ? "Done" : "Edit" }
-                      </EditListButton>
-                    </Title>
-                    <MovieList className='row'>
-                    <MovieCard poster={this.state.favoriteList[0].poster} movie_title={this.state.favoriteList[0].title} id={this.state.favoriteList[0].id} />
-                    <MovieCard poster={this.state.favoriteList[1].poster} movie_title={this.state.favoriteList[1].title} id={this.state.favoriteList[1].id} />
-                    <MovieCard poster={this.state.favoriteList[2].poster} movie_title={this.state.favoriteList[2].title} id={this.state.favoriteList[2].id} />
-                    <MovieCard poster={this.state.favoriteList[3].poster} movie_title={this.state.favoriteList[3].title} id={this.state.favoriteList[3].id} />
-                    <MovieCard poster={this.state.favoriteList[4].poster} movie_title={this.state.favoriteList[4].title} id={this.state.favoriteList[4].id} />
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[0]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[1]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[2]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[3]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[4]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    </MovieList>
-                  </Box>
+                            this.setState({ editFav: (this.state.editFav) ? false : true });
+                          }}>
+                            {(this.state.editFav) ? "Done" : "Edit"}
+                          </EditListButton>
+                        </Title>
+                        <MovieList className='row'>
+                          {favoriteMovies}
+                        </MovieList>
+                      </Box>
 
-                  <Box>
-                    <Title>
-                      <Icon src={watchLater} alt='watchLater'/>
-                      Watch Later:
+                      <Box>
+                        <Title>
+                          <Icon src={watchLater} alt='watchLater' />
+                          Watch Later:
                       <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                        this.setState({ editLater: (this.state.editLater) ? false : true });
-                      }}>
-                        { (this.state.editLater) ? "Done" : "Edit" }
-                      </EditListButton>
-                    </Title>
-                    <MovieList className='row'>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[0]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[1]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[2]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[3]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[4]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    </MovieList>
-                  </Box>
+                            this.setState({ editLater: (this.state.editLater) ? false : true });
+                          }}>
+                            {(this.state.editLater) ? "Done" : "Edit"}
+                          </EditListButton>
+                        </Title>
+                        <MovieList className='row'>
+                          {watchLaterMovies}
+                        </MovieList>
+                      </Box>
 
-                  <Box>
-                    <Title>
-                      <Icon src={watched} alt='watched'/>
-                      Watched:
+                      <Box>
+                        <Title>
+                          <Icon src={watched} alt='watched' />
+                          Watched:
                       <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                        this.setState({ editWatched: (this.state.editWatched) ? false : true });
-                      }}>
-                        { (this.state.editWatched) ? "Done" : "Edit" }
-                      </EditListButton>
-                    </Title>
-                    <MovieList className='row'>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[0]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[1]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[2]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[3]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[4]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    </MovieList>
-                  </Box>
-                </div>
-              </div>
+                            this.setState({ editWatched: (this.state.editWatched) ? false : true });
+                          }}>
+                            {(this.state.editWatched) ? "Done" : "Edit"}
+                          </EditListButton>
+                        </Title>
+                        <MovieList className='row'>
+                          {watchedMovies}
+                        </MovieList>
+                      </Box>
+                    </div>
+                  </div>
 
-            )}
+                )}
 
             </div>
             {/* end of main body */}
@@ -372,8 +358,8 @@ let wList = this.state.watchedList.map((movie, count) => {
           <div className="col-2"></div>
         </div>
       </ProfileStyle>
-		);
-	}
+    );
+  }
 }
 
 export default compose(withAuthentication)(UserPage);
