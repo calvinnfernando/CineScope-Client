@@ -97,7 +97,6 @@ class ComparitronPage extends Component {
     this.state = {
       movieSelections: [],
       chartSelections: [],
-      list: [], // tag list
       movies: [],
       movieInput: ''
     }
@@ -113,27 +112,7 @@ class ComparitronPage extends Component {
     })
   }
 
-  removeItem(item) {
-    const list = this.state.list.slice();
-
-    list.some((el, i) => {
-      if (el === item) {
-        list.splice(i, 1);
-        return true;
-      }
-    });
-
-    this.setState({
-      list: list
-    });
-
-    if (list.length === 0) {
-      this.setState({ movies: [] });
-    }
-  }
-
   selectMovie(movie) {
-
     console.log('Selected a movie' + movie.title);
     var movieSelections = this.state.movieSelections;
 
@@ -193,7 +172,7 @@ class ComparitronPage extends Component {
       <div>
         <Navbar color="warning" light expand="md">
           <LogoStyle>
-            <a href="/"><img src={logo} alt='CineScope' /></a>
+            <a href="/"><img src={logo} alt='CineScope'/></a>
           </LogoStyle>
           <ComparitronLogo>Comparitron<TMStyle>TM</TMStyle></ComparitronLogo>
         </Navbar>
@@ -207,19 +186,8 @@ class ComparitronPage extends Component {
                 placeholder="Enter a movie"
                 value={this.state.movieInput}
                 onChange={event => this.setState({ movieInput: event.target.value })} />
+                {/* Kept in for padding */}
               <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
-                {this.state.list.map(item => (
-                  <li key={item}
-                    style={{
-                      listStyleType: "none", borderRadius: 15, borderColor: "transparent", borderWidth: 1,
-                      borderStyle: "solid", backgroundColor: "#feeecd", fontSize: 15, width: 90, marginRight: 5, marginBottom: 5
-                    }}>
-                    {item} &nbsp;
-                      <span style={{ cursor: "pointer" }} onClick={() => this.removeItem(item)}>
-                      x
-                      </span>
-                  </li>
-                ))}
               </ul>
             </form>
             <ComparitronMovieHolder>
