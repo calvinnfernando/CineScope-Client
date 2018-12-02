@@ -146,16 +146,8 @@ class UserPage extends Component {
       editFav: false,
       editLater: false,
       editWatched: false,
-      favoriteList: [
-        {title: 'Iron Man 3', imgsrc: ironman3},
-        {title: 'Ant Man', imgsrc: antman},
-        {title: 'Ant Man', imgsrc: antman},
-      ],
-      laterList: [
-        {title: 'Iron Man 3', imgsrc: ironman3},
-        {title: 'Ant Man', imgsrc: antman},
-        {title: 'Iron Man 3', imgsrc: ironman3},
-      ],
+      favoriteList: [],
+      laterList: [],
       watchedList: [],
     };
 
@@ -186,8 +178,8 @@ class UserPage extends Component {
     // Authentication Stuff
     firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-    const response = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
-    response.once('value').then((snapshot) => {
+    const watchedRef = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
+    watchedRef.once('value').then((snapshot) => {
       snapshot.forEach(child => {
         console.log(child.val().poster);
         this.setState({
@@ -195,20 +187,36 @@ class UserPage extends Component {
         });
       });
     });
+    const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
+    favoritesRef.once('value').then((snapshot) => {
+      snapshot.forEach(child => {
+        console.log(child.val().poster);
+        this.setState({
+          favoriteList: this.state.favoriteList.concat([child.val().poster]),
+        });
+      });
+    });
+    const laterRef = firebase.database().ref().child('users/' + user.uid + '/watchLaterList').orderByKey();
+    laterRef.once('value').then((snapshot) => {
+      snapshot.forEach(child => {
+        console.log(child.val().poster);
+        this.setState({
+          laterList: this.state.laterList.concat([child.val().poster]),
+        });
+      });
+    });
   }
 });
 }
 
-/*    let wList = this.state.watchedList.map((movie, count) => {
+/*    old render functions
+let wList = this.state.watchedList.map((movie, count) => {
       if (this.state.editWatched){
         return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
       } else {
         return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
       }
-    }); */
-
-  render(){
-
+    });
     let favList = this.state.favoriteList.map((movie, count) => {
       if (this.state.editFav){
         return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
@@ -223,6 +231,10 @@ class UserPage extends Component {
         return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
       }
     });
+    */
+
+  render(){
+
     const pList = postList.map((post, count)=> {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date}/>
     });
@@ -300,7 +312,16 @@ class UserPage extends Component {
                       </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                      {favList}
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[0]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[1]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[2]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[3]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[4]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
                     </MovieList>
                   </Box>
 
@@ -315,7 +336,16 @@ class UserPage extends Component {
                       </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                      {wlList}
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[0]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[1]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[2]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[3]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[4]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
                     </MovieList>
                   </Box>
 
@@ -330,9 +360,16 @@ class UserPage extends Component {
                       </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[0]}/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[1]}/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[2]}/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[0]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[1]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[2]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[3]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[4]}
+                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
                     </MovieList>
                   </Box>
                 </div>
