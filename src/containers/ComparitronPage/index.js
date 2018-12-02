@@ -95,7 +95,7 @@ class ComparitronPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      movieSelections: ["Star Wars", "Avatar"],
+      movieSelections: [],
       chartSelections: [],
       list: [], // tag list
       movies: [],
@@ -106,23 +106,9 @@ class ComparitronPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
-    let list = this.state.list;
-    const newItem = this.state.movieInput;
-    const form = document.getElementById("addItemForm");
-
-    if (newItem !== "") {
-      list.push(newItem);
-      this.setState({
-        list: list,
-        movieInput: ''
-      });
-      form.reset();
-    }
-
-    var query = newItem;
+    var query = this.state.movieInput;
     MovieService.getSearchMovies(query).then((movies) => {
-      //oldMovies = 
+      //oldMovies =
       this.setState({ movies: movies, query: query });
     })
   }
@@ -141,7 +127,7 @@ class ComparitronPage extends Component {
       list: list
     });
 
-    if (list.length == 0) {
+    if (list.length === 0) {
       this.setState({ movies: [] });
     }
   }
@@ -154,13 +140,13 @@ class ComparitronPage extends Component {
     var movieExists = movieSelections.findIndex((el, i) => {
       return el === movie.title;
     });
-    if (movieExists != -1) {
+    if (movieExists !== -1) {
       movieSelections.splice(movieExists, 1);
     }
     else {
       movieSelections.push(movie.title);
     }
-    
+
     this.setState({ movieSelections: movieSelections });
   }
 
