@@ -27,7 +27,7 @@ const ProfileStyle =  styled.div`
 
 const Profile = styled.div`
   border: 1px solid #999999;
-  background-color: #787878;  
+  background-color: #787878;
   margin-bottom: 12px;
 `;
 
@@ -52,6 +52,11 @@ const EditListButton = styled.button`
   right: 40px;
 `;
 
+const SmallText = styled.p`
+  font-size: 0.8em;
+  margin-left: 15px;
+  margin-bottom: 5px;
+`;
 
 
 const HighlightsButton = styled.button`
@@ -71,7 +76,7 @@ const WatchlistsButton = styled.button`
 `;
 
 const MovieList = styled.div`
-  
+
 `;
 
 const FriendList = styled.div`
@@ -158,6 +163,7 @@ class UserPage extends Component {
         {title: 'Iron Man 3', imgsrc: ironman3},
       ],
     };
+
     this.deleteFav = this.deleteFav.bind(this);
     this.deleteLater = this.deleteLater.bind(this);
     this.deleteWatched = this.deleteWatched.bind(this);
@@ -216,7 +222,7 @@ class UserPage extends Component {
         <Header />
         <div className="container-fluid row mx-auto">
           <div className="col-2"></div>
-          <div className="col-8"> 
+          <div className="col-8">
             <Profile>
               <div>
                 <Banner src={wallpaper} />
@@ -284,7 +290,7 @@ class UserPage extends Component {
                       {favList}
                     </MovieList>
                   </Box>
-                  
+
                   <Box>
                     <Title>
                       <Icon src={watchLater} alt='watchLater'/>
@@ -320,7 +326,7 @@ class UserPage extends Component {
             )}
 
             </div>
-            {/* end of main body */} 
+            {/* end of main body */}
           </div>
           <div className="col-2"></div>
         </div>
