@@ -112,7 +112,8 @@ class MoviePage extends Component {
       displayTrailer: false,
       dropdownOpen: false,
       dropdownValue: 0,
-      invalidRating: false
+      invalidRating: false,
+      ratingPostedMessage: false
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
@@ -140,7 +141,7 @@ class MoviePage extends Component {
       const rating = this.state.dropdownValue;
       const movieID = this.state.movie_id;
       MovieService.postRating(rating,movieID,id).then(()=> {
-
+        this.setState({ratingPostedMessage: true});
       });
     });
 
@@ -241,6 +242,7 @@ class MoviePage extends Component {
                   <button onClick={this.rateMovie}>Submit</button>
                   <br/>
                   {this.state.invalidRating && 'Please select a rating.'}
+                  {this.state.ratingPostedMessage && 'Your rating has been posted!'}
                 </div>
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">

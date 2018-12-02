@@ -147,21 +147,6 @@ class MovieService {
             var data = JSON.stringify({
                 "value": rating
             });
-            console.log(data)
-            /*
-                        var xhr = new XMLHttpRequest();
-                        xhr.withCredentials = true;
-            
-                        xhr.addEventListener("readystatechange", function () {
-                            if (this.readyState === this.DONE) {
-                                console.log(this.responseText);
-                            }
-                        });
-            
-                        xhr.open("POST", `https://api.themoviedb.org/3/movie/${movie_id}/rating?guest_session_id=${guest_session_id}&api_key=${API_KEY}`);
-                        xhr.setRequestHeader("content-type", "application/json;charset=utf-8");
-            
-                        xhr.send(data);*/
             const url = `https://api.themoviedb.org/3/movie/${movie_id}/rating?guest_session_id=${guest_session_id}&api_key=${API_KEY}`;
             return fetch(url, {
                 method: 'post',
