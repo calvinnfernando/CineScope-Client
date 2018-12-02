@@ -156,13 +156,7 @@ class UserPage extends Component {
         {title: 'Ant Man', imgsrc: antman},
         {title: 'Iron Man 3', imgsrc: ironman3},
       ],
-      watchedList: [
-        {title: 'Iron Man 3', imgsrc: ironman3},
-        {title: 'Ant Man', imgsrc: antman},
-        {title: 'Ant Man', imgsrc: antman},
-        {title: 'Iron Man 3', imgsrc: ironman3},
-      ],
-      listList: [],
+      watchedList: [],
     };
 
     this.deleteFav = this.deleteFav.bind(this);
@@ -189,7 +183,7 @@ class UserPage extends Component {
   }
 
   componentWillMount(){
-    this.setState({ displayHighlights: false });
+    // Authentication Stuff
     firebase.auth().onAuthStateChanged((user) => {
     if (user) {
     const response = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
@@ -197,14 +191,21 @@ class UserPage extends Component {
       snapshot.forEach(child => {
         console.log(child.val().poster);
         this.setState({
-          listList: this.state.listList.concat([child.val().poster]),
+          watchedList: this.state.watchedList.concat([child.val().poster]),
         });
-        console.log("hi" + this.state.listList[0]);
       });
     });
   }
 });
 }
+
+/*    let wList = this.state.watchedList.map((movie, count) => {
+      if (this.state.editWatched){
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+      } else {
+        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+      }
+    }); */
 
   render(){
 
@@ -220,13 +221,6 @@ class UserPage extends Component {
         return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
       } else {
         return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-      }
-    });
-    let wList = this.state.watchedList.map((movie, count) => {
-      if (this.state.editWatched){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
       }
     });
     const pList = postList.map((post, count)=> {
@@ -253,7 +247,9 @@ class UserPage extends Component {
                   }}>
                     Highlights
                   </HighlightsButton>
-                  <WatchlistsButton type="button" className="btn btn-dark" onClick={this.getMovies}>
+                  <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
+                    this.setState({ displayHighlights: false });
+                  }}>
                     Watchlists
                   </WatchlistsButton>
                 </div>
@@ -306,8 +302,6 @@ class UserPage extends Component {
                     <MovieList className='row'>
                       {favList}
                     </MovieList>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.listList[0]}/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.listList[1]}/>
                   </Box>
 
                   <Box>
@@ -336,7 +330,9 @@ class UserPage extends Component {
                       </EditListButton>
                     </Title>
                     <MovieList className='row'>
-                      {wList}
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[0]}/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[1]}/>
+                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[2]}/>
                     </MovieList>
                   </Box>
                 </div>
