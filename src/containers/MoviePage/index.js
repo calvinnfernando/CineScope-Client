@@ -52,6 +52,16 @@ const AddButtonsStyle = styled.div`
 
 const AddToFavorites = styled.span`
   margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #FFA500;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background-color: #cc8400;
+  }
 `;
 
 const AddToWatchList = styled.span`
@@ -64,7 +74,7 @@ const AddToWatchList = styled.span`
   transition: .2s;
 
   &:hover {
-    background-color: #fdbcc6;
+    background-color: #ba3e52;
   }
 `;
 
@@ -79,7 +89,7 @@ const TrailerButton = styled.span`
   transition: .2s;
 
   &:hover {
-    background-color: #a3d2fa;
+    background-color: #ba3e52;
   }
 `;
 
@@ -127,10 +137,7 @@ class MoviePage extends Component {
         console.log("Not Signed In");
       }
     });
-    console.log(props.firebase.auth.app.firebase_.database().ref('users'));
-    //console.log(firebase.database().ref('users').child('A5VVmWlzyjfCkgFCd9OQmSY5QJn2'));
-    //this.props.db.database().ref("users");
-
+    // console.log(props.firebase.auth.app.firebase_.database().ref('users'));
   }
 
   /**
@@ -247,9 +254,24 @@ class MoviePage extends Component {
    * @param {const} movieID
    */
   handleAddFav(event) {
+    event.preventDefault();
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user.uid);
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
+          if (exist) {
+            alert('Movie is exist, need to change the button appearance');
+          } else {
+            this.firebaseref.child('favoriteList').child(imdb_id)
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          }
+        });
+
       } else {
         console.log("Not Signed In");
       }
@@ -271,8 +293,16 @@ class MoviePage extends Component {
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
 
-        this.firebaseref.child('watchedList').child(imdb_id)
-          .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
+          if (exist) {
+            alert('Movie is exist, need to change the button appearance');
+          } else {
+            this.firebaseref.child('watchedList').child(imdb_id)
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          }
+        });
+
       } else {
         console.log("Not Signed In");
       }
@@ -286,13 +316,37 @@ class MoviePage extends Component {
    * @param {const} movieID
    */
   handleAddWatchLater(event) {
+    event.preventDefault();
+
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user.uid);
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
+          if (exist) {
+            alert('Movie is exist, need to change the button appearance');
+          } else {
+            this.firebaseref.child('watchLaterList').child(imdb_id)
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          }
+        });
+
       } else {
         console.log("Not Signed In");
       }
     });
+  }
+
+  /**
+   * This method check if the movie exist in a list
+   */
+  checkIfMovieExist = async(movie_id, type) => {
+    return this.firebaseref.child(type).child(movie_id).once('value')
+      .then(snapshot => snapshot.exists() );
   }
 
   render() {
@@ -319,7 +373,7 @@ class MoviePage extends Component {
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
                   <AddToFavorites onClick={this.handleAddFav}>
-                    Star button here
+                    + Add to Favorites
                     </AddToFavorites>
                   <AddToWatchList onClick={this.handleAddWatched}>
                     + Add to Watched
