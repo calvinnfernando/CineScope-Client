@@ -6,9 +6,10 @@ import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
 import MovieService from '../../services/MovieService.js'
 import styled from 'styled-components'
-import ThumbsUp from './thumbsup.png'
-import ThumbsDown from './thumbsdown.png'
 import { Link } from 'react-router-dom';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
+/* STYLES */
 
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
@@ -96,28 +97,55 @@ const CompareButtonStyle = styled.div`
   }
 `;
 
+const RateStyle = styled.span`
+  font-size: 24px;
+  margin: 0px 2px;
+`;
+
+/* CLASS */
+
 class MoviePage extends Component {
   constructor(props) {
     super(props)
     this.state = {
       rating: 0,
-      displayTrailer: false
+      displayTrailer: false,
+      dropdownOpen: false,
+      dropdownValue: 0,
+      invalidRating: false
     }
-    this.handleThumbsUp = this.handleThumbsUp.bind(this)
-    this.handleThumbsDown = this.handleThumbsDown.bind(this)
+    this.setMovieRating = this.setMovieRating.bind(this)
+    this.rateMovie = this.rateMovie.bind(this)
+    this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
   }
-  handleThumbsUp() {
-    this.setState(state => ({
-      rating: 1
-    }))
+  // Dropdown stuff
+  setMovieRating(rating) {
+    this.setState({dropdownValue: rating, invalidRating: false})
   }
-  handleThumbsDown() {
-    this.setState(state => ({
-      rating: -1
-    }))
+  toggle() {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
   }
+  rateMovie() {
+    if(this.state.dropdownValue == 0) {
+      this.setState({invalidRating: true});
+      return;
+    }
+
+    MovieService.getSessionId().then((id) => {
+      console.log(id);
+      const rating = this.state.dropdownValue;
+      const movieID = this.state.movie_id;
+      MovieService.postRating(rating,movieID,id).then(()=> {
+
+      });
+    });
+
+  }
+  // Trailer stuff
   openTrailer() {
     this.setState({ displayTrailer: true });
   }
@@ -130,6 +158,7 @@ class MoviePage extends Component {
     MovieService.getSingleMovie(movieID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({
+        movie_id: movieID,
         title: movie.title,
         overview: movie.overview,
         poster: movie.poster_path,
@@ -146,7 +175,7 @@ class MoviePage extends Component {
           }
         }
         var rated = movie.Rated;
-        if (rated === "N/A") {
+        if (rated === "N/A" || rated === "NOT RATED") {
           rated = "Not yet rated";
         }
         this.setState({
@@ -191,9 +220,27 @@ class MoviePage extends Component {
                     alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
-                  <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
-                  <button onClick={this.handleThumbsDown} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsDown} alt='' /></button>
-                  <h4>Average rating: {this.state.vote_average}/10</h4>
+                <h4>Average rating: {this.state.vote_average}/10</h4>
+                  <RateStyle>Rate This Movie: </RateStyle>
+                  <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <DropdownToggle caret>{this.state.dropdownValue == 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={() => this.setMovieRating(1)}>1</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(2)}>2</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(3)}>3</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(4)}>4</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(5)}>5</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(6)}>6</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(7)}>7</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(8)}>8</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(9)}>9</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(10)}>10</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                  <br/>
+                  <button onClick={this.rateMovie}>Submit</button>
+                  <br/>
+                  {this.state.invalidRating && 'Please select a rating.'}
                 </div>
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">
@@ -214,7 +261,7 @@ class MoviePage extends Component {
                     </TrailerButton>
                 </AddButtonsStyle>
                 <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
-                <p>{this.state.overview}</p>
+                <p style={{marginBottom: "2rem"}}>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
                   <CompareButtonStyle>

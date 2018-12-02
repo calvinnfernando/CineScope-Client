@@ -15,7 +15,7 @@ const loadMoviesDataOMDb = async (imdb_id) => {
     return fetch(`http://www.omdbapi.com/?i=${imdb_id}&apikey=${OMDB_API_KEY}`)
         .then(response => response.json())
         .catch(error => console.error('Error:', error))
-        .then(myJson => {return myJson});
+        .then(myJson => { return myJson });
 }
 
 const loadMoviesData = async (type, query, page) => {
@@ -30,9 +30,9 @@ const loadMoviesData = async (type, query, page) => {
         return fetch(url)
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
-            .then(myJson => {return myJson.results});
+            .then(myJson => { return myJson.results });
     } else if (type === "recommended") {
-        const url= `https://api.themoviedb.org/3/movie/${query}/recommendations?api_key=${API_KEY}&page=${page}`;
+        const url = `https://api.themoviedb.org/3/movie/${query}/recommendations?api_key=${API_KEY}&page=${page}`;
         return fetch(url)
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
@@ -58,6 +58,13 @@ const loadMoviesData = async (type, query, page) => {
     }
 }
 
+const loadSessionData = async () => {
+    const url = `https://api.themoviedb.org/3/authentication/guest_session/new?api_key=${API_KEY}`;
+    return fetch(url)
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error))
+        .then(myJson => { return myJson.guest_session_id });
+}
 
 class MovieService {
     static getPopularMovies = async (query = "", page = 1) => {
@@ -88,7 +95,7 @@ class MovieService {
             console.log(err);
         }
     }
-    
+
     static getSingleMovie = async (movie_id) => {
         try {
             var res = await loadMoviesData("movie", movie_id, "nopage");
@@ -108,7 +115,7 @@ class MovieService {
     }
 
     static getSimilarMovies = async (movie_id, page = 1) => {
-        try { 
+        try {
             var res = await loadMoviesData("movie similar", movie_id, page);
             return res;
         } catch (err) {
@@ -117,13 +124,58 @@ class MovieService {
     }
 
     static getMovieVideos = async (movie_id) => {
-        try { 
+        try {
             var res = await loadMoviesData("movie video", movie_id, "nopage");
-          return res;
+            return res;
         } catch (err) {
             console.log(err);
         }
+
+    }
+
+    static getSessionId = async () => {
+        try {
+            var res = await loadSessionData();
+            return res;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    static postRating = async (rating, movie_id, guest_session_id) => {
+        try {
+            var data = JSON.stringify({
+                "value": rating
+            });
+            console.log(data)
+            /*
+                        var xhr = new XMLHttpRequest();
+                        xhr.withCredentials = true;
             
+                        xhr.addEventListener("readystatechange", function () {
+                            if (this.readyState === this.DONE) {
+                                console.log(this.responseText);
+                            }
+                        });
+            
+                        xhr.open("POST", `https://api.themoviedb.org/3/movie/${movie_id}/rating?guest_session_id=${guest_session_id}&api_key=${API_KEY}`);
+                        xhr.setRequestHeader("content-type", "application/json;charset=utf-8");
+            
+                        xhr.send(data);*/
+            const url = `https://api.themoviedb.org/3/movie/${movie_id}/rating?guest_session_id=${guest_session_id}&api_key=${API_KEY}`;
+            return fetch(url, {
+                method: 'post',
+                body: data,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })  
+                .then(response => response.json())
+                .catch(error => console.error('Error:', error))
+                .then(data => {console.log(data);});
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 
