@@ -300,10 +300,10 @@ class MoviePage extends Component {
                 <h1>{this.state.title}</h1>
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
-                  <AddToFavorites id="fav" onClick={this.handleAddFav}>
+                  <AddToFavorites onClick={this.handleAddFav}>
                     Star button here
                     </AddToFavorites>
-                  <AddToWatchList id="watch" onClick={this.handleAddWatched}>
+                  <AddToWatchList onClick={this.handleAddWatched}>
                     + Add to Watched
                     </AddToWatchList>
                   <AddToWatchList onClick={this.handleAddWatchLater}>
