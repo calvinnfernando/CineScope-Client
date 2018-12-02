@@ -101,6 +101,7 @@ class ComparitronPage extends Component {
       movies: [],
       movieInput: ''
     }
+    this.selectMovie = this.selectMovie.bind(this)
   }
 
   handleSubmit(event) {
@@ -143,6 +144,13 @@ class ComparitronPage extends Component {
     if(list.length == 0) {
       this.setState({movies: []});
     }
+  }
+
+  selectMovie(movie) {
+    console.log('Selected a movie' + movie.title);
+    var movieSelections = this.state.movieSelections;
+    movieSelections.push(movie.title);
+    this.setState({movieSelections: movieSelections});
   }
 
   removeMovie(item) {
@@ -216,7 +224,7 @@ class ComparitronPage extends Component {
                 </ul>
               </form>
               <ComparitronMovieHolder>
-                <ComparitronMovieList movies={this.state.movies} />
+                <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
               </ComparitronMovieHolder>
             </Sidebars>
             <MainContent></MainContent>
