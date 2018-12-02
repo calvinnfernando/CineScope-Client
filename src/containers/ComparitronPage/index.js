@@ -111,7 +111,7 @@ class ComparitronPage extends Component {
     const newItem = this.state.movieInput;
     const form = document.getElementById("addItemForm");
 
-    if(newItem !== "") {
+    if (newItem !== "") {
       list.push(newItem);
       this.setState({
         list: list,
@@ -123,16 +123,16 @@ class ComparitronPage extends Component {
     var query = newItem;
     MovieService.getSearchMovies(query).then((movies) => {
       //oldMovies = 
-      this.setState({movies: movies, query: query});
+      this.setState({ movies: movies, query: query });
     })
   }
 
   removeItem(item) {
     const list = this.state.list.slice();
 
-    list.some((el,i) => {
-      if(el === item) {
-        list.splice(i,1);
+    list.some((el, i) => {
+      if (el === item) {
+        list.splice(i, 1);
         return true;
       }
     });
@@ -141,24 +141,35 @@ class ComparitronPage extends Component {
       list: list
     });
 
-    if(list.length == 0) {
-      this.setState({movies: []});
+    if (list.length == 0) {
+      this.setState({ movies: [] });
     }
   }
 
   selectMovie(movie) {
+
     console.log('Selected a movie' + movie.title);
     var movieSelections = this.state.movieSelections;
-    movieSelections.push(movie.title);
-    this.setState({movieSelections: movieSelections});
+
+    var movieExists = movieSelections.findIndex((el, i) => {
+      return el === movie.title;
+    });
+    if (movieExists != -1) {
+      movieSelections.splice(movieExists, 1);
+    }
+    else {
+      movieSelections.push(movie.title);
+    }
+    
+    this.setState({ movieSelections: movieSelections });
   }
 
   removeMovie(item) {
     const movieSelections = this.state.movieSelections;
 
-    movieSelections.some((el,i) => {
-      if(el === item) {
-        movieSelections.splice(i,1);
+    movieSelections.some((el, i) => {
+      if (el === item) {
+        movieSelections.splice(i, 1);
         return true;
       }
     });
@@ -173,15 +184,15 @@ class ComparitronPage extends Component {
 
     let chartSelections = this.state.chartSelections;
 
-    var done = chartSelections.some((el,i) => {
-      if(el === event.target.id) {
-        chartSelections.splice(i,1);
+    var done = chartSelections.some((el, i) => {
+      if (el === event.target.id) {
+        chartSelections.splice(i, 1);
         document.getElementById(event.target.id).style.borderColor = "transparent";
         return true;
       }
     });
 
-    if(!done) {
+    if (!done) {
       chartSelections.push(event.target.id);
       document.getElementById(event.target.id).style.borderColor = "gray";
     }
@@ -192,60 +203,62 @@ class ComparitronPage extends Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <Navbar color="warning" light expand="md">
           <LogoStyle>
-              <a href="/"><img src={logo} alt='CineScope' /></a>
+            <a href="/"><img src={logo} alt='CineScope' /></a>
           </LogoStyle>
           <ComparitronLogo>Comparitron<TMStyle>TM</TMStyle></ComparitronLogo>
         </Navbar>
         <Container>
-            <Sidebars>
-              <form id="addItemForm" onSubmit={this.handleSubmit.bind(this)}>
-                <p style={{ fontFamily: "Calibri", paddingTop: 15, fontWeight: "bold", color: "gray" }}>SELECT MOVIES</p>
-                <input
-                  style={{ borderRadius: 20, borderWidth: 0, outline: "none", paddingLeft: 15, width: "100%" }}
-                  type="search"
-                  placeholder="Enter a movie"
-                  value={this.state.movieInput}
-                  onChange={event => this.setState({ movieInput: event.target.value })}/>
-                <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
-                  {this.state.list.map(item => (
-                    <li key={item}
-                      style={{ listStyleType: "none", borderRadius: 15, borderColor: "transparent", borderWidth: 1,
-                      borderStyle: "solid", backgroundColor: "#feeecd", fontSize: 15, width: 90, marginRight: 5, marginBottom: 5 }}>
-                      {item} &nbsp;
-                      <span style={{ cursor: "pointer" }} onClick={ () => this.removeItem(item)}>
+          <Sidebars>
+            <form id="addItemForm" onSubmit={this.handleSubmit.bind(this)}>
+              <p style={{ fontFamily: "Calibri", paddingTop: 15, fontWeight: "bold", color: "gray" }}>SELECT MOVIES</p>
+              <input
+                style={{ borderRadius: 20, borderWidth: 0, outline: "none", paddingLeft: 15, width: "100%" }}
+                type="search"
+                placeholder="Enter a movie"
+                value={this.state.movieInput}
+                onChange={event => this.setState({ movieInput: event.target.value })} />
+              <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
+                {this.state.list.map(item => (
+                  <li key={item}
+                    style={{
+                      listStyleType: "none", borderRadius: 15, borderColor: "transparent", borderWidth: 1,
+                      borderStyle: "solid", backgroundColor: "#feeecd", fontSize: 15, width: 90, marginRight: 5, marginBottom: 5
+                    }}>
+                    {item} &nbsp;
+                      <span style={{ cursor: "pointer" }} onClick={() => this.removeItem(item)}>
                       x
                       </span>
-                    </li>
-                    ))}
-                </ul>
-              </form>
-              <ComparitronMovieHolder>
-                <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
-              </ComparitronMovieHolder>
-            </Sidebars>
-            <MainContent></MainContent>
-            <Sidebars>
-              <p style={{ paddingTop: 15, fontFamily: "Calibri", fontWeight: "bold", color: "gray" }}>SELECT CHARTS</p>
-              <ReviewSelection id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</ReviewSelection>
-              <ReviewSelection id="IMDb" onClick={this.handleChartSelection.bind(this)}>IMDb</ReviewSelection>
-              <ReviewSelection id="Metacritic" onClick={this.handleChartSelection.bind(this)}>Metacritic</ReviewSelection>
-              <ReviewSelection id="Box Office" onClick={this.handleChartSelection.bind(this)}>Box Office</ReviewSelection>
-              <ReviewSelection id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</ReviewSelection>
-              <hr></hr>
-              <p style={{ fontWeight: "bold", fontColor: "grey", fontFamily: "Calibri", color: "gray" }}>SELECTED MOVIES</p>
-              <ul style={{ paddingInlineStart: 0 }}>
-                {this.state.movieSelections.map(item => (
-                  <MovieSelection key={item}>
-                    <span style={{ cursor: "pointer", color: "#dedede", fontSize: 17 }} onClick={() => this.removeMovie(item)}>X</span>
-                    &nbsp; &nbsp; {item}
-                  </MovieSelection>
+                  </li>
                 ))}
               </ul>
-            </Sidebars>
+            </form>
+            <ComparitronMovieHolder>
+              <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
+            </ComparitronMovieHolder>
+          </Sidebars>
+          <MainContent></MainContent>
+          <Sidebars>
+            <p style={{ paddingTop: 15, fontFamily: "Calibri", fontWeight: "bold", color: "gray" }}>SELECT CHARTS</p>
+            <ReviewSelection id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</ReviewSelection>
+            <ReviewSelection id="IMDb" onClick={this.handleChartSelection.bind(this)}>IMDb</ReviewSelection>
+            <ReviewSelection id="Metacritic" onClick={this.handleChartSelection.bind(this)}>Metacritic</ReviewSelection>
+            <ReviewSelection id="Box Office" onClick={this.handleChartSelection.bind(this)}>Box Office</ReviewSelection>
+            <ReviewSelection id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</ReviewSelection>
+            <hr></hr>
+            <p style={{ fontWeight: "bold", fontColor: "grey", fontFamily: "Calibri", color: "gray" }}>SELECTED MOVIES</p>
+            <ul style={{ paddingInlineStart: 0 }}>
+              {this.state.movieSelections.map(item => (
+                <MovieSelection key={item}>
+                  <span style={{ cursor: "pointer", color: "#dedede", fontSize: 17 }} onClick={() => this.removeMovie(item)}>X</span>
+                  &nbsp; &nbsp; {item}
+                </MovieSelection>
+              ))}
+            </ul>
+          </Sidebars>
         </Container>
       </div>
     );
