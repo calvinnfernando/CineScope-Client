@@ -1,20 +1,22 @@
-import React, { Component } from 'react'
-import Header from '../../components/Header'
-import TrailerModal from '../../components/MoviePage/TrailerModal'
-import Ratings from '../../components/MoviePage/Ratings'
-import Reviews from '../../components/MoviePage/Reviews'
-import RelatedMovies from '../../components/MoviePage/RelatedMovies'
-import MovieService from '../../services/MovieService.js'
-import styled from 'styled-components'
-import ThumbsUp from './thumbsup.png'
-import ThumbsDown from './thumbsdown.png'
+import React, { Component } from 'react';
+import Header from '../../components/Header';
+import TrailerModal from '../../components/MoviePage/TrailerModal';
+import Ratings from '../../components/MoviePage/Ratings';
+import Reviews from '../../components/MoviePage/Reviews';
+import RelatedMovies from '../../components/MoviePage/RelatedMovies';
+import MovieService from '../../services/MovieService.js';
+import MoviePageService from '../../services/MoviePageService.js';
+import styled from 'styled-components';
+import ThumbsUp from './thumbsup.png';
+import ThumbsDown from './thumbsdown.png';
 import { Link } from 'react-router-dom';
+
+import firebase from 'firebase';
 
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
   border-radius: 20px; 
-
 `;
 
 const MovieInfoStyle = styled.div`
@@ -64,7 +66,8 @@ const AddToWatchList = styled.span`
   &:hover {
     background-color: #fdbcc6;
   }
-`;
+`; 
+
 
 const TrailerButton = styled.span`
   margin-right: 8px;
@@ -97,36 +100,70 @@ const CompareButtonStyle = styled.div`
 `;
 
 class MoviePage extends Component {
+  /**
+   * Constructor  
+   */
   constructor(props) {
     super(props)
+
     this.state = {
       rating: 0,
       displayTrailer: false
     }
+
     this.handleThumbsUp = this.handleThumbsUp.bind(this)
     this.handleThumbsDown = this.handleThumbsDown.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
+    this.handleAddFav = this.handleAddFav.bind(this)
+    this.handleAddWatched = this.handleAddWatched.bind(this)
+    this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+
+    this.firebaseref = this.props.db.database().ref("users");
   }
+
+  /**
+   * This method handle thumbs up
+   */
   handleThumbsUp() {
     this.setState(state => ({
       rating: 1
     }))
   }
+
+  /**
+   * This emthod handle thumbs down
+   */
   handleThumbsDown() {
     this.setState(state => ({
       rating: -1
     }))
   }
+
+  /**
+   * This method set display trailer true
+   */
   openTrailer() {
     this.setState({ displayTrailer: true });
   }
+
+  /**
+   * This method set display trailer true
+   */
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
+
+  /**
+   * This method mounts component initially
+   */
   componentDidMount() {
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
+
+    /**
+     * This method get single movie data from TMDb
+     */
     MovieService.getSingleMovie(movieID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({
@@ -137,6 +174,10 @@ class MoviePage extends Component {
         vote_average: movie.vote_average,
         imdb_id: movie.imdb_id
       });
+      
+      /**
+       * This method get single movie data from OMDb
+       */
       MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
         const ratings = movie.Ratings;
         var rottenTomatoes = "N/A";
@@ -160,10 +201,22 @@ class MoviePage extends Component {
         });
       });
     });
+    
+    /**
+     * This method get similar movies based on the movie page
+     * 
+     * @param {const} movieID
+     */
     MovieService.getSimilarMovies(movieID).then((movies) => {
       const relatedMovies = movies.slice(0, 4);
       this.setState({ relatedMovies: relatedMovies });
-    })
+    });
+
+    /**
+     * This method get movie trailer based on movie id
+     * 
+     * @param {const} movieID
+     */
     MovieService.getMovieVideos(movieID).then((videos) => {
       var trailerVideo = "";
       for (const video of videos) {
@@ -173,8 +226,55 @@ class MoviePage extends Component {
         }
       }
       this.setState({ trailerVideo: trailerVideo });
-    })
+    });
+  } // end componentDidMount
 
+  /**
+   * This method handle adding movie to the fav list in database by
+   * calling MoviePageService
+   * 
+   * @param {const} movieID
+   */
+  handleAddFav(event) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user);
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the watched list in database by
+   * calling MoviePageService
+   * 
+   * @param {const} movieID
+   */
+  handleAddWatched(event) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user);
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the watch later list in database by
+   * calling MoviePageService
+   * 
+   * @param {const} movieID
+   */
+  handleAddWatchLater(event) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user);
+      } else {
+        console.log("Not Signed In");
+      }
+    });
   }
 
   render() {
@@ -200,13 +300,13 @@ class MoviePage extends Component {
                 <h1>{this.state.title}</h1>
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
-                  <AddToFavorites>
+                  <AddToFavorites id="fav" onClick={this.handleAddFav}>
                     Star button here
                     </AddToFavorites>
-                  <AddToWatchList>
+                  <AddToWatchList id="watch" onClick={this.handleAddWatched}>
                     + Add to Watched
                     </AddToWatchList>
-                  <AddToWatchList>
+                  <AddToWatchList onClick={this.handleAddWatchLater}>
                     + Add to Watch Later
                     </AddToWatchList>
                   <TrailerButton onClick={this.openTrailer}>

@@ -30,7 +30,10 @@ class App extends Component {
 				<Route exact path="/" component={HomePage}/>
 				<Route path="/login" component={LoginPage}/>
 				<Route path="/profile" component={UserPage}/>
-				<Route path="/movie" component={MoviePage}/>
+				<Route 
+					path="/movie" 
+					render={(props) => <MoviePage {...props} db={firebase} />}
+				/>
 				<Route path="/movie/:id" component={MoviePage} />
 				<Route path="/all-movies" component={AllMoviesPage}/>
 			</Switch>

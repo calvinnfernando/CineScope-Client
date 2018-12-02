@@ -207,6 +207,7 @@ class UserPage extends Component {
                   <Box>
                     <Title>
                       <Icon src={heart} alt='heart'/>
+                      {/* Favorites list */ }
                       Favourites:
                     </Title>
                     <MovieList className='row'>
