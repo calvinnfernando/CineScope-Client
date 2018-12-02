@@ -18,6 +18,7 @@ const App = () => (
 	<Route path="/movie" component={MoviePage}/>
 	<Route path="/movie/:id" component={MoviePage} />
 	<Route path="/all-movies" component={AllMoviesPage}/>
+	<Route path="/register" component={SignUpPage}/>
 </Switch>
 );
 

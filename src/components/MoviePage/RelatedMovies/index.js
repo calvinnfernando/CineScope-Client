@@ -10,7 +10,7 @@ const RelatedMoviesStyle = styled.div`
         text-decoration: none;
         color: #777;
     }
-    
+
 `;
 
 const RelatedMovieStyle = styled.div`
@@ -26,19 +26,21 @@ const RelatedMovieStyle = styled.div`
 class RelatedMovies extends Component {
 
     render() {
-        if (!this.props.movies) {
-            return <h2>No related movies.</h2>
-        }
-        const moviesToDisplay = this.props.movies.map(relatedMovie => {
+      var moviesToDisplay = ""
+        if (this.props.movies) {
+          moviesToDisplay = this.props.movies.map(relatedMovie => {
             return <RelatedMovieStyle key={relatedMovie.id}>
                 <a href={'/movie/' + relatedMovie.id}>
                     <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${relatedMovie.poster_path}`}
                         onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt={relatedMovie} />
                     <div>{relatedMovie.title}</div>
                 </a>
-            </RelatedMovieStyle>
-        });
-
+                </RelatedMovieStyle>
+            });
+        }
+        if (moviesToDisplay.length === 0) {
+            return <h2>No related movies</h2>
+        }
         return (
             <div>
                 <h2>Related Movies</h2>
