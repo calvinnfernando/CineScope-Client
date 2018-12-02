@@ -11,11 +11,12 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 
 /* STYLES */
 
+import firebase from 'firebase';
+
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
-  border-radius: 20px; 
-
+  border-radius: 20px;
 `;
 
 const MovieInfoStyle = styled.div`
@@ -67,6 +68,7 @@ const AddToWatchList = styled.span`
   }
 `;
 
+
 const TrailerButton = styled.span`
   margin-right: 8px;
   padding: 8px 12px;
@@ -105,8 +107,12 @@ const RateStyle = styled.span`
 /* CLASS */
 
 class MoviePage extends Component {
+  /**
+   * Constructor
+   */
   constructor(props) {
     super(props)
+
     this.state = {
       rating: 0,
       displayTrailer: false,
@@ -120,6 +126,22 @@ class MoviePage extends Component {
     this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
+    this.handleAddFav = this.handleAddFav.bind(this)
+    this.handleAddWatched = this.handleAddWatched.bind(this)
+    this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+
+    //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.firebaseref = firebase.database().ref(`users/${user.uid}`); 
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+    console.log(props.firebase.auth.app.firebase_.database().ref('users'));
+    //console.log(firebase.database().ref('users').child('A5VVmWlzyjfCkgFCd9OQmSY5QJn2'));
+    //this.props.db.database().ref("users");
+
   }
   // Dropdown stuff
   setMovieRating(rating) {
@@ -150,12 +172,24 @@ class MoviePage extends Component {
   openTrailer() {
     this.setState({ displayTrailer: true });
   }
+
+  /**
+   * This method set display trailer true
+   */
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
+
+  /**
+   * This method mounts component initially
+   */
   componentDidMount() {
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
+
+    /**
+     * This method get single movie data from TMDb
+     */
     MovieService.getSingleMovie(movieID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({
@@ -167,6 +201,10 @@ class MoviePage extends Component {
         vote_average: movie.vote_average,
         imdb_id: movie.imdb_id
       });
+
+      /**
+       * This method get single movie data from OMDb
+       */
       MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
         const ratings = movie.Ratings;
         var rottenTomatoes = "N/A";
@@ -190,10 +228,22 @@ class MoviePage extends Component {
         });
       });
     });
+
+    /**
+     * This method get similar movies based on the movie page
+     *
+     * @param {const} movieID
+     */
     MovieService.getSimilarMovies(movieID).then((movies) => {
       const relatedMovies = movies.slice(0, 4);
       this.setState({ relatedMovies: relatedMovies });
-    })
+    });
+
+    /**
+     * This method get movie trailer based on movie id
+     *
+     * @param {const} movieID
+     */
     MovieService.getMovieVideos(movieID).then((videos) => {
       var trailerVideo = "";
       for (const video of videos) {
@@ -207,8 +257,62 @@ class MoviePage extends Component {
     MovieService.getMovieReviews(movieID).then((reviews) => {
       const movieReviews = reviews.slice(0, 8);
       this.setState({ reviews: movieReviews });
-    })
+    });
+  } // end componentDidMount
 
+  /**
+   * This method handle adding movie to the fav list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+  handleAddFav(event) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user.uid);
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the watched list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+  handleAddWatched(event) {
+    event.preventDefault();
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        this.firebaseref.child('watchedList').child(imdb_id)
+          .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the watch later list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+  handleAddWatchLater(event) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user.uid);
+      } else {
+        console.log("Not Signed In");
+      }
+    });
   }
 
   render() {
@@ -253,13 +357,13 @@ class MoviePage extends Component {
                 <h1>{this.state.title}</h1>
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
-                  <AddToFavorites>
+                  <AddToFavorites onClick={this.handleAddFav}>
                     Star button here
                     </AddToFavorites>
-                  <AddToWatchList>
+                  <AddToWatchList onClick={this.handleAddWatched}>
                     + Add to Watched
                     </AddToWatchList>
-                  <AddToWatchList>
+                  <AddToWatchList onClick={this.handleAddWatchLater}>
                     + Add to Watch Later
                     </AddToWatchList>
                   <TrailerButton onClick={this.openTrailer}>
