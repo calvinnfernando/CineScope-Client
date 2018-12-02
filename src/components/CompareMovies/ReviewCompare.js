@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
+import ComparitronMovieList from './ComparitronMovieList';
+import PieChart from 'react-minimal-pie-chart';
 
 //const ChartDiv = styled.div`
 //  width: 100%;
@@ -8,13 +9,9 @@ import styled from 'styled-components';
 //  max-height: 600px;
 //`;
 
-class CompareMovies extends Component{
+class ReviewCompare extends Component{
   constructor(props) {
     super(props);
-  }
-
-  componentWillMount() {
-
   }
 
   render(){
@@ -22,11 +19,10 @@ class CompareMovies extends Component{
 
     return(
       <div style={{ overflow: "hidden", margin: 0 }}>
-        <div id="chartdiv" style={{ width: "100%", height: 500 }}>
-        </div>
+        HI
       </div>
     );
   }
 }
 
-export default CompareMovies;
+export default ReviewCompare;
