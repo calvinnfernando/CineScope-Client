@@ -119,7 +119,18 @@ class MoviePage extends Component {
     this.handleAddWatched = this.handleAddWatched.bind(this)
     this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
 
-    this.firebaseref = this.props.db.database().ref("users");
+    //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.firebaseref = firebase.database().ref(`users/${user.uid}`); 
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+    console.log(props.firebase.auth.app.firebase_.database().ref('users'));
+    //console.log(firebase.database().ref('users').child('A5VVmWlzyjfCkgFCd9OQmSY5QJn2'));
+    //this.props.db.database().ref("users");
+
   }
 
   /**
@@ -238,7 +249,7 @@ class MoviePage extends Component {
   handleAddFav(event) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user);
+        console.log(user.uid);
       } else {
         console.log("Not Signed In");
       }
@@ -252,9 +263,16 @@ class MoviePage extends Component {
    * @param {const} movieID
    */
   handleAddWatched(event) {
+    event.preventDefault();
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user);
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        this.firebaseref.child('watchedList').child(imdb_id)
+          .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
       } else {
         console.log("Not Signed In");
       }
@@ -270,7 +288,7 @@ class MoviePage extends Component {
   handleAddWatchLater(event) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user);
+        console.log(user.uid);
       } else {
         console.log("Not Signed In");
       }

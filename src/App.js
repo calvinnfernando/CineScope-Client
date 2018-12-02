@@ -10,13 +10,19 @@ import MoviePage from './containers/MoviePage'
 
 import { withAuthentication } from './components/Sessions';
 
-const App = () => (
+import firebase from 'firebase';
+
+const App = (fprops) => (
+	console.log(fprops),
 	<Switch>
 		<Route exact path="/" component={HomePage}/>
 		<Route path="/login" component={LoginPage}/>
 		<Route path="/register" component={SignUpPage}/>
 		<Route path="/profile" component={UserPage}/>
-		<Route path="/movie" component={MoviePage}/>
+		<Route 
+			path="/movie" 
+			render={(props) => <MoviePage {...props} {...fprops} />}
+		/>
 	</Switch>
 );
 
