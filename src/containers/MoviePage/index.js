@@ -16,7 +16,7 @@ import firebase from 'firebase';
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
-  border-radius: 20px; 
+  border-radius: 20px;
 `;
 
 const MovieInfoStyle = styled.div`
@@ -66,7 +66,7 @@ const AddToWatchList = styled.span`
   &:hover {
     background-color: #fdbcc6;
   }
-`; 
+`;
 
 
 const TrailerButton = styled.span`
@@ -101,7 +101,7 @@ const CompareButtonStyle = styled.div`
 
 class MoviePage extends Component {
   /**
-   * Constructor  
+   * Constructor
    */
   constructor(props) {
     super(props)
@@ -119,7 +119,7 @@ class MoviePage extends Component {
     this.handleAddWatched = this.handleAddWatched.bind(this)
     this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
 
-    this.firebaseref = this.props.db.database().ref("users");
+    //this.firebaseref = this.props.db.database().ref("users");
   }
 
   /**
@@ -174,7 +174,7 @@ class MoviePage extends Component {
         vote_average: movie.vote_average,
         imdb_id: movie.imdb_id
       });
-      
+
       /**
        * This method get single movie data from OMDb
        */
@@ -201,10 +201,10 @@ class MoviePage extends Component {
         });
       });
     });
-    
+
     /**
      * This method get similar movies based on the movie page
-     * 
+     *
      * @param {const} movieID
      */
     MovieService.getSimilarMovies(movieID).then((movies) => {
@@ -214,7 +214,7 @@ class MoviePage extends Component {
 
     /**
      * This method get movie trailer based on movie id
-     * 
+     *
      * @param {const} movieID
      */
     MovieService.getMovieVideos(movieID).then((videos) => {
@@ -232,7 +232,7 @@ class MoviePage extends Component {
   /**
    * This method handle adding movie to the fav list in database by
    * calling MoviePageService
-   * 
+   *
    * @param {const} movieID
    */
   handleAddFav(event) {
@@ -248,7 +248,7 @@ class MoviePage extends Component {
   /**
    * This method handle adding movie to the watched list in database by
    * calling MoviePageService
-   * 
+   *
    * @param {const} movieID
    */
   handleAddWatched(event) {
@@ -264,7 +264,7 @@ class MoviePage extends Component {
   /**
    * This method handle adding movie to the watch later list in database by
    * calling MoviePageService
-   * 
+   *
    * @param {const} movieID
    */
   handleAddWatchLater(event) {
