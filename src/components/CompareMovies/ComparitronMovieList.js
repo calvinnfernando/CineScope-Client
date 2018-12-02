@@ -1,12 +1,12 @@
 import React from 'react';
 import MovieCard from './MovieCard';
 import PropTypes from 'prop-types';
-import '../../styles/components/movieCard.css';
 
 const MovieList = (props) => {
-  const moviesArray = props.movies.map(movie => (<MovieCard key={movie.id} movie={movie} />));
+  const moviesArray = props.movies.map(movie => (<MovieCard key={movie.id} movie={movie} selectMovie={props.selectMovie} />));
+  console.log(props);
    return (
-    <div className="card-deck">
+    <div>
       {moviesArray}
     </div>
   )
