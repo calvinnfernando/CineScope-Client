@@ -2,27 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import profilepic from '../img/profpic-sponge.webp';
-
-const DropdownContent = styled.div`
-    display: none;
-    position: absolute;
-    background-color: #FFF;
-    min-width: 160px;
-    box-shadow: 2px 4px 8px 0px rgba(0,0,0,0.3);
-    padding: 12px 16px;
-    z-index: 1;
-`;
+import profilepic from '../img/profile.svg';
 
 const MenuBtnStyle = styled.div`
     position: relative;
     margin: 0px 20px;
     font-size: 20px;
-
-    &:hover ${DropdownContent} {
-        display: block;
-    }
-
     a {
         display: block;
         text-align: left;
@@ -83,13 +68,6 @@ class MenuButton extends Component {
                     </IconContainerStyle>) : this.props.name
                     }
                 </Link>
-
-                {/* Dropdown implemented in simple HTML and CSS */}
-                <DropdownContent>
-                    <Link to={{ pathname: '/profile', state: { highlights: true } }}>Highlights</Link>
-                    <Link to={{ pathname: '/profile', state: { highlights: false } }}>Watchlists</Link>
-                    {/* <a href="#"> Menu item 3 </a> */}
-                </DropdownContent>
             </MenuBtnStyle>
         );
       }

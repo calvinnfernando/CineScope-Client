@@ -8,7 +8,7 @@ import {
 } from 'reactstrap';
 
 import banner from '../img/avengers.jpg';
-import banner2 from '../img/avengers2.jpg';
+import banner2 from '../img/Venom-Banner.png';
 import banner3 from '../img/stranger.jpg';
 
 const items = [

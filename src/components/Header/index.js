@@ -1,4 +1,3 @@
-"Used template from https://reactstrap.github.io/components/navbar/"
 import React from 'react';
 import {
     Collapse,
@@ -70,12 +69,13 @@ class Header extends React.Component {
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
-                    
+
                     <AuthUserContext.Consumer>
                     {
                         authUser => authUser
                             ? <AccountIconStyle>
-                                {authUser.username} logged in <br/>
+                                Welcome {authUser.username}! <br/>
+                                <MenuButton name={"account"} />
                                 <SignOutButton/>
                               </AccountIconStyle>
                             : <AccountIconStyle><a href="/login">Login</a></AccountIconStyle>

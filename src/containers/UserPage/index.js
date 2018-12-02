@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { compose } from 'recompose';
 import Header from '../../components/Header';
 import wallpaper from './wallpaper-sponge.jpg';
-import profilepic from './profpic-sponge.webp';
+import profilepic from '../../components/img/profile.svg';
 import ironman3 from './ironman3.jpg';
 import antman from './antman.jpg';
 import heart from './heart.png';
@@ -102,25 +102,6 @@ const Icon = styled.img`
   width: 20px;
   margin-right: 5px;
 `;
-
-// let favoriteList = [
-//   {title: 'Iron Man 3', imgsrc: ironman3},
-//   {title: 'Ant Man', imgsrc: antman},
-//   {title: 'Ant Man', imgsrc: antman},
-// ];
-
-// let laterList = [
-//   {title: 'Iron Man 3', imgsrc: ironman3},
-//   {title: 'Ant Man', imgsrc: antman},
-//   {title: 'Iron Man 3', imgsrc: ironman3},
-// ];
-
-// let watchedList = [
-//   {title: 'Iron Man 3', imgsrc: ironman3},
-//   {title: 'Ant Man', imgsrc: antman},
-//   {title: 'Ant Man', imgsrc: antman},
-//   {title: 'Iron Man 3', imgsrc: ironman3},
-// ];
 
 const postList = [
   {title: "a post", description:"Just watched Ant Man", date:'Oct 31 2018'},
@@ -240,8 +221,8 @@ let wList = this.state.watchedList.map((movie, count) => {
     });
     const fList = friendsList.map((friend, count)=> {
       return <FriendsThumbnail key={friend.name + count.toString()} friendName={friend.name}/>
-    });
-
+    })
+    
 		return (
       <ProfileStyle>
         <Header />
