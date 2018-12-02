@@ -4,25 +4,38 @@ import '../../styles/components/movieCard.css';
 import styled from 'styled-components';
 
 const SelectedMovieStyle = styled.div`
-  border-style: solid;
-  border-width: 5px;
-  border-color: white;
+  outline: 5px solid white; 
 `;
 
 const MovieCardStyle = styled.div`
-width: 80%;
+margin: 15px auto;
+width: 60%;
+position: relative;
+text-align: center;
 
+img { 
+  width: 100%;
+  height: auto;
+}
 `;
 
 const MovieCardOverlay = styled.div`
-transition: .5s ease;
+background: rgba(0,0,0,0.5);
 opacity: 0;
 position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
--ms-transform: translate(-50%, -50%);
-text-align: center;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 100%;
+&:hover {
+  opacity: 1
+}
+`;
+
+const MovieCardText = styled.p`
+z-index: 5;
+margin-top: 25%;
+color: white;
 `;
 
 class MovieCard extends Component {
@@ -57,7 +70,7 @@ class MovieCard extends Component {
               onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="300" />
 
             <MovieCardOverlay>
-              <p className="card-text">{this.props.movie.title}</p>
+              <MovieCardText>{this.props.movie.title}</MovieCardText>
             </MovieCardOverlay>
           </SelectedMovieStyle>
         </MovieCardStyle>
@@ -66,12 +79,12 @@ class MovieCard extends Component {
     }
     return (
       <MovieCardStyle onClick={() => { this.props.selectMovie(this.props.movie); this.toggleSelect(); }}>
-          <img className="card-img-top movie-img"
-            src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.props.movie.poster_path}`}
-            onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="300" />
-          <MovieCardOverlay>
-            <p className="card-text">{this.props.movie.title}</p>
-          </MovieCardOverlay>
+        <img className="card-img-top movie-img"
+          src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.props.movie.poster_path}`}
+          onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="300" />
+        <MovieCardOverlay>
+          <MovieCardText>{this.props.movie.title}</MovieCardText>
+        </MovieCardOverlay>
 
       </MovieCardStyle>
     );
