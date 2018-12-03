@@ -275,7 +275,7 @@ class UserPage extends Component {
           snapshot.forEach(child => {
             if (child.val()) {
               this.setState({
-                watchedList: this.state.watchedList.concat([child.val()]),
+                watchedList: (this.state.watchedList.find((el) => { return el.id == child.val().id })) ? this.state.watchedList : this.state.watchedList.concat([child.val()]),
               });
             }
           });
@@ -285,7 +285,7 @@ class UserPage extends Component {
           snapshot.forEach(child=> {
             if (child.val()) {
               this.setState({
-                favoriteList: this.state.favoriteList.concat([child.val()]),
+                favoriteList: (this.state.favoriteList.find((el) => { return el.id == child.val().id })) ? this.state.favoriteList : this.state.favoriteList.concat([child.val()]),
               });
             }
     
@@ -296,7 +296,7 @@ class UserPage extends Component {
           snapshot.forEach(child=> {
             if (child.val()) {
               this.setState({
-                laterList: this.state.laterList.concat([child.val()]),
+                laterList: (this.state.laterList.find((el) => { return el.id == child.val().id })) ? this.state.laterList : this.state.laterList.concat([child.val()]),
               });
             }
           });
@@ -332,7 +332,7 @@ class UserPage extends Component {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                watchedList: this.state.watchedList.concat([child.val()]),
+                watchedList: (this.state.watchedList.find((el) => { return el.id == child.val().id })) ? this.state.watchedList : this.state.watchedList.concat([child.val()]),
               });
             }
           });
@@ -343,7 +343,7 @@ class UserPage extends Component {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                favoriteList: this.state.favoriteList.concat([child.val()]),
+                favoriteList: (this.state.favoriteList.find((el) => { return el.id == child.val().id })) ? this.state.favoriteList : this.state.favoriteList.concat([child.val()]),
               });
             }
     
@@ -355,7 +355,7 @@ class UserPage extends Component {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                laterList: this.state.laterList.concat([child.val()]),
+                laterList: (this.state.laterList.find((el) => { return el.id == child.val().id })) ? this.state.laterList : this.state.laterList.concat([child.val()]),
               });
             }
           });
