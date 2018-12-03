@@ -250,6 +250,61 @@ class UserPage extends Component {
     this.setState({ watchedList: newWatchedList });
   }
 
+  componentWillReceiveProps(props) {
+    const {location} = props;
+    this.setState({profileId: location.pathname.split('/')[2]});
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        
+        // is the user visiting the owner of the profile page?
+        const owner = (this.state.profileId) ? user.uid === this.state.profileId : true;
+        this.setState({
+          userIsOwner: owner,
+          profileId: (!this.state.profileId) ? user.uid : this.state.profileId,
+        });
+
+        const profId = this.state.profileId;
+        const userDetails = firebase.database().ref().child('users/' + profId);
+        userDetails.once('value').then((snap) => {
+          if(snap.val()) {
+            this.setState({user: snap.val()});
+          }
+        });
+        const watchedRef = firebase.database().ref().child('users/' + profId + '/watchedList').orderByKey();
+        watchedRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            if (child.val()) {
+              this.setState({
+                watchedList: this.state.watchedList.concat([child.val()]),
+              });
+            }
+          });
+        });
+        const favoritesRef = firebase.database().ref().child('users/' + profId + '/favoriteList').orderByKey();
+        favoritesRef.once('value').then((snapshot) => {
+          snapshot.forEach(child=> {
+            if (child.val()) {
+              this.setState({
+                favoriteList: this.state.favoriteList.concat([child.val()]),
+              });
+            }
+    
+          });
+        });
+        const laterRef = firebase.database().ref().child('users/' + profId + '/watchLaterList').orderByKey();
+        laterRef.once('value').then((snapshot) => {
+          snapshot.forEach(child=> {
+            if (child.val()) {
+              this.setState({
+                laterList: this.state.laterList.concat([child.val()]),
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
   componentWillMount() {
     // Authentication Stuff
     firebase.auth().onAuthStateChanged((user) => {
@@ -259,7 +314,9 @@ class UserPage extends Component {
         this.setState({
           userIsOwner: owner,
           profileId: (!this.state.profileId) ? user.uid : this.state.profileId,
-          user: user,
+          favoriteList: [],
+          laterList: [],
+          watchedList: [],
         });
 
         const profId = this.state.profileId;
