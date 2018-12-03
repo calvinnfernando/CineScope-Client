@@ -13,30 +13,21 @@ import { withAuthentication } from './components/Sessions';
 
 import firebase from 'firebase';
 
-		// Initialize Firebase
-		var config = {
-			apiKey: "AIzaSyAm-9jm4Lq3qOzWxMa5r4eDqiqPdIgI11s",
-			authDomain: "cine-scope.firebaseapp.com",
-			databaseURL: "https://cine-scope.firebaseio.com",
-			projectId: "cine-scope",
-			storageBucket: "cine-scope.appspot.com",
-			messagingSenderId: "692991307960"
-		};
-		firebase.initializeApp(config);
-	}
-	render(){
-		return (
-			<Switch>
-				<Route exact path="/" component={HomePage}/>
-				<Route path="/login" component={LoginPage}/>
-				<Route path="/profile" component={UserPage}/>
-				<Route path="/movie" component={MoviePage}/>
-				<Route path="/movie/:id" component={MoviePage} />
-				<Route path="/all-movies" component={AllMoviesPage}/>
-				<Route path="/Comparitron" component={ComparitronPage}/>
-			</Switch>
-		);
-	}
-}
+const App = (fprops) => (
+	console.log(fprops),
+	<Switch>
+		<Route exact path="/" component={HomePage}/>
+		<Route path="/login" component={LoginPage}/>
+		<Route path="/profile" component={UserPage}/>
+		<Route
+				path="/movie"
+				render={(props) => <MoviePage {...props} {...fprops} />}
+		/>
+		<Route path="/movie/:id" component={MoviePage} />
+		<Route path="/all-movies" component={AllMoviesPage}/>
+		<Route path="/register" component={SignUpPage}/>
+		<Route path="/Comparitron" component={ComparitronPage}/>
+	</Switch>
+);
 
 export default withAuthentication(App);
