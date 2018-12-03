@@ -21,7 +21,7 @@ class RecommendedMovies extends Component {
         this.state = {
             movies: [],
             activeItemIndex: 0,
-            query: 338952
+            query: 338952 // Needs to be changed
         };
     }
 
@@ -52,12 +52,6 @@ class RecommendedMovies extends Component {
                 <div className="d-flex flex-row mt-2">
                     <div className="col-sm-12">
                         <ItemsCarousel
-                            // Placeholder configurations
-                            enablePlaceholder
-                            numberOfPlaceholderItems={5}
-                            minimumPlaceholderTime={1000}
-                            placeholderItem={<div style={{ height: 300, width: 200, background: '#900' }}>Placeholder</div>}
-
                             // Carousel configurations
                             numberOfCards={4}
                             gutter={12}

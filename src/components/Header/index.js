@@ -1,4 +1,3 @@
-"Used template from https://reactstrap.github.io/components/navbar/"
 import React from 'react';
 import {
     Collapse,
@@ -12,6 +11,7 @@ import {
 import MenuButton from './MenuButton.js';
 import styled from 'styled-components';
 import logo from '../img/logo.svg';
+import { AuthUserContext } from '../Sessions';
 
 const LogoStyle = styled.div`
 margin: 10px auto;
@@ -45,32 +45,39 @@ class Header extends React.Component {
     render() {
         return (
             <div>
-                {/*Setting the color and setting display adjustments*/}
+                {/* Setting the color and setting display adjustments */}
                 <Navbar color="warning" light expand="md">
                     {/*Logo; redirects back to main page*/}
                     <LogoStyle className="col-md-2">
                         <a href="/"><img src={logo} alt='CineScope' /></a>
                     </LogoStyle>
                     {/*Compresses navbar buttons into a toggler if the window is too small*/}
-                    <NavbarToggler onClick={this.toggle}/>
+                    <NavbarToggler onClick={this.toggle} />
                     {/*Navbar contents*/}
                     <Collapse className="col-md-8" isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/all-movies">All Movies</NavLink>
                             </NavItem>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/Comparitron">Comparitron</NavLink>
-                            </NavItem>
+                            </NavItem>                          
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
-                    <AccountIconStyle className="col-md-2">
-                        <MenuButton name={"account"} link={"/profile"} />
-                    </AccountIconStyle>
+                    <AuthUserContext.Consumer>
+                        {
+                            authUser => authUser
+                                ? <AccountIconStyle className="col-md-2">
+                                    <MenuButton name={"account"} username={authUser.username} />
+                                </AccountIconStyle>
+                                : <AccountIconStyle className="col-md-2"><a href="/login">Login</a></AccountIconStyle>
+                        }
+                    </AuthUserContext.Consumer>
+
                 </Navbar>
             </div>
         );
