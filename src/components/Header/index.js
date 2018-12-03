@@ -72,7 +72,7 @@ class Header extends React.Component {
                         {
                             authUser => authUser
                                 ? <AccountIconStyle className="col-md-2">
-                                    <MenuButton name={"account"} />
+                                    <MenuButton name={"account"} username={authUser.username} />
                                 </AccountIconStyle>
                                 : <AccountIconStyle className="col-md-2"><a href="/login">Login</a></AccountIconStyle>
                         }
