@@ -52,16 +52,16 @@ const MovieCard = (props) => (
       </a>
     </div>
     {
-        (props.onEdit) && (
-          <div>
-            <Btn type="button" onClick={() => {
-              props.deleteMovie(props.count);
-            }}>
-              &times;
+      (props.onEdit) && (
+        <div>
+          <Btn type="button" onClick={() => {
+            props.deleteMovie(props.count);
+          }}>
+            &times;
             </Btn>
-          </div>
-        )
-      }
+        </div>
+      )
+    }
   </MovieCardStyle>
 );
 
@@ -144,6 +144,23 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
+const ErrorMessage = styled.div`
+  text-align: center;
+  margin: auto;
+  font-size: 2em;
+  margin-top: 2em;
+  color: #ddd;
+
+  a {
+    color: #999;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: white;
+  }
+`;
+
 const postList = [
   { title: "a post", description: "Just watched Ant Man", date: 'Oct 31 2018' },
   { title: "a post", description: "Just watched Iron Man 3", date: 'Nov 2 2018' },
@@ -169,8 +186,8 @@ class UserPage extends Component {
     this.deleteWatched = this.deleteWatched.bind(this);
   }
 
-  deleteFav(id,i) {
-    
+  deleteFav(id, i) {
+
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('users/' + user.uid + '/favoriteList/' + id);
@@ -182,7 +199,7 @@ class UserPage extends Component {
     this.setState({ favoriteList: newFavList });
   }
 
-  deleteLater(id,i) {
+  deleteLater(id, i) {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('users/' + user.uid + '/watchLaterList/' + id);
@@ -194,7 +211,7 @@ class UserPage extends Component {
     this.setState({ laterList: newLaterList });
   }
 
-  deleteWatched(id,i) {
+  deleteWatched(id, i) {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('users/' + user.uid + '/watchedList/' + id);
@@ -287,14 +304,14 @@ class UserPage extends Component {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date} />
     });
 
-    const favoriteMovies = this.state.favoriteList.map((movieData,count) => {
-      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.imdb_id,count)} onEdit={this.state.editFav} />
+    const favoriteMovies = this.state.favoriteList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.imdb_id, count)} onEdit={this.state.editFav} />
     })
-    const watchedMovies = this.state.watchedList.map((movieData,count) => {
-      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteWatched(movieData.imdb_id,count)} onEdit={this.state.editWatched} />
+    const watchedMovies = this.state.watchedList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteWatched(movieData.imdb_id, count)} onEdit={this.state.editWatched} />
     })
-    const watchLaterMovies = this.state.laterList.map((movieData,count) => {
-      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteLater(movieData.imdb_id,count)} onEdit={this.state.editLater} />
+    const watchLaterMovies = this.state.laterList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteLater(movieData.imdb_id, count)} onEdit={this.state.editLater} />
     })
 
 
@@ -303,108 +320,124 @@ class UserPage extends Component {
     return (
       <ProfileStyle>
         <Header />
-        <div className="container-fluid row mx-auto">
-          <div className="col-2"></div>
-          <div className="col-8">
-            <Profile>
-              <div>
-                <Banner src={wallpaper} />
-                <div className="container-fluid row">
-                  <Img src={profilepic} />
-                  <Name />
-                  <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
-                    this.setState({ displayHighlights: true });
-                  }}>
-                    Highlights
-                  </HighlightsButton>
-                  <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
-                    this.setState({ displayHighlights: false });
-                  }}>
-                    Watchlists
-                  </WatchlistsButton>
-                </div>
-              </div>
-            </Profile>
 
-            {/* start of main body */}
-            <div>
+        <AuthUserContext.Consumer>
+          {
+            authUser => authUser ?
 
-              {this.state.displayHighlights ? (
-
-                <div className="row">
-                  <div className="left-div col">
-                    <UserDescription />
-                  </div>
-
-                  <div className="right-div col">
-                    <Box>
-                      <Title>
-                        Activity Feed
-                    </Title>
-                      {pList}
-                    </Box>
-                  </div>
-                </div>
-
-              ) : (
-
-                  <div className="row">
-                    <div className="left-div col">
-                      <Box>
-                        <Title>
-                          <Icon src={heart} alt='heart' />
-                          Favorites:
-                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                            this.setState({ editFav: (this.state.editFav) ? false : true });
-                          }}>
-                            {(this.state.editFav) ? "Done" : "Edit"}
-                          </EditListButton>
-                        </Title>
-                        <MovieList className='row'>
-                          {favoriteMovies}
-                        </MovieList>
-                      </Box>
-
-                      <Box>
-                        <Title>
-                          <Icon src={watchLater} alt='watchLater' />
-                          Watch Later:
-                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                            this.setState({ editLater: (this.state.editLater) ? false : true });
-                          }}>
-                            {(this.state.editLater) ? "Done" : "Edit"}
-                          </EditListButton>
-                        </Title>
-                        <MovieList className='row'>
-                          {watchLaterMovies}
-                        </MovieList>
-                      </Box>
-
-                      <Box>
-                        <Title>
-                          <Icon src={watched} alt='watched' />
-                          Watched:
-                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                            this.setState({ editWatched: (this.state.editWatched) ? false : true });
-                          }}>
-                            {(this.state.editWatched) ? "Done" : "Edit"}
-                          </EditListButton>
-                        </Title>
-                        <MovieList className='row'>
-                          {watchedMovies}
-                        </MovieList>
-                      </Box>
+              (<div className="container-fluid row mx-auto">
+                <div className="col-2"></div>
+                <div className="col-8">
+                  <Profile>
+                    <div>
+                      <Banner src={wallpaper} />
+                      <div className="container-fluid row">
+                        <Img src={profilepic} />
+                        <Name />
+                        <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
+                          this.setState({ displayHighlights: true });
+                        }}>
+                          Highlights
+              </HighlightsButton>
+                        <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
+                          this.setState({ displayHighlights: false });
+                        }}>
+                          Watchlists
+              </WatchlistsButton>
+                      </div>
                     </div>
+                  </Profile>
+
+                  {/* start of main body */}
+                  <div>
+
+                    {this.state.displayHighlights ? (
+
+                      <div className="row">
+                        <div className="left-div col">
+                          <UserDescription />
+                        </div>
+
+                        <div className="right-div col">
+                          <Box>
+                            <Title>
+                              Activity Feed
+                </Title>
+                            {pList}
+                          </Box>
+                        </div>
+                      </div>
+
+                    ) : (
+
+                        <div className="row">
+                          <div className="left-div col">
+                            <Box>
+                              <Title>
+                                <Icon src={heart} alt='heart' />
+                                Favorites:
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                  this.setState({ editFav: (this.state.editFav) ? false : true });
+                                }}>
+                                  {(this.state.editFav) ? "Done" : "Edit"}
+                                </EditListButton>
+                              </Title>
+                              <MovieList className='row'>
+                                {favoriteMovies}
+                              </MovieList>
+                            </Box>
+
+                            <Box>
+                              <Title>
+                                <Icon src={watchLater} alt='watchLater' />
+                                Watch Later:
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                  this.setState({ editLater: (this.state.editLater) ? false : true });
+                                }}>
+                                  {(this.state.editLater) ? "Done" : "Edit"}
+                                </EditListButton>
+                              </Title>
+                              <MovieList className='row'>
+                                {watchLaterMovies}
+                              </MovieList>
+                            </Box>
+
+                            <Box>
+                              <Title>
+                                <Icon src={watched} alt='watched' />
+                                Watched:
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                  this.setState({ editWatched: (this.state.editWatched) ? false : true });
+                                }}>
+                                  {(this.state.editWatched) ? "Done" : "Edit"}
+                                </EditListButton>
+                              </Title>
+                              <MovieList className='row'>
+                                {watchedMovies}
+                              </MovieList>
+                            </Box>
+                          </div>
+                        </div>
+
+                      )}
+
                   </div>
+                  {/* end of main body */}
+                </div>
+                <div className="col-2"></div>
+              </div>)
 
-                )}
+              :
+              (<ErrorMessage>
+                  Please <a href="/register">create an account</a> to view your profile.
+                </ErrorMessage>)
 
-            </div>
-            {/* end of main body */}
-          </div>
-          <div className="col-2"></div>
-        </div>
+          }
+        </AuthUserContext.Consumer>
+
+
       </ProfileStyle>
+
     );
   }
 }
