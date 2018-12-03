@@ -4,7 +4,8 @@ import { Navbar } from 'reactstrap';
 import ComparitronMovieList from '../../components/CompareMovies/ComparitronMovieList';
 import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
-import ReviewCompare from '../../components/CompareMovies/ReviewCompare';
+import ReviewCompareList from '../../components/CompareMovies/ReviewCompareList';
+
 
 const ComparitronLogo = styled.p`
   font-size: 25px;
@@ -118,13 +119,13 @@ class ComparitronPage extends Component {
     var movieSelections = this.state.movieSelections;
 
     var movieExists = movieSelections.findIndex((el, i) => {
-      return el === movie.title;
+      return el.id === movie.id;
     });
     if (movieExists !== -1) {
       movieSelections.splice(movieExists, 1);
     }
     else {
-      movieSelections.push(movie.title);
+      movieSelections.push(movie);
     }
 
     this.setState({ movieSelections: movieSelections });
@@ -134,7 +135,7 @@ class ComparitronPage extends Component {
     const movieSelections = this.state.movieSelections;
 
     movieSelections.some((el, i) => {
-      if (el === item) {
+      if (el.id === item.id) {
         movieSelections.splice(i, 1);
         return true;
       }
@@ -195,7 +196,12 @@ class ComparitronPage extends Component {
               <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
             </ComparitronMovieHolder>
           </Sidebars>
-          <MainContent></MainContent>
+          <MainContent>
+		  	<ReviewCompareList
+				movies={this.state.movieSelections}
+				chartSelections={this.state.chartSelections}
+			/>
+		  </MainContent>
           <Sidebars>
             <p style={{ paddingTop: 15, fontFamily: "Calibri", fontWeight: "bold", color: "gray" }}>SELECT CHARTS</p>
             <ReviewSelection id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</ReviewSelection>
@@ -207,9 +213,9 @@ class ComparitronPage extends Component {
             <p style={{ fontWeight: "bold", fontColor: "grey", fontFamily: "Calibri", color: "gray" }}>SELECTED MOVIES</p>
             <ul style={{ paddingInlineStart: 0 }}>
               {this.state.movieSelections.map(item => (
-                <MovieSelection key={item}>
+                <MovieSelection key={item.title}>
                   <span style={{ cursor: "pointer", color: "#dedede", fontSize: 17 }} onClick={() => this.removeMovie(item)}>X</span>
-                  &nbsp; &nbsp; {item}
+                  &nbsp; &nbsp; {item.title}
                 </MovieSelection>
               ))}
             </ul>
