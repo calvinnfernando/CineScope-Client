@@ -20,7 +20,52 @@ import firebase from 'firebase';
 import { withFirebase } from '../../components/Firebase';
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
-const ProfileStyle =  styled.div`
+import '../../styles/components/movieCard.css';
+
+const Btn = styled.button`
+  border-radius: 200px;
+  background-color: firebrick;
+  color: white;
+  position: absolute;
+  top: -10px;
+  right: 0px;
+  font-size: 15px;
+  font-weight: bold;
+  padding-top: -5px;
+  padding-right: -5px;
+`;
+
+const MovieCardStyle = styled.div`
+  position: relative;
+`;
+
+const MovieCard = (props) => (
+  <MovieCardStyle>
+    <div className="movie-card card">
+      <img className="card-img-top movie-img"
+        src={"http://image.tmdb.org/t/p/w185" + props.poster}
+        onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="298" />
+      <a href={"/movie/" + parseInt(props.id)}>
+        <div className="card-img-overlay movie-description">
+          <p className="card-text">{props.movie_title}</p>
+        </div>
+      </a>
+    </div>
+    {
+      (props.onEdit) && (
+        <div>
+          <Btn type="button" onClick={() => {
+            props.deleteMovie(props.count);
+          }}>
+            &times;
+            </Btn>
+        </div>
+      )
+    }
+  </MovieCardStyle>
+);
+
+const ProfileStyle = styled.div`
   background-color: #232323;
   color: #232323;
 `;
@@ -76,7 +121,6 @@ const WatchlistsButton = styled.button`
 `;
 
 const MovieList = styled.div`
-
 `;
 
 const Box = styled.div`
@@ -99,6 +143,7 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
+
 const UserBodyStyle = styled.div`
   display: flex;
   flex-direction: row;
@@ -108,19 +153,35 @@ const UserBodyStyle = styled.div`
   min-width: 768px;
 `;
 
-const UserPageBtn = styled.div`
-  
+const UserPageBtn = styled.div``;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  margin: auto;
+  font-size: 2em;
+  margin-top: 2em;
+  color: #ddd;
+
+  a {
+    color: #999;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: white;
+  }
+
 `;
 
 const postList = [
-  {title: "a post", description:"Just watched Ant Man", date:'Oct 31 2018'},
-  {title: "a post", description:"Just watched Iron Man 3", date:'Nov 2 2018'},
-  {title: "a post", description:"Just watched Fast and Furious 12", date:'Nov 3 2018'},
-  {title: "a post", description:"Just watched Beauty and The Beast", date:'Nov 4 2018'},
+  { title: "a post", description: "Just watched Ant Man", date: 'Oct 31 2018' },
+  { title: "a post", description: "Just watched Iron Man 3", date: 'Nov 2 2018' },
+  { title: "a post", description: "Just watched Fast and Furious 12", date: 'Nov 3 2018' },
+  { title: "a post", description: "Just watched Beauty and The Beast", date: 'Nov 4 2018' },
 ];
 
 class UserPage extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       displayHighlights: (props.location.state) ? props.location.state.highlights : true,
@@ -137,234 +198,257 @@ class UserPage extends Component {
     this.deleteWatched = this.deleteWatched.bind(this);
   }
 
-  deleteFav(i){
+  deleteFav(id, i) {
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('users/' + user.uid + '/favoriteList/' + id);
+        return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(id).remove();
+      }
+    });
     this.state.favoriteList.splice(i, 1);
     let newFavList = this.state.favoriteList;
     this.setState({ favoriteList: newFavList });
   }
 
-  deleteLater(i){
+  deleteLater(id, i) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('users/' + user.uid + '/watchLaterList/' + id);
+        return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(id).remove();
+      }
+    });
     this.state.laterList.splice(i, 1);
     let newLaterList = this.state.laterList;
     this.setState({ laterList: newLaterList });
   }
 
-  deleteWatched(i){
+  deleteWatched(id, i) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('users/' + user.uid + '/watchedList/' + id);
+        return firebase.database().ref('users/' + user.uid + '/watchedList/').child(id).remove();
+      }
+    });
     this.state.watchedList.splice(i, 1);
     let newWatchedList = this.state.watchedList;
     this.setState({ watchedList: newWatchedList });
   }
 
-  componentWillMount(){
+  componentWillMount() {
     // Authentication Stuff
     firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const watchedRef = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
+        watchedRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            console.log(child.val());
+            if (child.val()) {
+              this.setState({
+                watchedList: this.state.watchedList.concat([child.val()]),
+              });
+            }
+          });
+        });
+        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
+        favoritesRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            console.log(child.val());
+            if (child.val()) {
+              this.setState({
+                favoriteList: this.state.favoriteList.concat([child.val()]),
+              });
+            }
+
+          });
+        });
+        const laterRef = firebase.database().ref().child('users/' + user.uid + '/watchLaterList').orderByKey();
+        laterRef.once('value').then((snapshot) => {
+          snapshot.forEach(child => {
+            console.log(child.val());
+            if (child.val()) {
+              this.setState({
+                laterList: this.state.laterList.concat([child.val()]),
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  //Testing out removing firebase data
+  /*handleRemove(movieKey) {
+    firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-    const watchedRef = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
-    watchedRef.once('value').then((snapshot) => {
-      snapshot.forEach(child => {
-        console.log(child.val().poster);
-        this.setState({
-          watchedList: this.state.watchedList.concat([child.val().poster]),
-        });
+      let key = movieKey
+      return firebase.database().ref('users/' + user.uid + '/watchedList' + key).remove();
+    }
+  }*/
+
+  /*    old render functions
+  let wList = this.state.watchedList.map((movie, count) => {
+        if (this.state.editWatched){
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+        } else {
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
+        }
       });
-    });
-    const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
-    favoritesRef.once('value').then((snapshot) => {
-      snapshot.forEach(child => {
-        console.log(child.val().poster);
-        this.setState({
-          favoriteList: this.state.favoriteList.concat([child.val().poster]),
-        });
+      let favList = this.state.favoriteList.map((movie, count) => {
+        if (this.state.editFav){
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
+        } else {
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
+        }
       });
-    });
-    const laterRef = firebase.database().ref().child('users/' + user.uid + '/watchLaterList').orderByKey();
-    laterRef.once('value').then((snapshot) => {
-      snapshot.forEach(child => {
-        console.log(child.val().poster);
-        this.setState({
-          laterList: this.state.laterList.concat([child.val().poster]),
-        });
+      let wlList = this.state.laterList.map((movie, count) => {
+        if (this.state.editLater){
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
+        } else {
+          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
+        }
       });
-    });
-  }
-});
-}
+      */
 
-//Testing out removing firebase data
-/*handleRemove(movieKey) {
-  firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    let key = movieKey
-    return firebase.database().ref('users/' + user.uid + '/watchedList' + key).remove();
-  }
-}*/
+  render() {
 
-/*    old render functions
-let wList = this.state.watchedList.map((movie, count) => {
-      if (this.state.editWatched){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-      }
-    });
-    let favList = this.state.favoriteList.map((movie, count) => {
-      if (this.state.editFav){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
-      }
-    });
-    let wlList = this.state.laterList.map((movie, count) => {
-      if (this.state.editLater){
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-      } else {
-        return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-      }
-    });
-    */
-
-  render(){
-
-    const pList = postList.map((post, count)=> {
-      return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date}/>
+    const pList = postList.map((post, count) => {
+      return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date} />
     });
 
-		return (
+    const favoriteMovies = this.state.favoriteList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.imdb_id, count)} onEdit={this.state.editFav} />
+    })
+    const watchedMovies = this.state.watchedList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteWatched(movieData.imdb_id, count)} onEdit={this.state.editWatched} />
+    })
+    const watchLaterMovies = this.state.laterList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteLater(movieData.imdb_id, count)} onEdit={this.state.editLater} />
+    })
+
+    console.log(this.state.watchedList);
+
+    return (
       <ProfileStyle>
         <Header />
-        <div className="container-fluid row mx-auto">
-          <div className="col-2"></div>
-          <div className="col-8">
-            <Profile>
-                <Banner src={wallpaper} />
-                <div className="container-fluid row">
-                  <Img src={profilepic}/>
-                  <Name/>
-                  <div className="col-md-4 offset-md-5">
-                    <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
-                      this.setState({ displayHighlights: true });
-                    }}>
-                      Highlights
-                    </HighlightsButton>
-                    <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
-                      this.setState({ displayHighlights: false });
-                    }}>
-                      Watchlists
-                    </WatchlistsButton>
+
+        <AuthUserContext.Consumer>
+          {
+            authUser => authUser ?
+
+              (<div className="container-fluid row mx-auto">
+                <div className="col-2"></div>
+                <div className="col-8">
+                  <Profile>
+                    <div>
+                      <Banner src={wallpaper} />
+                      <div className="container-fluid row">
+                        <Img src={profilepic} />
+                        <Name />
+                        <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
+                          this.setState({ displayHighlights: true });
+                        }}>
+                          Highlights
+              </HighlightsButton>
+                        <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
+                          this.setState({ displayHighlights: false });
+                        }}>
+                          Watchlists
+              </WatchlistsButton>
+                      </div>
+                    </div>
+                  </Profile>
+
+                  {/* start of main body */}
+                  <UserBodyStyle>
+                    {/* INTRO */}
+                    <div className="col-md-6">
+                      <UserDescription/>
+                    </div>
+
+                    {/* ACTIVITY FEED */}
+                    <div className="col-md-6">
+                      <Box>
+                        <Title>
+                          Activity Feed
+                        </Title>
+                        {pList}
+                      </Box>
+                    </div>
+                  </UserBodyStyle>
+
+                    ) : (
+
+                        <div className="row">
+                          <div className="left-div col">
+                            <Box>
+                              <Title>
+                                <Icon src={heart} alt='heart' />
+                                Favorites:
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                  this.setState({ editFav: (this.state.editFav) ? false : true });
+                                }}>
+                                  {(this.state.editFav) ? "Done" : "Edit"}
+                                </EditListButton>
+                              </Title>
+                              <MovieList className='row'>
+                                {favoriteMovies}
+                              </MovieList>
+                            </Box>
+
+                            <Box>
+                              <Title>
+                                <Icon src={watchLater} alt='watchLater' />
+                                Watch Later:
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                  this.setState({ editLater: (this.state.editLater) ? false : true });
+                                }}>
+                                  {(this.state.editLater) ? "Done" : "Edit"}
+                                </EditListButton>
+                              </Title>
+                              <MovieList className='row'>
+                                {watchLaterMovies}
+                              </MovieList>
+                            </Box>
+
+                            <Box>
+                              <Title>
+                                <Icon src={watched} alt='watched' />
+                                Watched:
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                  this.setState({ editWatched: (this.state.editWatched) ? false : true });
+                                }}>
+                                  {(this.state.editWatched) ? "Done" : "Edit"}
+                                </EditListButton>
+                              </Title>
+                              <MovieList className='row'>
+                                {watchedMovies}
+                              </MovieList>
+                            </Box>
+                          </div>
+                        </div>
+
+                      )}
+
                   </div>
-                </div>
-            </Profile>
+                  {/* end of main body */}
 
-            {/* start of main body */}
-            <div>
+                <div className="col-2"></div>
+              </div>)
 
-            {this.state.displayHighlights ? (
+              :
+              (<ErrorMessage>
+                  Please <a href="/register">create an account</a> to view your profile.
+                </ErrorMessage>)
 
-              <UserBodyStyle>
-                {/* INTRO */}
-                <div className="col-md-6">
-                  <UserDescription/>
-                </div>
+          }
+        </AuthUserContext.Consumer>
 
-                {/* ACTIVITY FEED */}
-                <div className="col-md-6">
-                  <Box>
-                    <Title>
-                      Activity Feed
-                    </Title>
-                    {pList}
-                  </Box>
-                </div>
-              </UserBodyStyle>
 
-            ) : (
-
-              <div className="row">
-                <div className="left-div col">
-                  <Box>
-                    <Title>
-                      <Icon src={heart} alt='heart'/>
-                      Favorites:
-                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                        this.setState({ editFav: (this.state.editFav) ? false : true });
-                      }}>
-                        { (this.state.editFav) ? "Done" : "Edit" }
-                      </EditListButton>
-                    </Title>
-                    <MovieList className='row'>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[0]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[1]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[2]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[3]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.favoriteList[4]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    </MovieList>
-                  </Box>
-
-                  <Box>
-                    <Title>
-                      <Icon src={watchLater} alt='watchLater'/>
-                      Watch Later:
-                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                        this.setState({ editLater: (this.state.editLater) ? false : true });
-                      }}>
-                        { (this.state.editLater) ? "Done" : "Edit" }
-                      </EditListButton>
-                    </Title>
-                    <MovieList className='row'>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[0]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[1]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[2]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[3]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.laterList[4]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    </MovieList>
-                  </Box>
-
-                  <Box>
-                    <Title>
-                      <Icon src={watched} alt='watched'/>
-                      Watched:
-                      <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                        this.setState({ editWatched: (this.state.editWatched) ? false : true });
-                      }}>
-                        { (this.state.editWatched) ? "Done" : "Edit" }
-                      </EditListButton>
-                    </Title>
-                    <MovieList className='row'>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[0]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[1]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[2]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[3]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    <img src={"http://image.tmdb.org/t/p/w185"+this.state.watchedList[4]}
-                    onError={(e) => {e.target.src="https://i.imgur.com/SeLMJwk.png"}} alt="" width="200" height="298"/>
-                    </MovieList>
-                  </Box>
-                </div>
-              </div>
-
-            )}
-
-            </div>
-            {/* end of main body */}
-          </div>
-          <div className="col-2"></div>
-        </div>
       </ProfileStyle>
-		);
-	}
+
+    );
+  }
 }
 
 export default compose(withAuthentication)(UserPage);
