@@ -87,7 +87,6 @@ const Img = styled.img`
   border: 5px solid #787878;
 `;
 
-
 const EditListButton = styled.button`
   position: absolute;
   right: 40px;
@@ -98,7 +97,6 @@ const SmallText = styled.p`
   margin-left: 15px;
   margin-bottom: 5px;
 `;
-
 
 const HighlightsButton = styled.button`
   position: relative;
@@ -154,7 +152,12 @@ const ErrorMessage = styled.div`
     text-decoration: none;
     color: white;
   }
+`;
 
+const ListTitle = styled.div`
+  text-align: center;
+  font-Weight: bold;
+  color: #FFFFFF;
 `;
 
 class UserPage extends Component {
@@ -307,23 +310,30 @@ class UserPage extends Component {
                             {(this.state.editFav) ? "Done" : "Edit"}
                           </EditListButton>
                         </Title>
+                        {favoriteMovies.length !== 0 ?
                         <MovieList className='row'>
                           {favoriteMovies}
-                        </MovieList>
+                        </MovieList> :
+                        <ListTitle>No movies in Favorites list</ListTitle>
+                      }
                       </Box>
 
                       <Box>
                         <Title>
                           <Icon src={watchLater} alt='watchLater' />
-                          Watch Later:                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                          Watch Later:
+                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                             this.setState({ editLater: (this.state.editLater) ? false : true });
                           }}>
                             {(this.state.editLater) ? "Done" : "Edit"}
                           </EditListButton>
                         </Title>
+                        {watchLaterMovies.length !== 0 ?
                         <MovieList className='row'>
                           {watchLaterMovies}
-                        </MovieList>
+                        </MovieList> :
+                        <ListTitle>No movies in Watch Later list</ListTitle>
+                      }
                       </Box>
 
                       <Box>
@@ -336,9 +346,12 @@ class UserPage extends Component {
                             {(this.state.editWatched) ? "Done" : "Edit"}
                           </EditListButton>
                         </Title>
+                        {watchedMovies.length !== 0 ?
                         <MovieList className='row'>
                           {watchedMovies}
-                        </MovieList>
+                        </MovieList> :
+                        <ListTitle>No movies in Watched list</ListTitle>
+                      }
                       </Box>
                     </div>
                   </div>
