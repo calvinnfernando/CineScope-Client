@@ -191,9 +191,6 @@ class MoviePage extends Component {
     this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
-    this.handleAddFav = this.handleAddFav.bind(this)
-    // this.handleAddWatched = this.handleAddWatched.bind(this)
-    // this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
     this.handleReviewChange = this.handleReviewChange.bind(this)
     this.uploadReview = this.uploadReview.bind(this)
     this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
@@ -233,15 +230,6 @@ class MoviePage extends Component {
 
     var rating = this.state.dropdownValue;
     this.setState({ ratingPostedMessage: true });
-
-    /*MovieService.getSessionId().then((id) => {
-      console.log(id);
-      const rating = this.state.dropdownValue;
-      const movieID = this.state.movie_id;
-      MovieService.postRating(rating, movieID, id).then(() => {
-        this.setState({ ratingPostedMessage: true });
-      });
-    });*/
 
     var ratingRef = firebase.database().ref('movies/' + this.state.movie_id);
     var newNumberOfRatings = 0;
@@ -311,7 +299,6 @@ class MoviePage extends Component {
         overview: movie.overview,
         poster: movie.poster_path,
         year: year,
-        vote_average: movie.vote_average,
         imdb_id: movie.imdb_id
       });
 
@@ -487,11 +474,6 @@ class MoviePage extends Component {
           }
         });
 
-        //this.setState({movieInFavorites: true});
-        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
-
-        this.firebaseref.child('watchedList').child(imdb_id)
-          .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id });
       } else {
         this.signInNotification();
       }
