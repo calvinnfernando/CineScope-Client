@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-
-import firebase from 'firebase';
 
 import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
 import UserPage from './containers/UserPage';
+import SignUpPage from './containers/SignUpPage';
 import MoviePage from './containers/MoviePage';
 import AllMoviesPage from './containers/AllMoviesPage';
 import ComparitronPage from './containers/ComparitronPage';
 
-class App extends Component {
-	constructor(props){
-		super(props);
+import { withAuthentication } from './components/Sessions';
+
+import firebase from 'firebase';
 
 		// Initialize Firebase
 		var config = {
@@ -40,4 +39,4 @@ class App extends Component {
 	}
 }
 
-export default App;
+export default withAuthentication(App);

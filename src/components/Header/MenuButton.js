@@ -1,28 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import SignOutButton from '../SignOut';
+import profilepic from '../img/profile.svg';
 
-import profilepic from '../img/profpic-sponge.webp';
-
-const DropdownContent = styled.div`
-    display: none;
-    position: absolute;
-    background-color: #FFF;
-    min-width: 160px;
-    box-shadow: 2px 4px 8px 0px rgba(0,0,0,0.3);
-    padding: 12px 16px;
-    z-index: 1;
-`;
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const MenuBtnStyle = styled.div`
     position: relative;
     margin: 0px 20px;
     font-size: 20px;
-
-    &:hover ${DropdownContent} {
-        display: block;
-    }
-
     a {
         display: block;
         text-align: left;
@@ -71,29 +58,48 @@ const IconContainerStyle = styled.div`
 `;
 
 class MenuButton extends Component {
+  constructor(props) {
+    super(props);
 
-    render() {
-        return (
-            <MenuBtnStyle>
-                {/* Creates a link with provided name and link */}
-                <Link to={{ pathname: '/profile', state: { highlights: true } }}>
-                    {/* renders text or account icon */
-                    this.props.name === "account" ? (<IconContainerStyle>
-                        <AccountIcon src={profilepic}/>
-                    </IconContainerStyle>) : this.props.name
-                    }
-                </Link>
+    this.state = {
+      dropdownOpen: false
+    };
 
-                {/* Dropdown implemented in simple HTML and CSS */}
-                <DropdownContent>
-                    <Link to={{ pathname: '/profile', state: { highlights: true } }}>Highlights</Link>
-                    <Link to={{ pathname: '/profile', state: { highlights: false } }}>Watchlists</Link>
-                    {/* <a href="#"> Menu item 3 </a> */}
-                </DropdownContent>
-            </MenuBtnStyle>
-        );
-      }
+    this.toggle = this.toggle.bind(this);
+  }
 
+  toggle() {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
+  }
+
+  render() {
+    return (
+      <MenuBtnStyle>
+        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+          <DropdownToggle
+            tag="span"
+            onClick={this.toggle}
+            data-toggle="dropdown"
+            aria-expanded={this.state.dropdownOpen}
+          >
+            {   /* renders text or account icon */
+              this.props.name === "account" ? (<IconContainerStyle onClick={this.handleClick}>
+                <AccountIcon src={profilepic} />
+              </IconContainerStyle>) : this.props.name
+            }
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>{this.props.username}</DropdownItem>
+            <DropdownItem divider/>
+            <DropdownItem><Link to={{ pathname: '/profile', state: { highlights: true } }}>User Page</Link></DropdownItem>
+            <DropdownItem><SignOutButton /></DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </MenuBtnStyle>
+    );
+  }
 }
 
 export default MenuButton;
