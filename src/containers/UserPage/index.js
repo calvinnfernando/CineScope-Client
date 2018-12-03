@@ -154,7 +154,7 @@ const UserBodyStyle = styled.div`
 `;
 
 const UserPageBtn = styled.div``;
-  
+
 const ErrorMessage = styled.div`
   text-align: center;
   margin: auto;
@@ -315,7 +315,7 @@ class UserPage extends Component {
     const pList = postList.map((post, count) => {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date} />
     });
-      
+
     const favoriteMovies = this.state.favoriteList.map((movieData, count) => {
       return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.imdb_id, count)} onEdit={this.state.editFav} />
     })
@@ -433,7 +433,6 @@ class UserPage extends Component {
                   </div>
                   {/* end of main body */}
 
-                </div>
                 <div className="col-2"></div>
               </div>)
 
