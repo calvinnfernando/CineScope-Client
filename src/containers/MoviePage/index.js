@@ -78,6 +78,34 @@ const AddToWatchList = styled.span`
   }
 `;
 
+const RemoveFromFavorites = styled.span`
+  margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #cc8400;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background-color: #cc8400;
+  }
+`;
+
+const RemoveFromWatchList = styled.span`
+  margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #ba3e52;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background-color: #ba3e52;
+  }
+`;
+
 
 const TrailerButton = styled.span`
   margin-right: 8px;
@@ -129,7 +157,10 @@ class MoviePage extends Component {
       dropdownOpen: false,
       dropdownValue: 0,
       invalidRating: false,
-      ratingPostedMessage: false
+      ratingPostedMessage: false,
+      movieInFavorites: false,
+      movieInWatched: false,
+      movieInWatchLater: false
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
@@ -185,6 +216,46 @@ class MoviePage extends Component {
    */
   closeTrailer() {
     this.setState({ displayTrailer: false });
+  }
+
+  deleteFav(id) {
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('users/' + user.uid + '/favoriteList/' + id);
+
+        console.log('Remove from favorites clicked');
+        this.setState({movieInFavorites: false});
+        console.log(this.state.movieInFavorites);
+        return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(id).remove();
+      }
+    });
+
+    
+  }
+
+  deleteLater(id) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('users/' + user.uid + '/watchLaterList/' + id);
+        this.setState({movieInWatchLater: false});
+        return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(id).remove();   
+      }
+    });
+
+    
+  }
+
+  deleteWatched(id) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('users/' + user.uid + '/watchedList/' + id);
+        this.setState({movieInWatched: false});
+        return firebase.database().ref('users/' + user.uid + '/watchedList/').child(id).remove();
+      }
+    });
+
+    
   }
 
   /**
@@ -268,6 +339,39 @@ class MoviePage extends Component {
       const movieReviews = reviews.slice(0, 8);
       this.setState({ reviews: movieReviews });
     });
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const imdb_id = this.state.imdb_id;
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
+          if (exist) {
+            this.setState({movieInFavorites:true})
+          } else {
+          }
+        });
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
+          if (exist) {
+            this.setState({movieInWatched:true})
+          } else {
+          }
+        });
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
+          if (exist) {
+            this.setState({movieInWatchLater:true})
+          } else {
+          }
+        });
+
+      } else {
+      }
+    });
+
+
   } // end componentDidMount
 
   /**
@@ -295,6 +399,9 @@ class MoviePage extends Component {
               .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
+
+        this.setState({movieInFavorites: true});
+        console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
 
       } else {
         console.log("Not Signed In");
@@ -327,6 +434,8 @@ class MoviePage extends Component {
               .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
+
+        this.setState({movieInWatched: true});
 
       } else {
         console.log("Not Signed In");
@@ -361,6 +470,8 @@ class MoviePage extends Component {
           }
         });
 
+        this.setState({movieInWatchLater: true});
+
       } else {
         console.log("Not Signed In");
       }
@@ -376,6 +487,7 @@ class MoviePage extends Component {
   }
 
   render() {
+    console.log(this.state.movieInFavorites);
 
     return (
       <div>
@@ -417,15 +529,43 @@ class MoviePage extends Component {
                 <h1>{this.state.title}</h1>
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
+                  {this.state.movieInFavorites ?
+                  
+                  <RemoveFromFavorites onClick={this.deleteFav(this.state.imdb_id)}>
+                    + Remove from Favorites
+                    </RemoveFromFavorites>
+
+                  :
+
                   <AddToFavorites onClick={this.handleAddFav}>
                     + Add to Favorites
                     </AddToFavorites>
-                  <AddToWatchList onClick={this.handleAddWatched}>
+                
+                }
+
+                {this.state.movieInWatched ?
+                <RemoveFromWatchList onClick={this.deleteWatched(this.state.imdb_id)}>
+                + Remove from Watched
+                </RemoveFromWatchList>
+              :
+              <AddToWatchList onClick={this.handleAddWatched}>
                     + Add to Watched
                     </AddToWatchList>
+              }
+                  
+                    
+                  {this.state.movieInWatchLater ?
+                  <RemoveFromWatchList onClick={this.deleteLater(this.state.imdb_id)}>
+                  + Remove from Watch Later
+                  </RemoveFromWatchList>
+                  :
                   <AddToWatchList onClick={this.handleAddWatchLater}>
-                    + Add to Watch Later
-                    </AddToWatchList>
+                  + Add to Watch Later
+                  </AddToWatchList>
+                }
+                    
+                  
+                    
                   <TrailerButton onClick={this.openTrailer}>
                     &#9658; Watch Trailer
                     </TrailerButton>
