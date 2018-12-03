@@ -56,7 +56,7 @@ class RecommendedMovies extends Component {
                             enablePlaceholder
                             numberOfPlaceholderItems={5}
                             minimumPlaceholderTime={1000}
-                            placeholderItem={<div style={{ height: 300, width: 200, background: '#900' }}>Placeholder</div>}
+                            placeholderItem={<div style={{ height: 300, width: 200, background: '#343a40' }}></div>}
 
                             // Carousel configurations
                             numberOfCards={4}
