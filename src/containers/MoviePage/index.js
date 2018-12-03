@@ -117,7 +117,7 @@ const TrailerButton = styled.span`
   transition: .2s;
 
   &:hover {
-    background-color: #ba3e52;
+    background-color: #384491;
   }
 `;
 
@@ -142,6 +142,24 @@ const RateStyle = styled.span`
   margin: 0px 2px;
 `;
 
+const SignInNotification = styled.div`
+  position: absolute;
+  top: 8em;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 10;
+  background-color: #384491;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #FFFFFF;
+  transition: 1s;
+  opacity: 0;
+
+  &.show {
+    opacity: 1;
+  }
+`;
+
 /* CLASS */
 
 class MoviePage extends Component {
@@ -164,7 +182,8 @@ class MoviePage extends Component {
       reviewSubmitted: false,
       movieInFavorites: false,
       movieInWatched: false,
-      movieInWatchLater: false
+      movieInWatchLater: false,
+      signInNotification: false
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
@@ -180,6 +199,7 @@ class MoviePage extends Component {
     this.toggleFav = this.toggleFav.bind(this)
     this.toggleWatched = this.toggleWatched.bind(this)
     this.toggleWatchLater = this.toggleWatchLater.bind(this)
+    this.signInNotification = this.signInNotification.bind(this)
 
     //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
     firebase.auth().onAuthStateChanged(user => {
@@ -435,11 +455,8 @@ class MoviePage extends Component {
           }
         });
 
-        //this.setState({movieInFavorites: true});
-        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
-
       } else {
-        console.log("Not Signed In");
+        this.signInNotification();
       }
     });
   }
@@ -474,7 +491,7 @@ class MoviePage extends Component {
         this.firebaseref.child('watchedList').child(imdb_id)
           .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id });
       } else {
-        console.log("Not Signed In");
+        this.signInNotification();
       }
     });
   }
@@ -502,12 +519,8 @@ class MoviePage extends Component {
               refToThis.setState({movieInWatchLater: true});
           }
         });
-
-        //this.setState({movieInFavorites: true});
-        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
-
       } else {
-        console.log("Not Signed In");
+        this.signInNotification();
       }
     });
   }
@@ -515,6 +528,16 @@ class MoviePage extends Component {
   handleReviewChange(event) {
     this.setState({reviewText: event.target.value})
   }
+  signInNotification() {
+    console.log('Sign in');
+    this.setState({signInNotification: true});
+    var refToThis = this;
+    setTimeout(function(){
+      refToThis.setState({signInNotification: false});
+      console.log('Sign in gone');
+    },3000);
+  }
+
   /**
    * This method check if the movie exist in a list
    */
@@ -613,6 +636,7 @@ class MoviePage extends Component {
 
                 }
 
+
                 {this.state.movieInWatched ?
                 <RemoveFromWatchList onClick={this.toggleWatched}>
                 + Remove from Watched
@@ -665,6 +689,7 @@ class MoviePage extends Component {
           </MovieInfoStyle>
         </WhiteBoxStyle>
         {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} video={this.state.trailerVideo} />}
+        <SignInNotification className={this.state.signInNotification ? 'show' : 'none'}>Sign in or create an account to enjoy user functionality!</SignInNotification>}
 
       </div>
     );
