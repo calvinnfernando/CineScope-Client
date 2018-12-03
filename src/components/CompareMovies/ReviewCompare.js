@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import MovieService from '../../services/MovieService';
-import {Pie} from 'react-chartjs-2';
+import { Pie, Bar } from 'react-chartjs-2';
 
 class ReviewCompare extends Component {
 	constructor(props) {
@@ -19,7 +19,7 @@ class ReviewCompare extends Component {
 		this.props.movies.forEach((movie) => {
 			var newMovieTitles = this.state.movieTitles;
 			newMovieTitles.push(movie.title);
-			this.setState({movieTitles: newMovieTitles});
+			this.setState({ movieTitles: newMovieTitles });
 			var imdb_id = '';
 			MovieService.getSingleMovie(movie.id).then((movieData) => {
 				imdb_id = movieData.imdb_id;
@@ -41,7 +41,7 @@ class ReviewCompare extends Component {
 
 					var new_imdb = this.state.imdb;
 					new_imdb[movie.title] = movieData.imdbRating;
-		
+
 
 					this.setState({
 						rotten_tomatoes: new_rotten_tomatoes,
@@ -49,7 +49,7 @@ class ReviewCompare extends Component {
 						imdb_rating: new_imdb
 					});
 
-					
+
 				})
 
 
@@ -63,13 +63,13 @@ class ReviewCompare extends Component {
 		var rottenTomatoesRatings = [];
 		for (var index in this.state.rotten_tomatoes) {
 			var ratingWithoutPercentage = parseInt(this.state.rotten_tomatoes[index].split('%')[0]);
-			rottenTomatoesRatings.push(ratingWithoutPercentage);	
+			rottenTomatoesRatings.push(ratingWithoutPercentage);
 		}
 		console.log(movieTitles)
 		console.log(rottenTomatoesRatings)
 		const rottenTomatoesData = {
 			labels: movieTitles,
-			datasets: [{ 
+			datasets: [{
 				data: rottenTomatoesRatings,
 				backgroundColor: [
 					'#44b7fb',
@@ -78,28 +78,32 @@ class ReviewCompare extends Component {
 			}]
 		};
 
-		const allRottenTomatoesPies = rottenTomatoesRatings.map(rating => {
-			var rating = parseInt(rating);
+		console.log('rotten tomatoes ratings')
+		console.log(rottenTomatoesRatings)
+
+		const allRottenTomatoesPies = [];
+		for (var index in this.state.rotten_tomatoes) {
+			var rating = parseInt(this.state.rotten_tomatoes[index]);
 			var otherRating = 100 - rating;
 			const data = {
 				labels: ['Liked it', 'Disliked it'],
-				datasets: [rating, otherRating],
-				backgroundColor: [
-					'#44b7fb',
-					'#f55f81'
-				]
+				datasets: [{
+					data: [rating, otherRating],
+					backgroundColor: [
+						'#44b7fb',
+						'#f55f81'
+					]
+				}]
 			}
-			return <Pie data={data} />
-		});
-
-		
+			allRottenTomatoesPies.push(<div><Pie data={data} /><h3>{index}</h3></div>);
+		}
 
 		if (chartType === "Rotten Tomatoes") {
 			return (
 				<div>
 					<h1>Rotten Tomatoes</h1>
 					<div>
-						<Pie data={rottenTomatoesData}/>
+						{allRottenTomatoesPies}
 					</div>
 					<div>
 						<p>Avengers</p>
@@ -113,7 +117,7 @@ class ReviewCompare extends Component {
 				<div>
 					<p>Rotten Tomatoes</p>
 					<div>
-
+						
 					</div>
 				</div>
 			);

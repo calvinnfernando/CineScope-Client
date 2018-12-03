@@ -50,6 +50,8 @@ const MainContent = styled.div`
   flex: 3;
   height: 100vh;
   background-color: white;
+  overflow-y: scroll;
+  text-align: center;
 `;
 
 const ReviewSelection = styled.button`
