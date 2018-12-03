@@ -1,4 +1,3 @@
-"Used template from https://reactstrap.github.io/components/navbar/"
 import React from 'react';
 import {
     Collapse,
@@ -12,7 +11,6 @@ import {
 import MenuButton from './MenuButton.js';
 import styled from 'styled-components';
 import logo from '../img/logo.svg';
-import SignOutButton from '../SignOut';
 import { AuthUserContext } from '../Sessions';
 
 const LogoStyle = styled.div`
@@ -54,32 +52,32 @@ class Header extends React.Component {
                         <a href="/"><img src={logo} alt='CineScope' /></a>
                     </LogoStyle>
                     {/*Compresses navbar buttons into a toggler if the window is too small*/}
-                    <NavbarToggler onClick={this.toggle}/>
+                    <NavbarToggler onClick={this.toggle} />
                     {/*Navbar contents*/}
                     <Collapse className="col-md-8" isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/all-movies">All Movies</NavLink>
                             </NavItem>
-                            <NavItem style={{fontSize: 20, fontWeight: 'bold'}}>
+                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/Comparitron">Comparitron</NavLink>
-                            </NavItem>
+                            </NavItem>                          
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
                     <AuthUserContext.Consumer>
-                    {
-                        authUser => authUser
-                            ? <AccountIconStyle>
-                                {authUser.username} logged in <br/>
-                                <SignOutButton/>
-                              </AccountIconStyle>
-                            : <AccountIconStyle><a href="/login">Login</a></AccountIconStyle>
-                    }
+                        {
+                            authUser => authUser
+                                ? <AccountIconStyle className="col-md-2">
+                                    <MenuButton name={"account"} />
+                                </AccountIconStyle>
+                                : <AccountIconStyle className="col-md-2"><a href="/login">Login</a></AccountIconStyle>
+                        }
                     </AuthUserContext.Consumer>
+
                 </Navbar>
             </div>
         );

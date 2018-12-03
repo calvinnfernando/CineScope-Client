@@ -1,20 +1,22 @@
-import React, { Component } from 'react'
-import Header from '../../components/Header'
-import TrailerModal from '../../components/MoviePage/TrailerModal'
-import Ratings from '../../components/MoviePage/Ratings'
-import Reviews from '../../components/MoviePage/Reviews'
-import RelatedMovies from '../../components/MoviePage/RelatedMovies'
-import MovieService from '../../services/MovieService.js'
-import styled from 'styled-components'
-import ThumbsUp from './thumbsup.png'
-import ThumbsDown from './thumbsdown.png'
+import React, { Component } from 'react';
+import Header from '../../components/Header';
+import TrailerModal from '../../components/MoviePage/TrailerModal';
+import Ratings from '../../components/MoviePage/Ratings';
+import Reviews from '../../components/MoviePage/Reviews';
+import RelatedMovies from '../../components/MoviePage/RelatedMovies';
+import MovieService from '../../services/MovieService.js';
+import MoviePageService from '../../services/MoviePageService.js';
+import styled from 'styled-components';
+import ThumbsUp from './thumbsup.png';
+import ThumbsDown from './thumbsdown.png';
 import { Link } from 'react-router-dom';
+
+import firebase from 'firebase';
 
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
-  border-radius: 20px; 
-
+  border-radius: 20px;
 `;
 
 const MovieInfoStyle = styled.div`
@@ -50,6 +52,16 @@ const AddButtonsStyle = styled.div`
 
 const AddToFavorites = styled.span`
   margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #FFA500;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background-color: #cc8400;
+  }
 `;
 
 const AddToWatchList = styled.span`
@@ -62,9 +74,10 @@ const AddToWatchList = styled.span`
   transition: .2s;
 
   &:hover {
-    background-color: #fdbcc6;
+    background-color: #ba3e52;
   }
 `;
+
 
 const TrailerButton = styled.span`
   margin-right: 8px;
@@ -76,7 +89,7 @@ const TrailerButton = styled.span`
   transition: .2s;
 
   &:hover {
-    background-color: #a3d2fa;
+    background-color: #ba3e52;
   }
 `;
 
@@ -97,36 +110,78 @@ const CompareButtonStyle = styled.div`
 `;
 
 class MoviePage extends Component {
+  /**
+   * Constructor
+   */
   constructor(props) {
     super(props)
+
     this.state = {
       rating: 0,
       displayTrailer: false
     }
+
     this.handleThumbsUp = this.handleThumbsUp.bind(this)
     this.handleThumbsDown = this.handleThumbsDown.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
+    this.handleAddFav = this.handleAddFav.bind(this)
+    this.handleAddWatched = this.handleAddWatched.bind(this)
+    this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+
+    //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.firebaseref = firebase.database().ref(`users/${user.uid}`); 
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+    // console.log(props.firebase.auth.app.firebase_.database().ref('users'));
   }
+
+  /**
+   * This method handle thumbs up
+   */
   handleThumbsUp() {
     this.setState(state => ({
       rating: 1
     }))
   }
+
+  /**
+   * This emthod handle thumbs down
+   */
   handleThumbsDown() {
     this.setState(state => ({
       rating: -1
     }))
   }
+
+  /**
+   * This method set display trailer true
+   */
   openTrailer() {
     this.setState({ displayTrailer: true });
   }
+
+  /**
+   * This method set display trailer true
+   */
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
+
+  /**
+   * This method mounts component initially
+   */
   componentDidMount() {
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
+
+    /**
+     * This method get single movie data from TMDb
+     */
     MovieService.getSingleMovie(movieID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({
@@ -137,6 +192,10 @@ class MoviePage extends Component {
         vote_average: movie.vote_average,
         imdb_id: movie.imdb_id
       });
+
+      /**
+       * This method get single movie data from OMDb
+       */
       MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
         const ratings = movie.Ratings;
         var rottenTomatoes = "N/A";
@@ -160,10 +219,22 @@ class MoviePage extends Component {
         });
       });
     });
+
+    /**
+     * This method get similar movies based on the movie page
+     *
+     * @param {const} movieID
+     */
     MovieService.getSimilarMovies(movieID).then((movies) => {
       const relatedMovies = movies.slice(0, 4);
       this.setState({ relatedMovies: relatedMovies });
-    })
+    });
+
+    /**
+     * This method get movie trailer based on movie id
+     *
+     * @param {const} movieID
+     */
     MovieService.getMovieVideos(movieID).then((videos) => {
       var trailerVideo = "";
       for (const video of videos) {
@@ -173,8 +244,109 @@ class MoviePage extends Component {
         }
       }
       this.setState({ trailerVideo: trailerVideo });
-    })
+    });
+  } // end componentDidMount
 
+  /**
+   * This method handle adding movie to the fav list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+  handleAddFav(event) {
+    event.preventDefault();
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
+          if (exist) {
+            alert('Movie is exist, need to change the button appearance');
+          } else {
+            this.firebaseref.child('favoriteList').child(imdb_id)
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          }
+        });
+
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the watched list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+  handleAddWatched(event) {
+    event.preventDefault();
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
+          if (exist) {
+            alert('Movie is exist, need to change the button appearance');
+          } else {
+            this.firebaseref.child('watchedList').child(imdb_id)
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          }
+        });
+
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the watch later list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+  handleAddWatchLater(event) {
+    event.preventDefault();
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const poster = this.state.poster;
+        const title = this.state.title;
+        const overview = this.state.overview;
+        const imdb_id = this.state.imdb_id;
+
+        // Checking if movie exist or not
+        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
+          if (exist) {
+            alert('Movie is exist, need to change the button appearance');
+          } else {
+            this.firebaseref.child('watchLaterList').child(imdb_id)
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+          }
+        });
+
+      } else {
+        console.log("Not Signed In");
+      }
+    });
+  }
+
+  /**
+   * This method check if the movie exist in a list
+   */
+  checkIfMovieExist = async(movie_id, type) => {
+    return this.firebaseref.child(type).child(movie_id).once('value')
+      .then(snapshot => snapshot.exists() );
   }
 
   render() {
@@ -200,13 +372,13 @@ class MoviePage extends Component {
                 <h1>{this.state.title}</h1>
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
-                  <AddToFavorites>
-                    Star button here
+                  <AddToFavorites onClick={this.handleAddFav}>
+                    + Add to Favorites
                     </AddToFavorites>
-                  <AddToWatchList>
+                  <AddToWatchList onClick={this.handleAddWatched}>
                     + Add to Watched
                     </AddToWatchList>
-                  <AddToWatchList>
+                  <AddToWatchList onClick={this.handleAddWatchLater}>
                     + Add to Watch Later
                     </AddToWatchList>
                   <TrailerButton onClick={this.openTrailer}>

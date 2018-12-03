@@ -1,16 +1,6 @@
 const OMDB_API_KEY = "612c3338";
 const API_KEY = '772550390f45ddb8fbac999e8b90ad9e';
 
-/* if (search === "") {
-    return fetch('http://www.omdbapi.com/?apikey=' + API_KEY + '&s=star&page=' + page)
-        .then(response => response.json())
-        .then(myJson => {return myJson.Search});
-} else {
-    return fetch('http://www.omdbapi.com/?apikey=' + API_KEY + '&s=' + search + '&page=' + page)
-        .then(response => response.json())
-        .then(myJson => {return myJson.Search});
-} */
-
 const loadMoviesDataOMDb = async (imdb_id) => {
     return fetch(`http://www.omdbapi.com/?i=${imdb_id}&apikey=${OMDB_API_KEY}`)
         .then(response => response.json())
