@@ -167,9 +167,9 @@ class MoviePage extends Component {
     this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
-    this.handleAddFav = this.handleAddFav.bind(this)
-    this.handleAddWatched = this.handleAddWatched.bind(this)
-    this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+    this.toggleFav = this.toggleFav.bind(this)
+    this.toggleWatched = this.toggleWatched.bind(this)
+    this.toggleWatchLater = this.toggleWatchLater.bind(this)
 
     //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
     firebase.auth().onAuthStateChanged(user => {
@@ -216,46 +216,6 @@ class MoviePage extends Component {
    */
   closeTrailer() {
     this.setState({ displayTrailer: false });
-  }
-
-  deleteFav(id) {
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log('users/' + user.uid + '/favoriteList/' + id);
-
-        console.log('Remove from favorites clicked');
-        this.setState({movieInFavorites: false});
-        console.log(this.state.movieInFavorites);
-        return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(id).remove();
-      }
-    });
-
-    
-  }
-
-  deleteLater(id) {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log('users/' + user.uid + '/watchLaterList/' + id);
-        this.setState({movieInWatchLater: false});
-        return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(id).remove();   
-      }
-    });
-
-    
-  }
-
-  deleteWatched(id) {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log('users/' + user.uid + '/watchedList/' + id);
-        this.setState({movieInWatched: false});
-        return firebase.database().ref('users/' + user.uid + '/watchedList/').child(id).remove();
-      }
-    });
-
-    
   }
 
   /**
@@ -374,14 +334,8 @@ class MoviePage extends Component {
 
   } // end componentDidMount
 
-  /**
-   * This method handle adding movie to the fav list in database by
-   * calling MoviePageService
-   *
-   * @param {const} movieID
-   */
-  handleAddFav(event) {
-    event.preventDefault();
+  toggleFav() {
+    var refToThis = this;
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const poster = this.state.poster;
@@ -392,16 +346,20 @@ class MoviePage extends Component {
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
+          // if it does exist, then we are removing
           if (exist) {
-            alert('Movie is exist, need to change the button appearance');
+            refToThis.setState({movieInFavorites: false});
+            return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(imdb_id).remove();
           } else {
+            // if it doesn't exist, we add it to the database
             this.firebaseref.child('favoriteList').child(imdb_id)
               .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
+              refToThis.setState({movieInFavorites: true});
           }
         });
 
-        this.setState({movieInFavorites: true});
-        console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
+        //this.setState({movieInFavorites: true});
+        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
 
       } else {
         console.log("Not Signed In");
@@ -409,14 +367,8 @@ class MoviePage extends Component {
     });
   }
 
-  /**
-   * This method handle adding movie to the watched list in database by
-   * calling MoviePageService
-   *
-   * @param {const} movieID
-   */
-  handleAddWatched(event) {
-    event.preventDefault();
+  toggleWatched() {
+    var refToThis = this;
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const poster = this.state.poster;
@@ -427,15 +379,20 @@ class MoviePage extends Component {
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
+          // if it does exist, then we are removing
           if (exist) {
-            alert('Movie is exist, need to change the button appearance');
+            refToThis.setState({movieInWatched: false});
+            return firebase.database().ref('users/' + user.uid + '/watchedList/').child(imdb_id).remove();
           } else {
+            // if it doesn't exist, we add it to the database
             this.firebaseref.child('watchedList').child(imdb_id)
               .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
+              refToThis.setState({movieInWatched: true});
           }
         });
 
-        this.setState({movieInWatched: true});
+        //this.setState({movieInFavorites: true});
+        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
 
       } else {
         console.log("Not Signed In");
@@ -443,15 +400,8 @@ class MoviePage extends Component {
     });
   }
 
-  /**
-   * This method handle adding movie to the watch later list in database by
-   * calling MoviePageService
-   *
-   * @param {const} movieID
-   */
-  handleAddWatchLater(event) {
-    event.preventDefault();
-
+  toggleWatchLater() {
+    var refToThis = this;
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const poster = this.state.poster;
@@ -462,15 +412,20 @@ class MoviePage extends Component {
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
+          // if it does exist, then we are removing
           if (exist) {
-            alert('Movie is exist, need to change the button appearance');
+            refToThis.setState({movieInWatchLater: false});
+            return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(imdb_id).remove();
           } else {
+            // if it doesn't exist, we add it to the database
             this.firebaseref.child('watchLaterList').child(imdb_id)
               .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
+              refToThis.setState({movieInWatchLater: true});
           }
         });
 
-        this.setState({movieInWatchLater: true});
+        //this.setState({movieInFavorites: true});
+        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
 
       } else {
         console.log("Not Signed In");
@@ -531,35 +486,34 @@ class MoviePage extends Component {
                 <AddButtonsStyle>
                   {this.state.movieInFavorites ?
                   
-                  <RemoveFromFavorites onClick={this.deleteFav(this.state.imdb_id)}>
+                  <RemoveFromFavorites onClick={this.toggleFav}>
                     + Remove from Favorites
                     </RemoveFromFavorites>
 
                   :
-
-                  <AddToFavorites onClick={this.handleAddFav}>
+                  <AddToFavorites onClick={this.toggleFav}>
                     + Add to Favorites
                     </AddToFavorites>
                 
                 }
 
                 {this.state.movieInWatched ?
-                <RemoveFromWatchList onClick={this.deleteWatched(this.state.imdb_id)}>
+                <RemoveFromWatchList onClick={this.toggleWatched}>
                 + Remove from Watched
                 </RemoveFromWatchList>
               :
-              <AddToWatchList onClick={this.handleAddWatched}>
+              <AddToWatchList onClick={this.toggleWatched}>
                     + Add to Watched
                     </AddToWatchList>
               }
                   
                     
                   {this.state.movieInWatchLater ?
-                  <RemoveFromWatchList onClick={this.deleteLater(this.state.imdb_id)}>
+                  <RemoveFromWatchList onClick={this.toggleWatchLater}>
                   + Remove from Watch Later
                   </RemoveFromWatchList>
                   :
-                  <AddToWatchList onClick={this.handleAddWatchLater}>
+                  <AddToWatchList onClick={this.toggleWatchLater}>
                   + Add to Watch Later
                   </AddToWatchList>
                 }
