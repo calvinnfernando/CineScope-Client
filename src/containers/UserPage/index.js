@@ -283,7 +283,6 @@ class UserPage extends Component {
               (
                 <div className="container-fluid row mx-auto">
                 <div className="col-2"></div>
-                <div className="jumbotron jumbotron-fluid">
                 <div className="col-8">
                   <Profile>
                     <div>
@@ -347,7 +346,6 @@ class UserPage extends Component {
 
                   </div>
                 {/* end of main body */}
-                </div>
                 <div className="col-2"></div>
               </div> )
 
