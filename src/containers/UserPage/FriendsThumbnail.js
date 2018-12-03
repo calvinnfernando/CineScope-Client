@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import profpic from './profpic-sponge.webp';
+import profpic from '../../components/img/profile.svg';
 
 const FriendsThumbnailStyle = styled.div`
   margin-left: 0px;
@@ -18,7 +18,7 @@ const SmallProfile = styled.img`
 
 const FriendsThumbnail = (props) => {
   return (
-    <FriendsThumbnailStyle className='col-4'> 
+    <FriendsThumbnailStyle className='col-3'> 
       <div className='row'>
         <SmallProfile src={profpic} alt='' />
       </div>

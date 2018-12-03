@@ -4,14 +4,12 @@ import { compose } from 'recompose';
 import Header from '../../components/Header';
 import wallpaper from './wallpaper-sponge.jpg';
 import profilepic from '../../components/img/profile.svg';
-import ironman3 from './ironman3.jpg';
-import antman from './antman.jpg';
 import heart from './heart.png';
 import friends from './friends.png';
 import watchLater from './watch-later.png';
 import watched from './watched.png';
 
-import MovieThumbnail from './MovieThumbnail';
+// import MovieThumbnail from './MovieThumbnail';
 import ActivityFeed from './ActivityFeed';
 import FriendsThumbnail from './FriendsThumbnail';
 import firebase from 'firebase';
@@ -109,6 +107,13 @@ const SmallText = styled.p`
 `;
 
 
+const FriendButton = styled.button`
+  display: ${props => props.hide ? "none": "inline-block"} !important;
+  position: relative;
+  margin-top: 13px;
+  height: 50px;
+`;
+
 const HighlightsButton = styled.button`
   display: ${props => props.hide ? "none": "inline-block"} !important;
   position: relative;
@@ -124,6 +129,10 @@ const HighlightsButton = styled.button`
   margin-left: 10px;
   width: 100px;
   height: 50px;
+`;
+
+const FriendList = styled.div`
+  padding-left: 5%;
 `;
 
 const MovieList = styled.div`
@@ -206,12 +215,13 @@ class UserPage extends Component {
       profileId: location.pathname.split('/')[2],
       user: {},
       userIsOwner: false, // by default the page should be public
+      isFriend: false,
     };
 
     this.deleteFav = this.deleteFav.bind(this);
     this.deleteLater = this.deleteLater.bind(this);
     this.deleteWatched = this.deleteWatched.bind(this);
-    this.addFriend = this.addFriend.bind(this);
+    this.addOrRemoveFriend = this.addOrRemoveFriend.bind(this);
   }
 
   deleteFav(id, i) {
@@ -258,13 +268,17 @@ class UserPage extends Component {
         
         // is the user visiting the owner of the profile page?
         const owner = (this.state.profileId) ? user.uid === this.state.profileId : true;
+        const profId = this.state.profileId;
+        const userDetails = firebase.database().ref().child('users/' + profId);
         this.setState({
           userIsOwner: owner,
           profileId: (!this.state.profileId) ? user.uid : this.state.profileId,
         });
 
-        const profId = this.state.profileId;
-        const userDetails = firebase.database().ref().child('users/' + profId);
+        this.setState({
+          isFriend: (owner) ? false : ( (firebase.database().ref().child('users/' + user.uid + '/friends/')) ? !!firebase.database().ref().child('users/' + user.uid + '/friends/').child(this.state.profileId) : false ),
+        });
+
         userDetails.once('value').then((snap) => {
           if(snap.val()) {
             this.setState({user: snap.val()});
@@ -275,7 +289,7 @@ class UserPage extends Component {
           snapshot.forEach(child => {
             if (child.val()) {
               this.setState({
-                watchedList: (this.state.watchedList.find((el) => { return el.id == child.val().id })) ? this.state.watchedList : this.state.watchedList.concat([child.val()]),
+                watchedList: (this.state.watchedList.find((el) => { return el.id === child.val().id })) ? this.state.watchedList : this.state.watchedList.concat([child.val()]),
               });
             }
           });
@@ -285,7 +299,7 @@ class UserPage extends Component {
           snapshot.forEach(child=> {
             if (child.val()) {
               this.setState({
-                favoriteList: (this.state.favoriteList.find((el) => { return el.id == child.val().id })) ? this.state.favoriteList : this.state.favoriteList.concat([child.val()]),
+                favoriteList: (this.state.favoriteList.find((el) => { return el.id === child.val().id })) ? this.state.favoriteList : this.state.favoriteList.concat([child.val()]),
               });
             }
     
@@ -296,7 +310,7 @@ class UserPage extends Component {
           snapshot.forEach(child=> {
             if (child.val()) {
               this.setState({
-                laterList: (this.state.laterList.find((el) => { return el.id == child.val().id })) ? this.state.laterList : this.state.laterList.concat([child.val()]),
+                laterList: (this.state.laterList.find((el) => { return el.id === child.val().id })) ? this.state.laterList : this.state.laterList.concat([child.val()]),
               });
             }
           });
@@ -311,6 +325,8 @@ class UserPage extends Component {
       if (user) {
         // is the user visiting the owner of the profile page?
         const owner = (this.state.profileId) ? user.uid === this.state.profileId : true;
+        const profId = this.state.profileId;
+        const userDetails = firebase.database().ref().child('users/' + profId);
         this.setState({
           userIsOwner: owner,
           profileId: (!this.state.profileId) ? user.uid : this.state.profileId,
@@ -319,8 +335,10 @@ class UserPage extends Component {
           watchedList: [],
         });
 
-        const profId = this.state.profileId;
-        const userDetails = firebase.database().ref().child('users/' + profId);
+        this.setState({
+          isFriend: (owner) ? false : ( (firebase.database().ref().child('users/' + user.uid + '/friends/')) ? !!firebase.database().ref().child('users/' + user.uid + '/friends/').child(this.state.profileId) : false ),
+        });
+
         userDetails.once('value').then((snap) => {
           if(snap.val()) {
             this.setState({user: snap.val()});
@@ -332,7 +350,7 @@ class UserPage extends Component {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                watchedList: (this.state.watchedList.find((el) => { return el.id == child.val().id })) ? this.state.watchedList : this.state.watchedList.concat([child.val()]),
+                watchedList: (this.state.watchedList.find((el) => { return el.id === child.val().id })) ? this.state.watchedList : this.state.watchedList.concat([child.val()]),
               });
             }
           });
@@ -343,7 +361,7 @@ class UserPage extends Component {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                favoriteList: (this.state.favoriteList.find((el) => { return el.id == child.val().id })) ? this.state.favoriteList : this.state.favoriteList.concat([child.val()]),
+                favoriteList: (this.state.favoriteList.find((el) => { return el.id === child.val().id })) ? this.state.favoriteList : this.state.favoriteList.concat([child.val()]),
               });
             }
     
@@ -355,7 +373,7 @@ class UserPage extends Component {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                laterList: (this.state.laterList.find((el) => { return el.id == child.val().id })) ? this.state.laterList : this.state.laterList.concat([child.val()]),
+                laterList: (this.state.laterList.find((el) => { return el.id === child.val().id })) ? this.state.laterList : this.state.laterList.concat([child.val()]),
               });
             }
           });
@@ -401,15 +419,58 @@ class UserPage extends Component {
   /**
    * Add friend will add the friend 
    */
-  addFriend() {
-    console.log("friend added");
+  addOrRemoveFriend(loggedInUserId) {
+    const userDetails = firebase.database().ref().child('users/' + loggedInUserId);
+    let dispName, emailAddress, uName = '';
+    userDetails.child('displayName').once('value').then(snapshot => dispName = snapshot.val())
+    userDetails.child('email').once('value').then(snapshot => emailAddress = snapshot.val())
+    userDetails.child('username').once('value').then(snapshot => uName = snapshot.val())
+    this.checkFriend(userDetails, this.state.profileId).then((exist) => {
+      // if it does exist, then we are removing
+      if (exist) {
+        this.setState({ isFriend: false });
+        firebase.database().ref('users/' + this.state.profileId + '/friends/').child(loggedInUserId).remove();
+        firebase.database().ref('users/' + loggedInUserId + '/friends/').child(this.state.profileId).remove();
+      } else {
+        // if it doesn't exist, we add it to the database
+        this.setState({ isFriend: true });
+        firebase.database().ref('users/' + loggedInUserId).child('friends').child(this.state.profileId)
+          .set({uid: this.state.profileId, displayName: this.state.user.displayName, email: this.state.user.email, username: this.state.user.username});
+        firebase.database().ref('users/' + this.state.profileId).child('friends').child(loggedInUserId)
+          .set({uid: loggedInUserId, displayName: dispName, email: emailAddress, username: uName});
+      }
+    });
   }
+
+  /**
+   * Check if friend is already in the friends list.
+   */
+  checkFriend = async(user, fid) => {
+    return user.child('friends').child(fid).once('value')
+      .then(snapshot => snapshot.exists() );
+  }
+
+  fList = [];
 
   render() {
 
     const pList = postList.map((post, count) => {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date} />
     });
+
+    const friendRef = firebase.database().ref('users/' + this.state.profileId + '/friends/').orderByKey();
+    if (!!friendRef){
+      friendRef.once('value').then((snapshot) => {
+        snapshot.forEach((friend) => {
+          if (friend.val()){
+            if (this.fList.find(el => { return friend.val().uid === el.key })) {
+            } else {
+              this.fList.push(<FriendsThumbnail key={friend.val().uid} friendName={friend.val().displayName} />);
+            }
+          }
+        });
+      });
+    }
 
     const favoriteMovies = this.state.favoriteList.map((movieData, count) => {
       return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.imdb_id, count)} onEdit={this.state.editFav} />
@@ -443,9 +504,9 @@ class UserPage extends Component {
                         <NameStyle>
                           {displayName}
                         </NameStyle>
-                        <HighlightsButton hide={this.state.userIsOwner} type="button" className="btn btn-dark" onClick={() => this.addFriend()}>
-                          Add Friend
-                        </HighlightsButton>
+                        <FriendButton hide={this.state.userIsOwner} type="button" className="btn btn-dark" onClick={() => this.addOrRemoveFriend(authUser.uid)}>
+                          {(this.state.isFriend) ? "Remove Friend" : "Add Friend"}
+                        </FriendButton>
 
                         <HighlightsButton hide={!this.state.userIsOwner} type="button" className="btn btn-dark" onClick={() => {
                             this.setState({ displayHighlights: true });
@@ -473,6 +534,15 @@ class UserPage extends Component {
                         <SmallText>Lives {liveIn}</SmallText>
                         <SmallText>{bio}</SmallText>
                         <SmallText>{birthday}</SmallText>
+                      </Box>
+                      <Box>
+                        <Title>
+                          <Icon src={friends} alt='friends'/>
+                          Friends
+                        </Title>
+                        <FriendList className="row">
+                          { this.fList }
+                        </FriendList>
                       </Box>
                     </div>
 

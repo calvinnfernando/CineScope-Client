@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import profpic from './profpic-sponge.webp';
+import profpic from '../../components/img/profile.svg';
 
 const ActivityFeedStyle = styled.div`
   margin: 10px;

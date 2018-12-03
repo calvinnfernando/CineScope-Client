@@ -18,6 +18,7 @@ const App = (fprops) => (
 		<Route exact path="/" component={HomePage}/>
 		<Route path="/login" component={LoginPage}/>
 		<Route path="/profile" component={UserPage}/>
+		<Route path="/profile/:id" component={UserPage}/>
 		<Route 
 				path="/movie" 
 				render={(props) => <MoviePage {...props} {...fprops} />}
