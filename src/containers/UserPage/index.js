@@ -76,7 +76,6 @@ const WatchlistsButton = styled.button`
 `;
 
 const MovieList = styled.div`
-
 `;
 
 const Box = styled.div`

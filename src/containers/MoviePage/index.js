@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import Header from '../../components/Header';
-import TrailerModal from '../../components/MoviePage/TrailerModal';
-import Ratings from '../../components/MoviePage/Ratings';
-import Reviews from '../../components/MoviePage/Reviews';
-import RelatedMovies from '../../components/MoviePage/RelatedMovies';
-import MovieService from '../../services/MovieService.js';
-import MoviePageService from '../../services/MoviePageService.js';
-import styled from 'styled-components';
-import ThumbsUp from './thumbsup.png';
-import ThumbsDown from './thumbsdown.png';
+import React, { Component } from 'react'
+import Header from '../../components/Header'
+import TrailerModal from '../../components/MoviePage/TrailerModal'
+import Ratings from '../../components/MoviePage/Ratings'
+import Reviews from '../../components/MoviePage/Reviews'
+import RelatedMovies from '../../components/MoviePage/RelatedMovies'
+import MovieService from '../../services/MovieService.js'
+import styled from 'styled-components'
 import { Link } from 'react-router-dom';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
+/* STYLES */
 
 import firebase from 'firebase';
 
@@ -109,6 +109,13 @@ const CompareButtonStyle = styled.div`
   }
 `;
 
+const RateStyle = styled.span`
+  font-size: 24px;
+  margin: 0px 2px;
+`;
+
+/* CLASS */
+
 class MoviePage extends Component {
   /**
    * Constructor
@@ -118,11 +125,15 @@ class MoviePage extends Component {
 
     this.state = {
       rating: 0,
-      displayTrailer: false
+      displayTrailer: false,
+      dropdownOpen: false,
+      dropdownValue: 0,
+      invalidRating: false,
+      ratingPostedMessage: false
     }
-
-    this.handleThumbsUp = this.handleThumbsUp.bind(this)
-    this.handleThumbsDown = this.handleThumbsDown.bind(this)
+    this.setMovieRating = this.setMovieRating.bind(this)
+    this.rateMovie = this.rateMovie.bind(this)
+    this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
     this.handleAddFav = this.handleAddFav.bind(this)
@@ -139,28 +150,32 @@ class MoviePage extends Component {
     });
     // console.log(props.firebase.auth.app.firebase_.database().ref('users'));
   }
-
-  /**
-   * This method handle thumbs up
-   */
-  handleThumbsUp() {
-    this.setState(state => ({
-      rating: 1
-    }))
+  // Dropdown stuff
+  setMovieRating(rating) {
+    this.setState({dropdownValue: rating, invalidRating: false})
   }
-
-  /**
-   * This emthod handle thumbs down
-   */
-  handleThumbsDown() {
-    this.setState(state => ({
-      rating: -1
-    }))
+  toggle() {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
   }
+  rateMovie() {
+    if(this.state.dropdownValue == 0) {
+      this.setState({invalidRating: true});
+      return;
+    }
 
-  /**
-   * This method set display trailer true
-   */
+    MovieService.getSessionId().then((id) => {
+      console.log(id);
+      const rating = this.state.dropdownValue;
+      const movieID = this.state.movie_id;
+      MovieService.postRating(rating,movieID,id).then(()=> {
+        this.setState({ratingPostedMessage: true});
+      });
+    });
+
+  }
+  // Trailer stuff
   openTrailer() {
     this.setState({ displayTrailer: true });
   }
@@ -185,6 +200,7 @@ class MoviePage extends Component {
     MovieService.getSingleMovie(movieID).then((movie) => {
       const year = movie.release_date.split("-")[0];
       this.setState({
+        movie_id: movieID,
         title: movie.title,
         overview: movie.overview,
         poster: movie.poster_path,
@@ -205,7 +221,7 @@ class MoviePage extends Component {
           }
         }
         var rated = movie.Rated;
-        if (rated === "N/A") {
+        if (rated === "N/A" || rated === "NOT RATED") {
           rated = "Not yet rated";
         }
         this.setState({
@@ -244,6 +260,13 @@ class MoviePage extends Component {
         }
       }
       this.setState({ trailerVideo: trailerVideo });
+    })
+    /**
+     * Gets movie reviews based on movie ID
+     */
+    MovieService.getMovieReviews(movieID).then((reviews) => {
+      const movieReviews = reviews.slice(0, 8);
+      this.setState({ reviews: movieReviews });
     });
   } // end componentDidMount
 
@@ -261,6 +284,7 @@ class MoviePage extends Component {
         const title = this.state.title;
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
+        const id = this.state.movie_id;
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
@@ -268,7 +292,7 @@ class MoviePage extends Component {
             alert('Movie is exist, need to change the button appearance');
           } else {
             this.firebaseref.child('favoriteList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
 
@@ -292,6 +316,7 @@ class MoviePage extends Component {
         const title = this.state.title;
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
+        const id = this.state.movie_id;
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
@@ -299,7 +324,7 @@ class MoviePage extends Component {
             alert('Movie is exist, need to change the button appearance');
           } else {
             this.firebaseref.child('watchedList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
 
@@ -324,6 +349,7 @@ class MoviePage extends Component {
         const title = this.state.title;
         const overview = this.state.overview;
         const imdb_id = this.state.imdb_id;
+        const id = this.state.movie_id;
 
         // Checking if movie exist or not
         this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
@@ -331,7 +357,7 @@ class MoviePage extends Component {
             alert('Movie is exist, need to change the button appearance');
           } else {
             this.firebaseref.child('watchLaterList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id});
+              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
           }
         });
 
@@ -363,9 +389,28 @@ class MoviePage extends Component {
                     alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
-                  <button onClick={this.handleThumbsUp} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsUp} alt='' /></button>
-                  <button onClick={this.handleThumbsDown} style={{ border: "none", cursor: "pointer", backgroundColor: "Transparent" }}><img src={ThumbsDown} alt='' /></button>
-                  <h4>Average rating: {this.state.vote_average}/10</h4>
+                <h4>Average rating: {this.state.vote_average}/10</h4>
+                  <RateStyle>Rate This Movie: </RateStyle>
+                  <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <DropdownToggle caret>{this.state.dropdownValue == 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={() => this.setMovieRating(1)}>1</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(2)}>2</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(3)}>3</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(4)}>4</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(5)}>5</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(6)}>6</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(7)}>7</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(8)}>8</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(9)}>9</DropdownItem>
+                      <DropdownItem onClick={() => this.setMovieRating(10)}>10</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                  <br/>
+                  <button onClick={this.rateMovie}>Submit</button>
+                  <br/>
+                  {this.state.invalidRating && 'Please select a rating.'}
+                  {this.state.ratingPostedMessage && 'Your rating has been posted!'}
                 </div>
               </MovieLeftStyle>
               <MovieRightStyle className="col-md-8">
@@ -386,7 +431,7 @@ class MoviePage extends Component {
                     </TrailerButton>
                 </AddButtonsStyle>
                 <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
-                <p>{this.state.overview}</p>
+                <p style={{marginBottom: "2rem"}}>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
@@ -399,7 +444,7 @@ class MoviePage extends Component {
             {/* Must replace the props with real data */}
             <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
-            <Reviews />
+            <Reviews reviews={this.state.reviews} />
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>
