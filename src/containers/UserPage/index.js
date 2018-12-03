@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { compose } from 'recompose';
 import Header from '../../components/Header';
-import wallpaper from './wallpaper-sponge.jpg';
+import wallpaper from './banner.jpg';
 import profilepic from '../../components/img/profile.svg';
 import ironman3 from './ironman3.jpg';
 import antman from './antman.jpg';
@@ -345,40 +345,11 @@ class UserPage extends Component {
                       <div className="container-fluid row">
                         <Img src={profilepic} />
                         <Name />
-                        <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
-                          this.setState({ displayHighlights: true });
-                        }}>
-                          Highlights
-              </HighlightsButton>
-                        <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
-                          this.setState({ displayHighlights: false });
-                        }}>
-                          Watchlists
-              </WatchlistsButton>
                       </div>
                     </div>
                   </Profile>
 
                   {/* start of main body */}
-                  <UserBodyStyle>
-                    {/* INTRO */}
-                    <div className="col-md-6">
-                      <UserDescription/>
-                    </div>
-
-                    {/* ACTIVITY FEED */}
-                    <div className="col-md-6">
-                      <Box>
-                        <Title>
-                          Activity Feed
-                        </Title>
-                        {pList}
-                      </Box>
-                    </div>
-                  </UserBodyStyle>
-
-                    ) : (
-
                         <div className="row">
                           <div className="left-div col">
                             <Box>

@@ -4,15 +4,15 @@ import { AuthUserContext } from '../Sessions';
 
 const NameStyle = styled.h3`
 max-width: 30%;
-margin-left: 10px;
+margin: auto;
 `;
 
 const Name = () => (
   <AuthUserContext.Consumer>
     {
-      authUser => authUser ? 
+      authUser => authUser ?
       <NameStyle>{authUser.displayName}</NameStyle>
-      : 
+      :
       <NameStyle>No Name</NameStyle>
     }
   </AuthUserContext.Consumer>
