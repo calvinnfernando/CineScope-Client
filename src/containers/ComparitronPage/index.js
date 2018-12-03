@@ -49,6 +49,7 @@ const MainContent = styled.div`
   padding-left: 15px;
   flex: 3;
   height: 100vh;
+  background-color: white;
 `;
 
 const ReviewSelection = styled.button`
@@ -109,13 +110,11 @@ class ComparitronPage extends Component {
     event.preventDefault();
     var query = this.state.movieInput;
     MovieService.getSearchMovies(query).then((movies) => {
-      //oldMovies =
       this.setState({ movies: movies, query: query });
     })
   }
 
   selectMovie(movie) {
-    console.log('Selected a movie' + movie.title);
     var movieSelections = this.state.movieSelections;
 
     var movieExists = movieSelections.findIndex((el, i) => {

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 const MovieList = (props) => {
   const moviesArray = props.movies.map(movie => (<MovieCard key={movie.id} movie={movie} selectMovie={props.selectMovie} />));
-  console.log(props);
    return (
     <div>
       {moviesArray}

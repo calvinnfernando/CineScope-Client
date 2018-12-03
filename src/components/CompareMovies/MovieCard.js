@@ -52,10 +52,8 @@ class MovieCard extends Component {
   toggleSelect() {
     if (this.state.selected === true) {
       this.setState({ selected: false });
-      console.log("set to false");
     } else {
       this.setState({ selected: true });
-      console.log("set to true");
     }
   }
 
