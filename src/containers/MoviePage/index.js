@@ -687,8 +687,8 @@ class MoviePage extends Component {
             <form>
               <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{width: '100%', height: 200}}/>
               <button type="button" onClick={this.uploadReview}>Submit</button>
-              {this.state.reviewSubmitted && 'Your review has been posted!'}
             </form>
+            {this.state.reviewSubmitted && 'Your review has been posted!'}
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>
