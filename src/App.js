@@ -11,7 +11,7 @@ import Test from './containers/Test';
 
 import { withAuthentication } from './components/Sessions';
 
-const App = () => (
+const App = (props) => (
 	<Switch>
 	<Route exact path="/" component={HomePage}/>
 	<Route path="/login" component={LoginPage}/>
