@@ -179,6 +179,7 @@ class MoviePage extends Component {
       reviewText: "",
       currentUser: "",
       displayName: "",
+      emptyReview: false,
       reviewSubmitted: false,
       movieInFavorites: false,
       movieInWatched: false,
@@ -549,13 +550,16 @@ class MoviePage extends Component {
 
   uploadReview(event){
     // console.log(this.state.reviewText)
+    if (this.state.reviewText === '') {
+      this.setState({emptyReview: true});
+      return;
+    }
     var displayName = ""
     return firebase.database().ref('/users/' + this.state.currentUser).once('value').then((snapshot) => {
       displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
       this.setState({displayName: displayName})
       this.setState({ reviewSubmitted: true });
-      console.log('review submtitted');
-      console.log(this.state.reviewSubmitted);
+      this.setState({emptyReview: false});
     }).then(displayName => {
       firebase.database().ref('movies/' + this.state.movie_id).child('reviews/' + this.state.displayName).set({
         review: this.state.reviewText
@@ -688,6 +692,7 @@ class MoviePage extends Component {
               <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{width: '100%', height: 200}}/>
               <button type="button" onClick={this.uploadReview}>Submit</button>
             </form>
+            {this.state.emptyReview && 'Review cannot be empty.'}
             {this.state.reviewSubmitted && 'Your review has been posted!'}
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
