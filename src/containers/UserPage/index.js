@@ -110,8 +110,18 @@ const SmallText = styled.p`
 
 
 const HighlightsButton = styled.button`
+  display: ${props => props.hide ? "none": "inline-block"} !important;
   position: relative;
   margin-top: 13px;
+  width: 100px;
+  height: 50px;
+`;
+
+ const WatchlistsButton = styled.button`
+  display: ${props => props.hide ? "none": "inline-block"} !important;
+  position: relative;
+  margin-top: 13px;
+  margin-left: 10px;
   width: 100px;
   height: 50px;
 `;
@@ -376,9 +386,20 @@ class UserPage extends Component {
                         <NameStyle>
                           {displayName}
                         </NameStyle>
-                        <HighlightsButton type="button" className="btn btn-dark" onClick={() => this.addFriend()}>
+                        <HighlightsButton hide={this.state.userIsOwner} type="button" className="btn btn-dark" onClick={() => this.addFriend()}>
                           Add Friend
                         </HighlightsButton>
+
+                        <HighlightsButton hide={!this.state.userIsOwner} type="button" className="btn btn-dark" onClick={() => {
+                            this.setState({ displayHighlights: true });
+                          }}>
+                             Highlights
+                        </HighlightsButton>
+                        <WatchlistsButton hide={!this.state.userIsOwner} type="button" className="btn btn-dark" onClick={() => {
+                            this.setState({ displayHighlights: false });
+                          }}>
+                              Watchlists
+                        </WatchlistsButton>
                       </div>
                     </div>
                   </Profile>
