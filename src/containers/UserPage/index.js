@@ -157,13 +157,6 @@ const ErrorMessage = styled.div`
 
 `;
 
-const postList = [
-  { title: "a post", description: "Just watched Ant Man", date: 'Oct 31 2018' },
-  { title: "a post", description: "Just watched Iron Man 3", date: 'Nov 2 2018' },
-  { title: "a post", description: "Just watched Fast and Furious 12", date: 'Nov 3 2018' },
-  { title: "a post", description: "Just watched Beauty and The Beast", date: 'Nov 4 2018' },
-];
-
 class UserPage extends Component {
   constructor(props) {
     super(props);
@@ -287,8 +280,10 @@ class UserPage extends Component {
           {
             authUser => authUser ?
 
-              (<div className="container-fluid row mx-auto">
+              (
+                <div className="container-fluid row mx-auto">
                 <div className="col-2"></div>
+                <div className="jumbotron jumbotron-fluid">
                 <div className="col-8">
                   <Profile>
                     <div>
@@ -350,13 +345,11 @@ class UserPage extends Component {
                     </div>
                   </div>
 
-                  )}
-
                   </div>
                 {/* end of main body */}
-
+                </div>
                 <div className="col-2"></div>
-              </div>)
+              </div> )
 
               : (<ErrorMessage>
                 Please <a href="/register">create an account</a> to view your profile.
