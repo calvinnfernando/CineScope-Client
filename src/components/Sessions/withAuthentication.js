@@ -14,7 +14,6 @@ const withAuthentication = Component => {
     }
 
     componentDidMount() {
-      console.log("DIDMOUNT BITCH");
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           if (authUser) {

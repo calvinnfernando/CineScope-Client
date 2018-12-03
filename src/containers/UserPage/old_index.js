@@ -21,7 +21,6 @@ import { withFirebase } from '../../components/Firebase';
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
 import '../../styles/components/movieCard.css';
-import introicon from './intro-icon.png';
 
 const Btn = styled.button`
   border-radius: 200px;
@@ -46,7 +45,7 @@ const MovieCard = (props) => (
       <img className="card-img-top movie-img"
         src={"http://image.tmdb.org/t/p/w185" + props.poster}
         onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="298" />
-      <a href={"/movie/" + parseInt(props.id)}>
+      <a href={"/movie/" + parseInt(props.movie_id)}>
         <div className="card-img-overlay movie-description">
           <p className="card-text">{props.movie_title}</p>
         </div>
@@ -93,13 +92,9 @@ const Img = styled.img`
   border: 5px solid #787878;
 `;
 
-const NameStyle = styled.h3`
-max-width: 30%;
-margin-left: 10px;
-`;
 
-const EditListButton = styled.button`
-  display: ${props => props.hide ? "none": "inline-block"} !important;
+const EditListButton = (props) => styled.button`
+  display: ${(props.userLoggedIn) ? "hidden": "inline-block"};
   position: absolute;
   right: 40px;
 `;
@@ -114,6 +109,14 @@ const SmallText = styled.p`
 const HighlightsButton = styled.button`
   position: relative;
   margin-top: 13px;
+  width: 100px;
+  height: 50px;
+`;
+
+const WatchlistsButton = styled.button`
+  position: relative;
+  margin-top: 13px;
+  margin-left: 10px;
   width: 100px;
   height: 50px;
 `;
@@ -181,29 +184,20 @@ const postList = [
 class UserPage extends Component {
   constructor(props) {
     super(props);
-
-    // parse the path of profile
-    const { location } = this.props;
-
     this.state = {
-      displayHighlights: (props.location.state) ? props.location.state.highlights : true,
+      displayHighlights: (props.location) ? props.location.state.highlights : true,
       editFav: false,
       editLater: false,
       editWatched: false,
       favoriteList: [],
       laterList: [],
       watchedList: [],
-
-      // public related profile
-      profileId: location.pathname.split('/')[2],
-      user: {},
-      userIsOwner: false, // by default the page should be public
     };
+
 
     this.deleteFav = this.deleteFav.bind(this);
     this.deleteLater = this.deleteLater.bind(this);
     this.deleteWatched = this.deleteWatched.bind(this);
-    this.addFriend = this.addFriend.bind(this);
   }
 
   deleteFav(id, i) {
@@ -246,22 +240,7 @@ class UserPage extends Component {
     // Authentication Stuff
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // is the user visiting the owner of the profile page?
-        const owner = (this.state.profileId) ? user.uid === this.state.profileId : true;
-        this.setState({
-          userIsOwner: owner,
-          profileId: (!this.state.profileId) ? user.uid : this.state.profileId,
-          user: user,
-        });
-
-        const profId = this.state.profileId;
-        const userDetails = firebase.database().ref().child('users/' + profId);
-        userDetails.once('value').then((snap) => {
-          if(snap.val()) {
-            this.setState({user: snap.val()});
-          }
-        })
-        const watchedRef = firebase.database().ref().child('users/' + profId + '/watchedList').orderByKey();
+        const watchedRef = firebase.database().ref().child('users/' + user.uid + '/watchedList').orderByKey();
         watchedRef.once('value').then((snapshot) => {
           snapshot.forEach(child => {
             console.log(child.val());
@@ -272,7 +251,7 @@ class UserPage extends Component {
             }
           });
         });
-        const favoritesRef = firebase.database().ref().child('users/' + profId + '/favoriteList').orderByKey();
+        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
         favoritesRef.once('value').then((snapshot) => {
           snapshot.forEach(child => {
             console.log(child.val());
@@ -281,10 +260,10 @@ class UserPage extends Component {
                 favoriteList: this.state.favoriteList.concat([child.val()]),
               });
             }
-    
+
           });
         });
-        const laterRef = firebase.database().ref().child('users/' + profId + '/watchLaterList').orderByKey();
+        const laterRef = firebase.database().ref().child('users/' + user.uid + '/watchLaterList').orderByKey();
         laterRef.once('value').then((snapshot) => {
           snapshot.forEach(child => {
             console.log(child.val());
@@ -297,47 +276,6 @@ class UserPage extends Component {
         });
       }
     });
-  }
-
-  //Testing out removing firebase data
-  /*handleRemove(movieKey) {
-    firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      let key = movieKey
-      return firebase.database().ref('users/' + user.uid + '/watchedList' + key).remove();
-    }
-  }*/
-
-  /*    old render functions
-  let wList = this.state.watchedList.map((movie, count) => {
-        if (this.state.editWatched){
-          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-        } else {
-          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteWatched} imgsrc={movie.imgsrc}/>
-        }
-      });
-      let favList = this.state.favoriteList.map((movie, count) => {
-        if (this.state.editFav){
-          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
-        } else {
-          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteFav} imgsrc={movie.imgsrc}/>
-        }
-      });
-      let wlList = this.state.laterList.map((movie, count) => {
-        if (this.state.editLater){
-          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={true} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-        } else {
-          return <MovieThumbnail key={movie.title + count.toString()} movieTitle={movie.title} onEdit={false} count={count} deleteMovie={this.deleteLater} imgsrc={movie.imgsrc}/>
-        }
-      });
-      */
-
-
-  /**
-   * Add friend will add the friend 
-   */
-  addFriend() {
-    console.log("friend added");
   }
 
   render() {
@@ -358,7 +296,6 @@ class UserPage extends Component {
 
     console.log(this.state.watchedList);
 
-    const {displayName, liveIn, birthday, bio} = this.state.user;
     return (
       <ProfileStyle>
         <Header />
@@ -375,12 +312,17 @@ class UserPage extends Component {
                       <Banner src={wallpaper} />
                       <div className="container-fluid row">
                         <Img src={profilepic} />
-                        <NameStyle>
-                          {displayName}
-                        </NameStyle>
-                        <HighlightsButton type="button" className="btn btn-dark" onClick={() => this.addFriend()}>
-                          Add Friend
-                        </HighlightsButton>
+                        <Name />
+                        <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
+                          this.setState({ displayHighlights: true });
+                        }}>
+                          Highlights
+              </HighlightsButton>
+                        <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
+                          this.setState({ displayHighlights: false });
+                        }}>
+                          Watchlists
+              </WatchlistsButton>
                       </div>
                     </div>
                   </Profile>
@@ -389,15 +331,7 @@ class UserPage extends Component {
                   <UserBodyStyle>
                     {/* INTRO */}
                     <div className="col-md-6">
-                      <Box>
-                        <Title>
-                          <Icon src={introicon} alt='intro'/>
-                          Intro
-                        </Title>
-                        <SmallText>Lives {liveIn}</SmallText>
-                        <SmallText>{bio}</SmallText>
-                        <SmallText>{birthday}</SmallText>
-                      </Box>
+                      <UserDescription/>
                     </div>
 
                     {/* ACTIVITY FEED */}
@@ -419,7 +353,7 @@ class UserPage extends Component {
                               <Title>
                                 <Icon src={heart} alt='heart' />
                                 Favorites:
-                  <EditListButton hide={!this.state.userIsOwner} type="button" className="btn btn-dark btn-sm" onClick={() => {
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                                   this.setState({ editFav: (this.state.editFav) ? false : true });
                                 }}>
                                   {(this.state.editFav) ? "Done" : "Edit"}
@@ -434,7 +368,7 @@ class UserPage extends Component {
                               <Title>
                                 <Icon src={watchLater} alt='watchLater' />
                                 Watch Later:
-                  <EditListButton hide={!this.state.userIsOwner} type="button" className="btn btn-dark btn-sm" onClick={() => {
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                                   this.setState({ editLater: (this.state.editLater) ? false : true });
                                 }}>
                                   {(this.state.editLater) ? "Done" : "Edit"}
@@ -449,7 +383,7 @@ class UserPage extends Component {
                               <Title>
                                 <Icon src={watched} alt='watched' />
                                 Watched:
-                  <EditListButton hide={!this.state.userIsOwner} type="button" className="btn btn-dark btn-sm" onClick={() => {
+                  <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                                   this.setState({ editWatched: (this.state.editWatched) ? false : true });
                                 }}>
                                   {(this.state.editWatched) ? "Done" : "Edit"}
