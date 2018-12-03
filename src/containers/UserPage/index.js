@@ -74,6 +74,7 @@ const Profile = styled.div`
   border: 1px solid #999999;
   background-color: #787878;
   margin-bottom: 12px;
+  min-width: 768px;
 `;
 
 const Banner = styled.img`
@@ -105,23 +106,21 @@ const SmallText = styled.p`
 
 
 const HighlightsButton = styled.button`
-  position: absolute;
+  position: relative;
   margin-top: 13px;
-  right: 145px;
   width: 100px;
   height: 50px;
 `;
 
 const WatchlistsButton = styled.button`
-  position: absolute;
+  position: relative;
   margin-top: 13px;
-  right: 30px;
+  margin-left: 10px;
   width: 100px;
   height: 50px;
 `;
 
 const MovieList = styled.div`
-
 `;
 
 const Box = styled.div`
@@ -144,6 +143,18 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
+
+const UserBodyStyle = styled.div`
+  display: flex;
+  flex-direction: row;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+  min-width: 768px;
+`;
+
+const UserPageBtn = styled.div``;
+
 const ErrorMessage = styled.div`
   text-align: center;
   margin: auto;
@@ -159,6 +170,7 @@ const ErrorMessage = styled.div`
     text-decoration: none;
     color: white;
   }
+
 `;
 
 const postList = [
@@ -314,7 +326,6 @@ class UserPage extends Component {
       return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteLater(movieData.imdb_id, count)} onEdit={this.state.editLater} />
     })
 
-
     console.log(this.state.watchedList);
 
     return (
@@ -349,24 +360,22 @@ class UserPage extends Component {
                   </Profile>
 
                   {/* start of main body */}
-                  <div>
+                  <UserBodyStyle>
+                    {/* INTRO */}
+                    <div className="col-md-6">
+                      <UserDescription/>
+                    </div>
 
-                    {this.state.displayHighlights ? (
-
-                      <div className="row">
-                        <div className="left-div col">
-                          <UserDescription />
-                        </div>
-
-                        <div className="right-div col">
-                          <Box>
-                            <Title>
-                              Activity Feed
-                </Title>
-                            {pList}
-                          </Box>
-                        </div>
-                      </div>
+                    {/* ACTIVITY FEED */}
+                    <div className="col-md-6">
+                      <Box>
+                        <Title>
+                          Activity Feed
+                        </Title>
+                        {pList}
+                      </Box>
+                    </div>
+                  </UserBodyStyle>
 
                     ) : (
 
@@ -423,7 +432,7 @@ class UserPage extends Component {
 
                   </div>
                   {/* end of main body */}
-                </div>
+
                 <div className="col-2"></div>
               </div>)
 
