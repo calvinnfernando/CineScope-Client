@@ -100,11 +100,11 @@ class Movies extends Component {
                   <input className="form-control" onInput={this.handleInput} type="text" placeholder="Search" aria-label="Search movie title" />
                 </div>
               </div>
-                <div className="d-flex flex-row mt-2">
+              <div className="d-flex flex-row mt-2">
                   <div className="col-sm-12 text-center">
                       <MovieList sortOption={this.state.sortOption} movies={this.state.movies}/>
                   </div>
-                </div>
+              </div>
             </div>
         );
     }
