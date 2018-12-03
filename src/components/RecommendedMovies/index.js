@@ -21,7 +21,7 @@ class RecommendedMovies extends Component {
         this.state = {
             movies: [],
             activeItemIndex: 0,
-            query: 338952
+            query: 338952 // Needs to be changed
         };
     }
 
