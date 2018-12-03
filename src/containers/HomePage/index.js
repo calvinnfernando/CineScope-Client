@@ -11,6 +11,7 @@ const HomeStyle = styled.div`
 document.body.style = 'background: #232323;';
 
 class HomePage extends Component {
+
     render() {
         return (
             <HomeStyle>
