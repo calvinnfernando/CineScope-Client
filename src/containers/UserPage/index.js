@@ -315,8 +315,7 @@ class UserPage extends Component {
                       <Box>
                         <Title>
                           <Icon src={watchLater} alt='watchLater' />
-                          Watch Later:
-                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                          Watch Later:                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                             this.setState({ editLater: (this.state.editLater) ? false : true });
                           }}>
                             {(this.state.editLater) ? "Done" : "Edit"}
