@@ -3,6 +3,7 @@ import Header from '../../components/Header'
 import ItemsCarousel from 'react-items-carousel';
 import styled from 'styled-components';
 import FriendsList from './FriendsList' //move to component
+import MovieService from '../../services/MovieService.js'
 import { Calendar } from 'react-date-range';
 import { Link } from 'react-router-dom';
 
@@ -93,6 +94,18 @@ class MoviePlanner extends Component {
     }
 */
 
+    componentDidMount() {
+        const { location } = this.props;
+        const movieID = parseInt(location.pathname.split('/')[2]);
+        MovieService.getSingleMovie(movieID).then((movie) => {
+          this.setState({
+            title: movie.title,
+            poster: movie.poster_path,
+            imdb_id: movie.imdb_id
+          });
+        });
+      }
+
     handleSelect(date){
         console.log(date); // Momentjs object
     }
@@ -112,16 +125,16 @@ class MoviePlanner extends Component {
             <Header />
                 <WhiteBoxStyle>
                     <MoviePlannerStyle className='container'>
-                        <TitlePage>Make a Plan</TitlePage>
+                        <TitlePage>Make a Plan</TitlePage> 
                         <div className="row">
                             <MovieLeftStyle className="col-4">
                                 <MoviePosterStyle>
-                                    <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/x1txcDXkcM65gl7w20PwYSxAYah.jpg`}
+                                    <img src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.state.poster}`}
                                     alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                                 </MoviePosterStyle>
                             </MovieLeftStyle>
                             <MovieRightStyle className="col-8">
-                                <h1>The Incredibles 2</h1>                           
+                                <h1>{this.state.title}Movie title</h1>                           
                                 <div>
                                     <h4>Choose a date</h4>
                                     <Calendar
@@ -155,7 +168,7 @@ class MoviePlanner extends Component {
                                 activePosition={'center'}
 
                                 chevronWidth={12}
-                                rightChevron={<span style={{color: '#000000', size: '20px'}}> &gt; </span>}
+                                rightChevron={<span style={{color: '#000000'}}> &gt; </span>}
                                 leftChevron={<span style={{color: '#000000'}}> &lt; </span>}
                                 outsideChevron={true}
                             >

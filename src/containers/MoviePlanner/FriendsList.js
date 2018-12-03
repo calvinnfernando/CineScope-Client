@@ -16,6 +16,7 @@ const SmallProfile = styled.img`
   border-radius: 100px;
   height: 70px;
   width: 70px;
+  }
 `;
 
 const FriendsList = (props) => {

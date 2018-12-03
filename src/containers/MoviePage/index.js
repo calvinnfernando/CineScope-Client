@@ -96,6 +96,22 @@ const CompareButtonStyle = styled.div`
   }
 `;
 
+const MoviePlannerButtonStyle = styled.div`
+  position: absolute;
+  right: 36%;
+  bottom: 0px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #228B22;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background-color: #98FB98;
+  }
+`;
+
 class MoviePage extends Component {
   constructor(props) {
     super(props)
@@ -215,11 +231,15 @@ class MoviePage extends Component {
                 </AddButtonsStyle>
                 <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
                 <p>{this.state.overview}</p>
-
+                <Link to = {"/movie-planner"}>
+                  <MoviePlannerButtonStyle>
+                    Watch this movie with a friend
+                  </MoviePlannerButtonStyle>
+                </Link>
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
                     Open Movie in Comparitron
-                    </CompareButtonStyle>
+                  </CompareButtonStyle>
                 </Link>
               </MovieRightStyle>
             </div>
