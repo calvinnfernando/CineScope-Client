@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import MovieService from '../../services/MovieService';
 import { Pie, Bar } from 'react-chartjs-2';
 
+const ChartStyle = styled.div`
+	margin: 20px auto;
+`;
+
 class ReviewCompare extends Component {
 	constructor(props) {
 		super(props);
@@ -24,7 +28,7 @@ class ReviewCompare extends Component {
 			MovieService.getSingleMovie(movie.id).then((movieData) => {
 				imdb_id = movieData.imdb_id;
 				MovieService.getSingleMovieOMDb(imdb_id).then((movieData) => {
-					//console.log(movieData);
+					console.log(movieData);
 
 					const ratings = movieData.Ratings;
 					var rottenTomatoes = "N/A";
@@ -75,7 +79,7 @@ class ReviewCompare extends Component {
 					]
 				}]
 			}
-			allRottenTomatoesPies.push(<div><Pie data={data} /><h3>{index}</h3></div>);
+			allRottenTomatoesPies.push(<div><Pie data={data} /><h4 style={{color: 'gray', marginBottom: '40px'}}>{index}</h4></div>);
 		}
 
 		// Imdb
@@ -90,6 +94,7 @@ class ReviewCompare extends Component {
 			labels: imdbLabels,
 			datasets: [{
 				label: 'IMDb Rating',
+				backgroundColor: 'rgba(136, 239, 231, 0.5)',
 				data: imdbRatings
 			}]
 		}
@@ -106,27 +111,41 @@ class ReviewCompare extends Component {
 			labels: metascoreLabels,
 			datasets: [{
 				label: 'Metascore',
+				backgroundColor: 'rgba(255, 173, 114, 0.5)',
 				data: metascoreRatings
+			}]
+		}
+
+		// Box Office
+		const boxOfficeLabels = [];
+		const boxOfficeRatings = [];
+		for (var index in this.state.box_office) {
+			var rating = parseInt(this.state.box_office[index]);
+			boxOfficeRatings.push(rating);
+			boxOfficeLabels.push(index);
+		}
+		const boxOfficeData = {
+			labels: boxOfficeLabels,
+			datasets: [{
+				label: 'Box Office Revenue',
+				backgroundColor: 'rgba(204, 112, 249, 0.5)',
+				data: boxOfficeRatings
 			}]
 		}
 
 		if (chartType === "Rotten Tomatoes") {
 			return (
-				<div>
+				<ChartStyle>
 					<h2>Rotten Tomatoes</h2>
 					<div>
 						{allRottenTomatoesPies}
 					</div>
-					<div>
-						<p>Avengers</p>
-						<p>Act of Valor</p>
-					</div>
-				</div>
+				</ChartStyle>
 			);
 		}
 		else if (chartType === "IMDb") {
 			return (
-				<div>
+				<ChartStyle>
 					<h2>IMDb</h2>
 					<div>
 						<Bar data={imdbData} options={{
@@ -140,12 +159,12 @@ class ReviewCompare extends Component {
 							}
 						}} />
 					</div>
-				</div>
+				</ChartStyle>
 			);
 		}
 		else if (chartType === "Metacritic") {
 			return (
-				<div>
+				<ChartStyle>
 					<h2>Metacritic</h2>
 					<div>
 					<Bar data={metacriticData} options={{
@@ -159,17 +178,26 @@ class ReviewCompare extends Component {
 							}
 						}} />
 					</div>
-				</div>
+				</ChartStyle>
 			);
 		}
 		else if (chartType === "Box Office") {
 			return (
-				<div>
-					<p>Rotten Tomatoes</p>
+				<ChartStyle>
+					<h2>Box Office</h2>
 					<div>
-
+					<Bar data={boxOfficeData} options={{
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true,
+										max: 100
+									}
+								}]
+							}
+						}} />
 					</div>
-				</div>
+				</ChartStyle>
 			);
 		}
 		else if (chartType === "Overview") {

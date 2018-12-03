@@ -6,24 +6,13 @@ import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
 import ReviewCompareList from '../../components/CompareMovies/ReviewCompareList';
 
+import '../../styles/components/comparitron.css';
 
-const ComparitronLogo = styled.p`
-  font-size: 25px;
-  margin: auto 45% auto 35%;
-
-  font-family: Calibri;
-  color: white;
-`;
 
 const LogoStyle = styled.div`
   img {
 	   height: 60px;
   }
-`;
-
-const TMStyle = styled.sup`
-  font-size: 15px;
-  font-weight: normal;
 `;
 
 const Container = styled.div`
@@ -38,7 +27,7 @@ const Sidebars = styled.div`
   padding-left: 15px;
   flex: 1;
   align-items: center;
-  background-color: #ffe499;
+  background-color: #ffeead;
   text-align: center;
   height: 100vh;
 `;
@@ -54,29 +43,13 @@ const MainContent = styled.div`
   text-align: center;
 `;
 
-const ReviewSelection = styled.button`
-  border-radius: 15px;
-  border-color: transparent;
-  border-width: 1px;
-  border-style: solid;
-  background-color: #feeecd;
-  font-family: Calibri;
-  font-size: 12px;
-  outline: none;
-  width: 100%;
-  margin-top: 5px;
-  cursor: pointer;
-  outline: none !important;
-  text-align: left;
-  padding-left: 10px;
-`;
 
 const MovieSelection = styled.li`
   border-radius: 15px;
   border-color: transparent;
   border-width: 1px;
   border-style: solid;
-  background-color: #feeecd;
+  background-color: #fff;
   font-family: Calibri;
   font-size: 17px;
   width: 100%;
@@ -89,7 +62,8 @@ const MovieSelection = styled.li`
 `;
 
 const ComparitronMovieHolder = styled.div`
-  background-color: #feeecd;
+  background-color: #fff;
+  border-radius: 15px;
   width: 100%;
   height: 82%;
   overflow-y: scroll;
@@ -173,16 +147,16 @@ class ComparitronPage extends Component {
   render() {
     return (
       <div>
-        <Navbar color="warning" light expand="md">
+        <Navbar className="navbar-style" light expand="md">
           <LogoStyle>
             <a href="/"><img src={logo} alt='CineScope'/></a>
           </LogoStyle>
-          <ComparitronLogo>Comparitron<TMStyle>TM</TMStyle></ComparitronLogo>
+          <h1 className="comparitron-logo">Comparitron</h1>
         </Navbar>
         <Container>
           <Sidebars>
             <form id="addItemForm" onSubmit={this.handleSubmit.bind(this)}>
-              <p style={{ fontFamily: "Calibri", paddingTop: 15, fontWeight: "bold", color: "gray" }}>SELECT MOVIES</p>
+              <p className="select-text">SELECT MOVIES</p>
               <input
                 style={{ borderRadius: 20, borderWidth: 0, outline: "none", paddingLeft: 15, width: "100%" }}
                 type="search"
@@ -193,31 +167,31 @@ class ComparitronPage extends Component {
               <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
               </ul>
             </form>
-            <ComparitronMovieHolder>
+            <ComparitronMovieHolder className="movie-holder">
               <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
             </ComparitronMovieHolder>
           </Sidebars>
-          <MainContent>
+          <MainContent className="scroll">
 		  	<ReviewCompareList
 				movies={this.state.movieSelections}
 				chartSelections={this.state.chartSelections}
 			/>
 		  </MainContent>
           <Sidebars>
-            <p style={{ paddingTop: 15, fontFamily: "Calibri", fontWeight: "bold", color: "gray" }}>SELECT CHARTS</p>
-            <ReviewSelection id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</ReviewSelection>
-            <ReviewSelection id="IMDb" onClick={this.handleChartSelection.bind(this)}>IMDb</ReviewSelection>
-            <ReviewSelection id="Metacritic" onClick={this.handleChartSelection.bind(this)}>Metacritic</ReviewSelection>
-            <ReviewSelection id="Box Office" onClick={this.handleChartSelection.bind(this)}>Box Office</ReviewSelection>
-            <ReviewSelection id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</ReviewSelection>
+            <p className="select-text">SELECT CHARTS</p>
+            <button className="review-selection" id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</button>
+            <button className="review-selection" id="IMDb" onClick={this.handleChartSelection.bind(this)}>IMDb</button>
+            <button className="review-selection" id="Metacritic" onClick={this.handleChartSelection.bind(this)}>Metacritic</button>
+            <button className="review-selection" id="Box Office" onClick={this.handleChartSelection.bind(this)}>Box Office</button>
+            <button className="review-selection" id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</button>
             <hr></hr>
-            <p style={{ fontWeight: "bold", fontColor: "grey", fontFamily: "Calibri", color: "gray" }}>SELECTED MOVIES</p>
+            <p className="select-text">SELECTED MOVIES</p>
             <ul style={{ paddingInlineStart: 0 }}>
               {this.state.movieSelections.map(item => (
-                <MovieSelection key={item.title}>
+                <div className="movie-selection" key={item.title}>
                   <span style={{ cursor: "pointer", color: "#dedede", fontSize: 17 }} onClick={() => this.removeMovie(item)}>X</span>
                   &nbsp; &nbsp; {item.title}
-                </MovieSelection>
+                </div>
               ))}
             </ul>
           </Sidebars>

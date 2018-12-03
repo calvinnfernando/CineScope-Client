@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Kanit|Lobster');
+
+.navbar-style {
+    background-color: #fdbd34;
+}
+
+.comparitron-logo {
+    margin: auto 45% auto 35%;
+    font-family: 'Lobster', cursive;
+    color: #211059;
+    font-size: 3em;
+    text-shadow: 2px 4px rgba(66, 31, 107, 0.2); 
+}
+
+.select-text {
+    font-family: 'Josefin Sans', sans-serif; 
+    margin-top: 15px; 
+    font-size: 20px;
+    font-weight: "bold"; 
+    color: #211059;
+}
+
+.review-selection, .movie-selection {
+    border-radius: 15px;
+  border-color: transparent;
+  border-width: 1px;
+  border-style: solid;
+  background-color:#fff;
+  color: #211059;
+  font-family: 'Kanit', sans-serif;
+  font-size: 18px;
+  outline: none;
+  width: 100%;
+  margin-top: 5px;
+  cursor: pointer;
+  outline: none !important;
+  text-align: center;
+  padding-left: 10px;
+}
+
+.movie-selection {
+    text-align: left;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #eae5ff; 
+}
+
+.scroll::-webkit-scrollbar-track {
+    background: #eae5ff; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #211059; 
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    background: #211059; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #645799; 
+}
+
+.scroll::-webkit-scrollbar-thumb:hover {
+    background: #645799; 
+}
