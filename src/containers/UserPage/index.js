@@ -45,7 +45,7 @@ const MovieCard = (props) => (
       <img className="card-img-top movie-img"
         src={"http://image.tmdb.org/t/p/w185" + props.poster}
         onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="298" />
-      <a href={"/movie/" + parseInt(props.movie_id)}>
+      <a href={"/movie/" + parseInt(props.id)}>
         <div className="card-img-overlay movie-description">
           <p className="card-text">{props.movie_title}</p>
         </div>
