@@ -231,6 +231,7 @@ class MoviePage extends Component {
     }
 
     var rating = this.state.dropdownValue;
+    this.setState({ ratingPostedMessage: true });
 
     /*MovieService.getSessionId().then((id) => {
       console.log(id);
@@ -552,14 +553,17 @@ class MoviePage extends Component {
     return firebase.database().ref('/users/' + this.state.currentUser).once('value').then((snapshot) => {
       displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
       this.setState({displayName: displayName})
+      this.setState({ reviewSubmitted: true });
+      console.log('review submtitted');
+      console.log(this.state.reviewSubmitted);
     }).then(displayName => {
       firebase.database().ref('movies/' + this.state.movie_id).child('reviews/' + this.state.displayName).set({
         review: this.state.reviewText
       });
     });
-    this.setState({reviewSubmitted: true})
     this.getFirebaseReviews(this.state.movie_id)
-    window.location.reload();
+
+      //window.location.reload();
   }
 
   //get firebase reviews
@@ -680,9 +684,10 @@ class MoviePage extends Component {
             <hr></hr>
             <Reviews reviews={this.state.reviews} />
             <h1>Write a Review</h1>
-            <form onClick={this.uploadReview}>
+            <form>
               <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{width: '100%', height: 200}}/>
-              <button type="button">Submit</button>
+              <button type="button" onClick={this.uploadReview}>Submit</button>
+              {this.state.reviewSubmitted && 'Your review has been posted!'}
             </form>
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
