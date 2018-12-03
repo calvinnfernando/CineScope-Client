@@ -165,7 +165,7 @@ class MoviePage extends Component {
       const rating = this.state.dropdownValue;
       const movieID = this.state.movie_id;
       MovieService.postRating(rating, movieID, id).then(() => {
-        this.setState({ ratingPostedMessage: true });
+        
       });
     });*/
 
@@ -188,6 +188,8 @@ class MoviePage extends Component {
           newSumOfRatings = 0;
         }
       }
+
+      this.setState({ ratingPostedMessage: true });
     });
 
     // increase the number of ratings so far
