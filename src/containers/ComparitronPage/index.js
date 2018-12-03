@@ -182,8 +182,8 @@ class ComparitronPage extends Component {
             <button className="review-selection" id="Rotten Tomatoes" onClick={this.handleChartSelection.bind(this)}>Rotten Tomatoes</button>
             <button className="review-selection" id="IMDb" onClick={this.handleChartSelection.bind(this)}>IMDb</button>
             <button className="review-selection" id="Metacritic" onClick={this.handleChartSelection.bind(this)}>Metacritic</button>
-            <button className="review-selection" id="Box Office" onClick={this.handleChartSelection.bind(this)}>Box Office</button>
-            <button className="review-selection" id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</button>
+            {/*<button className="review-selection" id="Box Office" onClick={this.handleChartSelection.bind(this)}>Box Office</button>
+            <button className="review-selection" id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</button>*/}
             <hr></hr>
             <p className="select-text">SELECTED MOVIES</p>
             <ul style={{ paddingInlineStart: 0 }}>

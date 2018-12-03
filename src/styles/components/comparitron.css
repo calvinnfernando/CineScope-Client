@@ -62,11 +62,11 @@
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #211059; 
+    background: #827e91; 
 }
 
 .scroll::-webkit-scrollbar-thumb {
-    background: #211059; 
+    background: #827e91; 
 }
 
 /* Handle on hover */
