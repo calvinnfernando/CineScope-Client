@@ -119,7 +119,11 @@ class MoviePage extends Component {
       dropdownOpen: false,
       dropdownValue: 0,
       invalidRating: false,
-      ratingPostedMessage: false
+      ratingPostedMessage: false,
+      reviewText: "",
+      currentUser: "",
+      displayName: "",
+      reviewSubmitted: false
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
@@ -129,11 +133,15 @@ class MoviePage extends Component {
     this.handleAddFav = this.handleAddFav.bind(this)
     this.handleAddWatched = this.handleAddWatched.bind(this)
     this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+    this.handleReviewChange = this.handleReviewChange.bind(this)
+    this.uploadReview = this.uploadReview.bind(this)
+    this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
 
     //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.firebaseref = firebase.database().ref(`users/${user.uid}`);
+        this.setState({currentUser: user.uid})
       } else {
         console.log("Not Signed In");
       }
@@ -157,7 +165,7 @@ class MoviePage extends Component {
       this.setState({ invalidRating: true });
       return;
     }
-    
+
     var rating = this.state.dropdownValue;
 
     /*MovieService.getSessionId().then((id) => {
@@ -201,11 +209,11 @@ class MoviePage extends Component {
       rating: newRating,
       numberOfRatings: newNumberOfRatings
     });
-    
+
     firebase.database().ref('movies/' + this.state.movie_id).on('value', function (snapshot) {
       console.log(snapshot.val());
     });
-    
+
 
   }
   // Trailer stuff
@@ -219,7 +227,6 @@ class MoviePage extends Component {
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
-
   /**
    * This method mounts component initially
    */
@@ -294,8 +301,10 @@ class MoviePage extends Component {
       }
       this.setState({ trailerVideo: trailerVideo });
     })
+    this.getFirebaseReviews(movieID)
     MovieService.getMovieReviews(movieID).then((reviews) => {
       const movieReviews = reviews.slice(0, 8);
+      console.log(movieReviews)
       this.setState({ reviews: movieReviews });
     });
 
@@ -316,6 +325,7 @@ class MoviePage extends Component {
    *
    * @param {const} movieID
    */
+
   handleAddFav(event) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -365,8 +375,46 @@ class MoviePage extends Component {
     });
   }
 
-  render() {
+  handleReviewChange(event) {
+    this.setState({reviewText: event.target.value})
+  }
 
+  uploadReview(event){
+    // console.log(this.state.reviewText)
+    var displayName = ""
+    return firebase.database().ref('/users/' + this.state.currentUser).once('value').then((snapshot) => {
+      displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
+      this.setState({displayName: displayName})
+    }).then(displayName => {
+      firebase.database().ref('movies/' + this.state.movie_id).child('reviews/' + this.state.displayName).set({
+        review: this.state.reviewText
+      });
+    });
+    this.setState({reviewSubmitted: true})
+    this.getFirebaseReviews(this.state.movie_id)
+  }
+
+  //get firebase reviews
+  getFirebaseReviews(movieID){
+    console.log('here')
+    var reviewRef =  firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
+      var tempReviews = []
+      snapshot.forEach((child) => {
+        console.log(child.key)
+        console.log(child.val())
+        tempReviews.push({
+          author: child.key,
+          content: child.val().review
+        })
+        console.log(tempReviews)
+      });
+      var newReviews = this.state.reviews.concat(tempReviews)
+      this.setState({reviews: newReviews})
+      this.forceUpdate()
+    })
+  }
+
+  render() {
     return (
       <div>
         <Header />
@@ -435,6 +483,11 @@ class MoviePage extends Component {
             <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews reviews={this.state.reviews} />
+            <h1>Write a Review</h1>
+            <form onClick={this.uploadReview}>
+              <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{width: '100%', height: 200}}/>
+              <button type="button">Submit</button>
+            </form>
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>
