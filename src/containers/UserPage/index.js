@@ -185,8 +185,8 @@ class UserPage extends Component {
   deleteLater(id,i) {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('users/' + user.uid + '/laterList/' + id);
-        return firebase.database().ref('users/' + user.uid + '/laterList/').child(id).remove();
+        console.log('users/' + user.uid + '/watchLaterList/' + id);
+        return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(id).remove();
       }
     });
     this.state.laterList.splice(i, 1);
