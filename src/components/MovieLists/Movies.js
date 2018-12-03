@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MovieList from './MovieList';
 import MovieService from '../../services/MovieService';
 import {getScrollDownPercentage} from '../../services/scrollHelper';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class Movies extends Component {
 
@@ -24,7 +24,8 @@ class Movies extends Component {
         this.newest = this.newest.bind(this);
         this.oldest = this.oldest.bind(this);
         this.handleInput = this.handleInput.bind(this);
-        this.handleScroll = this.handleScroll.bind(this);
+        this.nextPage = this.nextPage.bind(this);
+        this.previousPage = this.previousPage.bind(this);
         this.toggle = this.toggle.bind(this);
     }
 
@@ -32,7 +33,6 @@ class Movies extends Component {
         MovieService.getPopularMovies().then((movies) => {
             this.setState({ movies: movies, currentPage: 1, query: "" });
         })
-        window.addEventListener('scroll', this.handleScroll);
     }
 
     /**
@@ -47,23 +47,25 @@ class Movies extends Component {
         })
     }
 
-    /**
-     * This method handles when the user has scrolled down
-     * This method must load an additional movie list
-     *
-     * @param {Event} event
-     */
-    handleScroll(event) {
-        let percentageScrolled = getScrollDownPercentage(window);
-        if (percentageScrolled > 0.8) {
-            const nextPage = this.state.currentPage + 1;
-            MovieService.getSearchMovies(this.state.query, nextPage)
-                .then((movies) => this.state.movies.concat(movies))
-                .then((newMovies) => this.setState({movies: newMovies}));
-            this.setState({currentPage: this.state.currentPage + 1});
-        }
+    nextPage(event) {
+        const nextPage = this.state.currentPage + 1;
+        MovieService.getSearchMovies(this.state.query, nextPage)
+            .then((movies) => this.state.movies = movies)
+            .then((newMovies) => this.setState({movies: newMovies}));
+        this.setState({currentPage: this.state.currentPage + 1});
     }
 
+    previousPage(event) {
+      if (this.state.currentPage !== 1) {
+      const nextPage = this.state.currentPage - 1;
+      MovieService.getSearchMovies(this.state.query, nextPage)
+          .then((movies) => this.state.movies = movies)
+          .then((newMovies) => this.setState({movies: newMovies}));
+      this.setState({currentPage: this.state.currentPage - 1});
+      }
+    }
+
+    // Dropdown Toggler
     toggle() {
       this.setState({
         dropdownOpen: !this.state.dropdownOpen
@@ -84,6 +86,8 @@ class Movies extends Component {
               <div className="container-fluid">
                 <p className="h1" align="center">MOVIES</p>
                 <div className="col-sm-12 text-right">
+                  <Button onClick={this.nextPage}>Next Page</Button>
+                  <Button onClick={this.previousPage}>Previous Page</Button>
                   <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>Sort</DropdownToggle>
                     <DropdownMenu>

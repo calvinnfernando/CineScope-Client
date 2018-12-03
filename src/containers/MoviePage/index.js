@@ -176,6 +176,11 @@ class MoviePage extends Component {
       dropdownValue: 0,
       invalidRating: false,
       ratingPostedMessage: false,
+      reviewText: "",
+      currentUser: "",
+      displayName: "",
+      emptyReview: false,
+      reviewSubmitted: false,
       movieInFavorites: false,
       movieInWatched: false,
       movieInWatchLater: false,
@@ -186,6 +191,12 @@ class MoviePage extends Component {
     this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
+    this.handleAddFav = this.handleAddFav.bind(this)
+    // this.handleAddWatched = this.handleAddWatched.bind(this)
+    // this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+    this.handleReviewChange = this.handleReviewChange.bind(this)
+    this.uploadReview = this.uploadReview.bind(this)
+    this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
     this.toggleFav = this.toggleFav.bind(this)
     this.toggleWatched = this.toggleWatched.bind(this)
     this.toggleWatchLater = this.toggleWatchLater.bind(this)
@@ -194,16 +205,20 @@ class MoviePage extends Component {
     //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.firebaseref = firebase.database().ref(`users/${user.uid}`); 
+        this.firebaseref = firebase.database().ref(`users/${user.uid}`);
+        this.setState({currentUser: user.uid})
       } else {
         console.log("Not Signed In");
       }
     });
-    // console.log(props.firebase.auth.app.firebase_.database().ref('users'));
+    console.log(props.firebase.auth.app.firebase_.database().ref('users'));
+    //console.log(firebase.database().ref('users').child('A5VVmWlzyjfCkgFCd9OQmSY5QJn2'));
+    //this.props.db.database().ref("users");
+
   }
   // Dropdown stuff
   setMovieRating(rating) {
-    this.setState({dropdownValue: rating, invalidRating: false})
+    this.setState({ dropdownValue: rating, invalidRating: false })
   }
   toggle() {
     this.setState({
@@ -211,19 +226,60 @@ class MoviePage extends Component {
     });
   }
   rateMovie() {
-    if(this.state.dropdownValue == 0) {
-      this.setState({invalidRating: true});
+    if (this.state.dropdownValue == 0) {
+      this.setState({ invalidRating: true });
       return;
     }
 
-    MovieService.getSessionId().then((id) => {
+    var rating = this.state.dropdownValue;
+    this.setState({ ratingPostedMessage: true });
+
+    /*MovieService.getSessionId().then((id) => {
       console.log(id);
       const rating = this.state.dropdownValue;
       const movieID = this.state.movie_id;
-      MovieService.postRating(rating,movieID,id).then(()=> {
-        this.setState({ratingPostedMessage: true});
+      MovieService.postRating(rating, movieID, id).then(() => {
+        this.setState({ ratingPostedMessage: true });
       });
+    });*/
+
+    var ratingRef = firebase.database().ref('movies/' + this.state.movie_id);
+    var newNumberOfRatings = 0;
+    var newSumOfRatings = 0;
+    ratingRef.on('value', function (snapshot) {
+      var firebaseRating = snapshot.val();
+      if (firebaseRating) {
+        if (firebaseRating.numberOfRatings) {
+          newNumberOfRatings = firebaseRating.numberOfRatings;
+        }
+        else {
+          newNumberOfRatings = 0;
+        }
+        if (firebaseRating.sumOfRatings) {
+          newSumOfRatings = firebaseRating.sumOfRatings;
+        }
+        else {
+          newSumOfRatings = 0;
+        }
+      }
     });
+
+    // increase the number of ratings so far
+    newNumberOfRatings = newNumberOfRatings + 1;
+    newSumOfRatings = newSumOfRatings + rating;
+
+    var newRating = Math.round(newSumOfRatings / newNumberOfRatings*10)/10; // https://stackoverflow.com/questions/661562/how-to-format-a-float-in-javascript
+
+    firebase.database().ref('movies/' + this.state.movie_id).set({
+      sumOfRatings: newSumOfRatings,
+      rating: newRating,
+      numberOfRatings: newNumberOfRatings
+    });
+
+    firebase.database().ref('movies/' + this.state.movie_id).on('value', function (snapshot) {
+      console.log(snapshot.val());
+    });
+
 
   }
   // Trailer stuff
@@ -237,7 +293,6 @@ class MoviePage extends Component {
   closeTrailer() {
     this.setState({ displayTrailer: false });
   }
-
   /**
    * This method mounts component initially
    */
@@ -312,10 +367,36 @@ class MoviePage extends Component {
       }
       this.setState({ trailerVideo: trailerVideo });
     })
+    this.getFirebaseReviews(movieID)
+    MovieService.getMovieReviews(movieID).then((reviews) => {
+      const movieReviews = reviews.slice(0, 8);
+      console.log(movieReviews)
+      this.setState({ reviews: movieReviews });
+    });
+
+    var ratingRef = firebase.database().ref('movies/' + movieID);
+    var refToThis = this;
+    ratingRef.on('value', function (snapshot) {
+      var firebaseRating = snapshot.val();
+      if (firebaseRating) {
+        refToThis.setState({vote_average: firebaseRating.rating});
+      }
+    });
+  }
+
+  /**
+   * This method handle adding movie to the fav list in database by
+   * calling MoviePageService
+   *
+   * @param {const} movieID
+   */
+
+  handleAddFav(event) {
+
     /**
      * Gets movie reviews based on movie ID
      */
-    MovieService.getMovieReviews(movieID).then((reviews) => {
+    MovieService.getMovieReviews(this.state.movie_id).then((reviews) => {
       const movieReviews = reviews.slice(0, 8);
       this.setState({ reviews: movieReviews });
     });
@@ -350,9 +431,7 @@ class MoviePage extends Component {
       } else {
       }
     });
-
-
-  } // end componentDidMount
+  }
 
   toggleFav() {
     var refToThis = this;
@@ -407,6 +486,12 @@ class MoviePage extends Component {
               refToThis.setState({movieInWatched: true});
           }
         });
+
+        //this.setState({movieInFavorites: true});
+        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
+
+        this.firebaseref.child('watchedList').child(imdb_id)
+          .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id });
       } else {
         this.signInNotification();
       }
@@ -442,6 +527,9 @@ class MoviePage extends Component {
     });
   }
 
+  handleReviewChange(event) {
+    this.setState({reviewText: event.target.value})
+  }
   signInNotification() {
     console.log('Sign in');
     this.setState({signInNotification: true});
@@ -460,8 +548,49 @@ class MoviePage extends Component {
       .then(snapshot => snapshot.exists() );
   }
 
-  render() {
+  uploadReview(event){
+    // console.log(this.state.reviewText)
+    if (this.state.reviewText === '') {
+      this.setState({emptyReview: true});
+      return;
+    }
+    var displayName = ""
+    return firebase.database().ref('/users/' + this.state.currentUser).once('value').then((snapshot) => {
+      displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
+      this.setState({displayName: displayName})
+      this.setState({ reviewSubmitted: true });
+      this.setState({emptyReview: false});
+    }).then(displayName => {
+      firebase.database().ref('movies/' + this.state.movie_id).child('reviews/' + this.state.displayName).set({
+        review: this.state.reviewText
+      });
+    });
+    this.getFirebaseReviews(this.state.movie_id)
 
+      //window.location.reload();
+  }
+
+  //get firebase reviews
+  getFirebaseReviews(movieID){
+    console.log('here')
+    var reviewRef =  firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
+      var tempReviews = []
+      snapshot.forEach((child) => {
+        console.log(child.key)
+        console.log(child.val())
+        tempReviews.push({
+          author: child.key,
+          content: child.val().review
+        })
+        console.log(tempReviews)
+      });
+      var newReviews = this.state.reviews.concat(tempReviews)
+      this.setState({reviews: newReviews})
+      this.forceUpdate()
+    })
+  }
+
+  render() {
     return (
       <div>
         <Header />
@@ -474,7 +603,7 @@ class MoviePage extends Component {
                     alt={this.state.title} onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} />
                 </MoviePosterStyle>
                 <div style={{ marginTop: 15 }}>
-                <h4>Average rating: {this.state.vote_average}/10</h4>
+                  <h4>Average rating: {this.state.vote_average}/10</h4>
                   <RateStyle>Rate This Movie: </RateStyle>
                   <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>{this.state.dropdownValue == 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
@@ -491,9 +620,9 @@ class MoviePage extends Component {
                       <DropdownItem onClick={() => this.setMovieRating(10)}>10</DropdownItem>
                     </DropdownMenu>
                   </ButtonDropdown>
-                  <br/>
+                  <br />
                   <button onClick={this.rateMovie}>Submit</button>
-                  <br/>
+                  <br />
                   {this.state.invalidRating && 'Please select a rating.'}
                   {this.state.ratingPostedMessage && 'Your rating has been posted!'}
                 </div>
@@ -503,7 +632,7 @@ class MoviePage extends Component {
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
                   {this.state.movieInFavorites ?
-                  
+
                   <RemoveFromFavorites onClick={this.toggleFav}>
                     + Remove from Favorites
                     </RemoveFromFavorites>
@@ -512,9 +641,9 @@ class MoviePage extends Component {
                   <AddToFavorites onClick={this.toggleFav}>
                     + Add to Favorites
                     </AddToFavorites>
-                
+
                 }
-                
+
 
                 {this.state.movieInWatched ?
                 <RemoveFromWatchList onClick={this.toggleWatched}>
@@ -525,8 +654,8 @@ class MoviePage extends Component {
                     + Add to Watched
                     </AddToWatchList>
               }
-                  
-                    
+
+
                   {this.state.movieInWatchLater ?
                   <RemoveFromWatchList onClick={this.toggleWatchLater}>
                   + Remove from Watch Later
@@ -536,15 +665,15 @@ class MoviePage extends Component {
                   + Add to Watch Later
                   </AddToWatchList>
                 }
-                    
-                  
-                    
+
+
+
                   <TrailerButton onClick={this.openTrailer}>
                     &#9658; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
                 <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
-                <p style={{marginBottom: "2rem"}}>{this.state.overview}</p>
+                <p style={{ marginBottom: "2rem" }}>{this.state.overview}</p>
 
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
@@ -558,6 +687,13 @@ class MoviePage extends Component {
             <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews reviews={this.state.reviews} />
+            <h1>Write a Review</h1>
+            <form>
+              <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{width: '100%', height: 200}}/>
+              <button type="button" onClick={this.uploadReview}>Submit</button>
+            </form>
+            {this.state.emptyReview && 'Review cannot be empty.'}
+            {this.state.reviewSubmitted && 'Your review has been posted!'}
             <hr></hr>
             <RelatedMovies movies={this.state.relatedMovies} />
           </MovieInfoStyle>

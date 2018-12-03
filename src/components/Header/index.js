@@ -46,7 +46,7 @@ class Header extends React.Component {
         return (
             <div>
                 {/* Setting the color and setting display adjustments */}
-                <Navbar color="warning" light expand="md">
+                <Navbar style={{backgroundColor: '#ffcc5c'}} light expand="md">
                     {/*Logo; redirects back to main page*/}
                     <LogoStyle className="col-md-2">
                         <a href="/"><img src={logo} alt='CineScope' /></a>
@@ -64,7 +64,7 @@ class Header extends React.Component {
                             </NavItem>
                             <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 <NavLink href="/Comparitron">Comparitron</NavLink>
-                            </NavItem>                          
+                            </NavItem>
                         </Nav>
                     </Collapse>
                     {/*User profile picture*/}
