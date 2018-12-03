@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
 import UserPage from './containers/UserPage';
+import MoviePlanner from './containers/MoviePlanner';
 import MoviePage from './containers/MoviePage';
 import AllMoviesPage from './containers/AllMoviesPage';
 
@@ -30,6 +31,7 @@ class App extends Component {
 				<Route exact path="/" component={HomePage}/>
 				<Route path="/login" component={LoginPage}/>
 				<Route path="/profile" component={UserPage}/>
+				<Route path="/movie-planner" component={MoviePlanner}/>
 				<Route path="/movie" component={MoviePage}/>
 				<Route path="/movie/:id" component={MoviePage} />
 				<Route path="/all-movies" component={AllMoviesPage}/>
