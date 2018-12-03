@@ -172,8 +172,8 @@ class MoviePage extends Component {
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
     this.handleAddFav = this.handleAddFav.bind(this)
-    this.handleAddWatched = this.handleAddWatched.bind(this)
-    this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
+    // this.handleAddWatched = this.handleAddWatched.bind(this)
+    // this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
     this.handleReviewChange = this.handleReviewChange.bind(this)
     this.uploadReview = this.uploadReview.bind(this)
     this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
@@ -360,8 +360,7 @@ class MoviePage extends Component {
         refToThis.setState({vote_average: firebaseRating.rating});
       }
     });
-
-  } // end componentDidMount
+  }
 
   /**
    * This method handle adding movie to the fav list in database by
@@ -375,7 +374,7 @@ class MoviePage extends Component {
     /**
      * Gets movie reviews based on movie ID
      */
-    MovieService.getMovieReviews(movieID).then((reviews) => {
+    MovieService.getMovieReviews(this.state.movie_id).then((reviews) => {
       const movieReviews = reviews.slice(0, 8);
       this.setState({ reviews: movieReviews });
     });
@@ -410,9 +409,7 @@ class MoviePage extends Component {
       } else {
       }
     });
-
-
-  } // end componentDidMount
+  }
 
   toggleFav() {
     var refToThis = this;
@@ -526,9 +523,6 @@ class MoviePage extends Component {
       .then(snapshot => snapshot.exists() );
   }
 
-  render() {
-    console.log(this.state.movieInFavorites);
-
   uploadReview(event){
     // console.log(this.state.reviewText)
     var displayName = ""
@@ -542,6 +536,7 @@ class MoviePage extends Component {
     });
     this.setState({reviewSubmitted: true})
     this.getFirebaseReviews(this.state.movie_id)
+    window.location.reload();
   }
 
   //get firebase reviews
