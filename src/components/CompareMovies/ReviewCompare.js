@@ -59,28 +59,8 @@ class ReviewCompare extends Component {
 	}
 
 	renderGraphs(chartType) {
-		var movieTitles = this.state.movieTitles;
-		var rottenTomatoesRatings = [];
-		for (var index in this.state.rotten_tomatoes) {
-			var ratingWithoutPercentage = parseInt(this.state.rotten_tomatoes[index].split('%')[0]);
-			rottenTomatoesRatings.push(ratingWithoutPercentage);
-		}
-		console.log(movieTitles)
-		console.log(rottenTomatoesRatings)
-		const rottenTomatoesData = {
-			labels: movieTitles,
-			datasets: [{
-				data: rottenTomatoesRatings,
-				backgroundColor: [
-					'#44b7fb',
-					'#f55f81'
-				]
-			}]
-		};
 
-		console.log('rotten tomatoes ratings')
-		console.log(rottenTomatoesRatings)
-
+		// Rotten tomatoes
 		const allRottenTomatoesPies = [];
 		for (var index in this.state.rotten_tomatoes) {
 			var rating = parseInt(this.state.rotten_tomatoes[index]);
@@ -98,10 +78,42 @@ class ReviewCompare extends Component {
 			allRottenTomatoesPies.push(<div><Pie data={data} /><h3>{index}</h3></div>);
 		}
 
+		// Imdb
+		const imdbLabels = [];
+		const imdbRatings = [];
+		for (var index in this.state.imdb) {
+			var rating = parseInt(this.state.imdb[index]);
+			imdbRatings.push(rating);
+			imdbLabels.push(index);
+		}
+		const imdbData = {
+			labels: imdbLabels,
+			datasets: [{
+				label: 'IMDb Rating',
+				data: imdbRatings
+			}]
+		}
+
+		// Metacritic
+		const metascoreLabels = [];
+		const metascoreRatings = [];
+		for (var index in this.state.metascore) {
+			var rating = parseInt(this.state.metascore[index]);
+			metascoreRatings.push(rating);
+			metascoreLabels.push(index);
+		}
+		const metacriticData = {
+			labels: metascoreLabels,
+			datasets: [{
+				label: 'Metascore',
+				data: metascoreRatings
+			}]
+		}
+
 		if (chartType === "Rotten Tomatoes") {
 			return (
 				<div>
-					<h1>Rotten Tomatoes</h1>
+					<h2>Rotten Tomatoes</h2>
 					<div>
 						{allRottenTomatoesPies}
 					</div>
@@ -115,9 +127,18 @@ class ReviewCompare extends Component {
 		else if (chartType === "IMDb") {
 			return (
 				<div>
-					<p>Rotten Tomatoes</p>
+					<h2>IMDb</h2>
 					<div>
-						
+						<Bar data={imdbData} options={{
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true,
+										max: 10
+									}
+								}]
+							}
+						}} />
 					</div>
 				</div>
 			);
@@ -125,9 +146,18 @@ class ReviewCompare extends Component {
 		else if (chartType === "Metacritic") {
 			return (
 				<div>
-					<p>Rotten Tomatoes</p>
+					<h2>Metacritic</h2>
 					<div>
-
+					<Bar data={metacriticData} options={{
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true,
+										max: 100
+									}
+								}]
+							}
+						}} />
 					</div>
 				</div>
 			);
