@@ -14,8 +14,6 @@ import watched from './watched.png';
 import MovieThumbnail from './MovieThumbnail';
 import ActivityFeed from './ActivityFeed';
 import FriendsThumbnail from './FriendsThumbnail';
-import Name from '../../components/Name';
-import UserDescription from '../../components/UserDescription';
 import firebase from 'firebase';
 import { withFirebase } from '../../components/Firebase';
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
