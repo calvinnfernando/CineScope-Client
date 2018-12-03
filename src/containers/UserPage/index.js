@@ -29,6 +29,7 @@ const Profile = styled.div`
   border: 1px solid #999999;
   background-color: #787878;
   margin-bottom: 12px;
+  min-width: 768px;
 `;
 
 const Banner = styled.img`
@@ -60,17 +61,16 @@ const SmallText = styled.p`
 
 
 const HighlightsButton = styled.button`
-  position: absolute;
+  position: relative;
   margin-top: 13px;
-  right: 145px;
   width: 100px;
   height: 50px;
 `;
 
 const WatchlistsButton = styled.button`
-  position: absolute;
+  position: relative;
   margin-top: 13px;
-  right: 30px;
+  margin-left: 10px;
   width: 100px;
   height: 50px;
 `;
@@ -97,6 +97,19 @@ const Icon = styled.img`
   height: 20px;
   width: 20px;
   margin-right: 5px;
+`;
+
+const UserBodyStyle = styled.div`
+  display: flex;
+  flex-direction: row;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+  min-width: 768px;
+`;
+
+const UserPageBtn = styled.div`
+  
 `;
 
 const postList = [
@@ -223,23 +236,23 @@ let wList = this.state.watchedList.map((movie, count) => {
           <div className="col-2"></div>
           <div className="col-8">
             <Profile>
-              <div>
                 <Banner src={wallpaper} />
                 <div className="container-fluid row">
                   <Img src={profilepic}/>
                   <Name/>
-                  <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
-                    this.setState({ displayHighlights: true });
-                  }}>
-                    Highlights
-                  </HighlightsButton>
-                  <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
-                    this.setState({ displayHighlights: false });
-                  }}>
-                    Watchlists
-                  </WatchlistsButton>
+                  <div className="col-md-4 offset-md-5">
+                    <HighlightsButton type="button" className="btn btn-dark" onClick={() => {
+                      this.setState({ displayHighlights: true });
+                    }}>
+                      Highlights
+                    </HighlightsButton>
+                    <WatchlistsButton type="button" className="btn btn-dark" onClick={() => {
+                      this.setState({ displayHighlights: false });
+                    }}>
+                      Watchlists
+                    </WatchlistsButton>
+                  </div>
                 </div>
-              </div>
             </Profile>
 
             {/* start of main body */}
@@ -247,12 +260,14 @@ let wList = this.state.watchedList.map((movie, count) => {
 
             {this.state.displayHighlights ? (
 
-              <div className="row">
-                <div className="left-div col">
+              <UserBodyStyle>
+                {/* INTRO */}
+                <div className="col-md-6">
                   <UserDescription/>
                 </div>
 
-                <div className="right-div col">
+                {/* ACTIVITY FEED */}
+                <div className="col-md-6">
                   <Box>
                     <Title>
                       Activity Feed
@@ -260,7 +275,7 @@ let wList = this.state.watchedList.map((movie, count) => {
                     {pList}
                   </Box>
                 </div>
-              </div>
+              </UserBodyStyle>
 
             ) : (
 
