@@ -4,7 +4,8 @@ import TrailerModal from '../../components/MoviePage/TrailerModal'
 import Ratings from '../../components/MoviePage/Ratings'
 import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
-import MovieService from '../../services/MovieService.js'
+import MovieService from '../../services/MovieService'
+import MovieFirebaseService from '../../services/MovieFirebaseService'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
