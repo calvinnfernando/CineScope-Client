@@ -262,15 +262,15 @@ class MoviePage extends Component {
   }
 
   toggleFav() {
-    MovieFirebaseService.toggleWatchList(this, 'favoritesList', this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
+    MovieFirebaseService.toggleWatchList(this, 'favoritesList', 'moviePage', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   toggleWatched() {
-    MovieFirebaseService.toggleWatchList(this, 'watchedList', this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
+    MovieFirebaseService.toggleWatchList(this, 'watchedList', 'moviePage', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   toggleWatchLater() {
-    MovieFirebaseService.toggleWatchList(this, 'watchLaterList', this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
+    MovieFirebaseService.toggleWatchList(this, 'watchLaterList', 'moviePage', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   handleReviewChange(event) {

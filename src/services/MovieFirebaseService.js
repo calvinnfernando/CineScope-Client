@@ -4,14 +4,14 @@ class MovieFirebaseService {
 
     /**
      * This method returns the user logged in
-     * @param refToMoviePage ref to the movie page so its state can be set
+     * @param refToPage ref to the movie page so its state can be set
      */
-    static getCurrentUser = async (refToMoviePage) => {
+    static getCurrentUser = async (refToPage) => {
 
         firebase.auth().onAuthStateChanged(user => {
             console.log('in here');
             if (user) {
-                refToMoviePage.setState({ currentUser: user.uid })
+                refToPage.setState({ currentUser: user.uid })
             } else {
             }
         });
@@ -20,14 +20,14 @@ class MovieFirebaseService {
     /** 
      * This method returns the rating for a movie
      * @param movieID the ID of the movie to get a rating for
-     * @param refToMoviePage ref to the movie page so that its state can be set
+     * @param refToPage ref to the movie page so that its state can be set
      */
-    static getRating(refToMoviePage, movieID) {
+    static getRating(refToPage, movieID) {
         var ratingRef = firebase.database().ref('movies/' + movieID);
         ratingRef.on('value', function (snapshot) {
             var firebaseRating = snapshot.val();
             if (firebaseRating) {
-                refToMoviePage.setState({ vote_average: firebaseRating.rating });
+                refToPage.setState({ vote_average: firebaseRating.rating });
             }
         });
     }
@@ -76,10 +76,10 @@ class MovieFirebaseService {
 
     /**
      * This returns the firebase reviews
-     * @param refToMoviePage reference to movie page to be updated
+     * @param refToPage reference to movie page to be updated
      * @param movieID id of movie to get reviews for
      */
-    static getReviews(refToMoviePage, movieID) {
+    static getReviews(refToPage, movieID) {
         firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
             var tempReviews = []
             snapshot.forEach((child) => {
@@ -91,26 +91,36 @@ class MovieFirebaseService {
                 })
                 console.log(tempReviews)
             });
-            var newReviews = refToMoviePage.state.reviews.concat(tempReviews)
-            refToMoviePage.setState({ reviews: newReviews })
+            var newReviews = refToPage.state.reviews.concat(tempReviews)
+            refToPage.setState({ reviews: newReviews })
         })
     }
 
-    static uploadReview(refToMoviePage, reviewText) {
+    static uploadReview(refToPage, reviewText) {
         var displayName = ""
-        firebase.database().ref('/users/' + refToMoviePage.state.currentUser).once('value').then((snapshot) => {
+        firebase.database().ref('/users/' + refToPage.state.currentUser).once('value').then((snapshot) => {
             displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
-            firebase.database().ref('movies/' + refToMoviePage.state.movie_id).child('reviews/' + displayName).set({
+            firebase.database().ref('movies/' + refToPage.state.movie_id).child('reviews/' + displayName).set({
                 review: reviewText
             });
-            refToMoviePage.setState({ displayName: displayName })
-            refToMoviePage.setState({ reviewSubmitted: true });
-            refToMoviePage.setState({ emptyReview: false });
-            
+            refToPage.setState({ displayName: displayName })
+            refToPage.setState({ reviewSubmitted: true });
+            refToPage.setState({ emptyReview: false });
+
         });
     }
 
-    static toggleWatchList(refToMoviePage, list, poster, title, overview, imdb_id, movieID) {
+    /**
+     * Adds or removes movie from firebase and performs other actions related to the page 
+     * @param {*} refToPage reference to React component to update
+     * @param {string} list 'favoritesList', 'watchedList', or 'watchLaterList', the list to add or remove from
+     * @param {string} source 'moviePage' or 'userPage', the page we are calling from
+     * @param {*} movieID id of the movie to add or remove (the TMDb one, not IMDb)
+     * @param {*} otherArgs other args passed in depending on where function is being called from. If it's 'moviePage', 
+     * we must pass in poster, title, overview, imdb_id in that order. If it's userPage, pass in i, the index in the
+     * list
+     */
+    static toggleWatchList(refToPage, list, source, movieID, ...otherArgs) {
 
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -120,17 +130,39 @@ class MovieFirebaseService {
                     // if it does exist, then we are removing
                     if (exist) {
                         firebase.database().ref('users/' + user.uid + `/${list}/`).child(movieID).remove();
-                        this.updateWatchListExistence(refToMoviePage, movieID);
+
+                        // Update pages based on what page we are calling this method from 
+                        switch (source) {
+                            case 'moviePage':
+                                this.updateWatchListExistence(refToPage, movieID);
+                                break;
+                            case 'userPage':
+                                const i = otherArgs;
+                                this.updateUserWatchListExistence(refToPage, list, i);
+                                break;
+                        }
+
                     } else {
                         // if it doesn't exist, we add it to the database
+                        const [poster, title, overview, imdb_id] = otherArgs;
                         firebaseref.child(list).child(movieID)
                             .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: movieID });
-                        this.updateWatchListExistence(refToMoviePage, movieID);
+
+                        // Update pages based on what page we are calling this method from 
+                        switch (source) {
+                            case 'moviePage':
+                                this.updateWatchListExistence(refToPage, movieID);
+                                break;
+                            case 'userPage':
+                                // will never call from this
+                                break;
+                        }
+
                     }
                 });
 
             } else {
-                refToMoviePage.signInNotification();
+                refToPage.signInNotification();
             }
         });
     }
@@ -138,7 +170,7 @@ class MovieFirebaseService {
     /**
      * Sets state based on whether the movies exist
      */
-    static updateWatchListExistence(refToMoviePage, movieID) {
+    static updateWatchListExistence(refToPage, movieID) {
         const lists = ['favoritesList', 'watchedList', 'watchLaterList'];
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -147,25 +179,25 @@ class MovieFirebaseService {
                         if (exist) {
                             switch (list) {
                                 case 'favoritesList':
-                                    refToMoviePage.setState({ movieInFavorites: true });
+                                    refToPage.setState({ movieInFavorites: true });
                                     break;
                                 case 'watchedList':
-                                    refToMoviePage.setState({ movieInWatched: true });
+                                    refToPage.setState({ movieInWatched: true });
                                     break;
                                 case 'watchLaterList':
-                                    refToMoviePage.setState({ movieInWatchLater: true });
+                                    refToPage.setState({ movieInWatchLater: true });
                                     break;
                             }
                         } else {
                             switch (list) {
                                 case 'favoritesList':
-                                    refToMoviePage.setState({ movieInFavorites: false });
+                                    refToPage.setState({ movieInFavorites: false });
                                     break;
                                 case 'watchedList':
-                                    refToMoviePage.setState({ movieInWatched: false });
+                                    refToPage.setState({ movieInWatched: false });
                                     break;
                                 case 'watchLaterList':
-                                    refToMoviePage.setState({ movieInWatchLater: false });
+                                    refToPage.setState({ movieInWatchLater: false });
                                     break;
                             }
                         }
@@ -173,6 +205,30 @@ class MovieFirebaseService {
                 }
             }
         });
+    }
+
+    /**
+     * Sets state based on whether the movies exist
+     */
+    static updateUserWatchListExistence(refToPage, list, i) {
+        switch (list) {
+            case 'favoritesList':
+                refToPage.state.favoritesList.splice(i, 1);
+                let newFavList = refToPage.state.favoritesList;
+                refToPage.setState({ favoritesList: newFavList });
+                break;
+            case 'watchedList':
+                refToPage.state.watchedList.splice(i, 1);
+                let newWatchedList = refToPage.state.watchedList;
+                refToPage.setState({ watchedList: newWatchedList });
+                break;
+            case 'watchLaterList':
+                refToPage.state.laterList.splice(i, 1);
+                let newLaterList = refToPage.state.laterList;
+                refToPage.setState({ laterList: newLaterList });
+                break;
+        }
+
     }
 
     /**
