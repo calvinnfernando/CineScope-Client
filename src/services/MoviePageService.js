@@ -73,7 +73,7 @@ class MoviePageService {
         /**
          * This method gets movie reviews from Firebase
          */
-        MovieFirebaseService.getReviews(refToMoviePage, movieID)
+        MovieFirebaseService.getReviews(refToMoviePage, movieID);
 
         /**
          * This method gets movie reviews from TheMovieDB

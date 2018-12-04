@@ -294,7 +294,7 @@ class MoviePage extends Component {
     }, 2000);
   }
 
-  uploadReview(event) {
+  uploadReview() {
     if (!this.state.currentUser) {
       this.signInNotification();
       return;
@@ -304,23 +304,9 @@ class MoviePage extends Component {
       this.setState({ emptyReview: true });
       return;
     }
-    var displayName = ""
-    return firebase.database().ref('/users/' + this.state.currentUser).once('value').then((snapshot) => {
-      displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
-      this.setState({ displayName: displayName })
-      this.setState({ reviewSubmitted: true });
-      this.setState({ emptyReview: false });
-    }).then(displayName => {
-      firebase.database().ref('movies/' + this.state.movie_id).child('reviews/' + this.state.displayName).set({
-        review: this.state.reviewText
-      });
-    });
-    //this.getFirebaseReviews(this.state.movie_id)
 
-    //window.location.reload();
+    MovieFirebaseService.uploadReview(this, this.state.reviewText);
   }
-
-  
 
   render() {
     return (
@@ -366,42 +352,32 @@ class MoviePage extends Component {
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
                   {this.state.movieInFavorites ?
-
                     <RemoveFromFavorites onClick={this.toggleFav}>
                       + Remove from Favorites
                     </RemoveFromFavorites>
-
                     :
                     <AddToFavorites onClick={this.toggleFav}>
                       + Add to Favorites
                     </AddToFavorites>
-
                   }
-
-
                   {this.state.movieInWatched ?
                     <RemoveFromWatchList onClick={this.toggleWatched}>
                       + Remove from Watched
-                </RemoveFromWatchList>
+                    </RemoveFromWatchList>
                     :
                     <AddToWatchList onClick={this.toggleWatched}>
                       + Add to Watched
                     </AddToWatchList>
                   }
-
-
                   {this.state.movieInWatchLater ?
                     <RemoveFromWatchList onClick={this.toggleWatchLater}>
                       + Remove from Watch Later
-                  </RemoveFromWatchList>
+                    </RemoveFromWatchList>
                     :
                     <AddToWatchList onClick={this.toggleWatchLater}>
                       + Add to Watch Later
-                  </AddToWatchList>
+                    </AddToWatchList>
                   }
-
-
-
                   <TrailerButton onClick={this.openTrailer}>
                     &#9658; Watch Trailer
                     </TrailerButton>

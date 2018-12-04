@@ -97,6 +97,19 @@ class MovieFirebaseService {
         })
     }
 
+    static uploadReview(refToMoviePage, reviewText) {
+        var displayName = ""
+        firebase.database().ref('/users/' + refToMoviePage.state.currentUser).once('value').then((snapshot) => {
+            displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
+            refToMoviePage.setState({ displayName: displayName })
+            refToMoviePage.setState({ reviewSubmitted: true });
+            refToMoviePage.setState({ emptyReview: false });
+            firebase.database().ref('movies/' + refToMoviePage.state.movie_id).child('reviews/' + displayName).set({
+                review: reviewText
+            });
+        });
+    }
+
     static toggleWatchList(refToMoviePage, list, poster, title, overview, imdb_id, movieID) {
 
         firebase.auth().onAuthStateChanged(user => {
@@ -106,6 +119,7 @@ class MovieFirebaseService {
                 this.checkIfMovieExist(user.uid, list, movieID).then((exist) => {
                     // if it does exist, then we are removing
                     if (exist) {
+                        firebase.database().ref('users/' + user.uid + `/${list}/`).child(movieID).remove();
                         switch (list) {
                             case 'favoritesList':
                                 refToMoviePage.setState({ movieInFavorites: false });
@@ -117,8 +131,6 @@ class MovieFirebaseService {
                                 refToMoviePage.setState({ movieInWatchLater: false });
                                 break;
                         }
-
-                        return firebase.database().ref('users/' + user.uid + `/${list}/`).child(movieID).remove();
                     } else {
                         // if it doesn't exist, we add it to the database
                         firebaseref.child(list).child(movieID)
@@ -151,10 +163,6 @@ class MovieFirebaseService {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 for (const list of lists) {
-                    console.log('user uid')
-                    console.log(user.uid);
-                    console.log('list')
-                    console.log(list)
                     this.checkIfMovieExist(user.uid, list, movieID).then((exist) => {
                         if (exist) {
                             switch (list) {
@@ -168,8 +176,6 @@ class MovieFirebaseService {
                                     refToMoviePage.setState({ movieInWatchLater: true });
                                     break;
                             }
-                            console.log('updated')
-
                         } else {
                             switch (list) {
                                 case 'favoritesList':
