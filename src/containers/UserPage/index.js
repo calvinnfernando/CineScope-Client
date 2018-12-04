@@ -168,7 +168,7 @@ class UserPage extends Component {
       editFav: false,
       editLater: false,
       editWatched: false,
-      favoriteList: [],
+      favoritesList: [],
       laterList: [],
       watchedList: [],
     };
@@ -182,13 +182,13 @@ class UserPage extends Component {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('users/' + user.uid + '/favoriteList/' + id);
-        return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(id).remove();
+        console.log('users/' + user.uid + '/favoritesList/' + id);
+        return firebase.database().ref('users/' + user.uid + '/favoritesList/').child(id).remove();
       }
     });
-    this.state.favoriteList.splice(i, 1);
-    let newFavList = this.state.favoriteList;
-    this.setState({ favoriteList: newFavList });
+    this.state.favoritesList.splice(i, 1);
+    let newFavList = this.state.favoritesList;
+    this.setState({ favoritesList: newFavList });
   }
 
   deleteLater(id, i) {
@@ -230,13 +230,13 @@ class UserPage extends Component {
             }
           });
         });
-        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
+        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoritesList').orderByKey();
         favoritesRef.once('value').then((snapshot) => {
           snapshot.forEach(child => {
             console.log(child.val());
             if (child.val()) {
               this.setState({
-                favoriteList: this.state.favoriteList.concat([child.val()]),
+                favoritesList: this.state.favoritesList.concat([child.val()]),
               });
             }
 
@@ -263,14 +263,14 @@ class UserPage extends Component {
       return <ActivityFeed key={post.title + count.toString()} description={post.description} date={post.date} />
     }); */
 
-    const favoriteMovies = this.state.favoriteList.map((movieData, count) => {
-      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.imdb_id, count)} onEdit={this.state.editFav} />
+    const favoriteMovies = this.state.favoritesList.map((movieData, count) => {
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteFav(movieData.id, count)} onEdit={this.state.editFav} />
     })
     const watchedMovies = this.state.watchedList.map((movieData, count) => {
-      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteWatched(movieData.imdb_id, count)} onEdit={this.state.editWatched} />
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteWatched(movieData.id, count)} onEdit={this.state.editWatched} />
     })
     const watchLaterMovies = this.state.laterList.map((movieData, count) => {
-      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteLater(movieData.imdb_id, count)} onEdit={this.state.editLater} />
+      return <MovieCard key={movieData.id} poster={movieData.poster} movie_title={movieData.title} id={movieData.id} deleteMovie={() => this.deleteLater(movieData.id, count)} onEdit={this.state.editLater} />
     })
 
     console.log(this.state.watchedList);

@@ -4,8 +4,11 @@ import TrailerModal from '../../components/MoviePage/TrailerModal'
 import Ratings from '../../components/MoviePage/Ratings'
 import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
-import MovieService from '../../services/MovieService'
+
+// services
+import MoviePageService from '../../services/MoviePageService'
 import MovieFirebaseService from '../../services/MovieFirebaseService'
+
 import styled from 'styled-components'
 import { Link } from 'react-router-dom';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -204,7 +207,6 @@ class MoviePage extends Component {
     this.closeTrailer = this.closeTrailer.bind(this)
     this.handleReviewChange = this.handleReviewChange.bind(this)
     this.uploadReview = this.uploadReview.bind(this)
-    this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
     this.toggleFav = this.toggleFav.bind(this)
     this.toggleWatched = this.toggleWatched.bind(this)
     this.toggleWatchLater = this.toggleWatchLater.bind(this)
@@ -258,189 +260,19 @@ class MoviePage extends Component {
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
 
-    /**
-     * This method get single movie data from TMDb
-     */
-    MovieService.getSingleMovie(movieID).then((movie) => {
-      const year = movie.release_date.split("-")[0];
-      this.setState({
-        movie_id: movieID,
-        title: movie.title,
-        overview: movie.overview,
-        poster: movie.poster_path,
-        year: year,
-        imdb_id: movie.imdb_id
-      });
-
-      /**
-       * This method get single movie data from OMDb
-       */
-      MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
-        const ratings = movie.Ratings;
-        var rottenTomatoes = "N/A";
-        for (const source of ratings) {
-          if (source.Source === "Rotten Tomatoes") {
-            rottenTomatoes = source.Value;
-          }
-        }
-        var rated = movie.Rated;
-        if (rated === "N/A" || rated === "NOT RATED") {
-          rated = "Not yet rated";
-        }
-        this.setState({
-          director: movie.Director,
-          actors: movie.Actors,
-          runtime: movie.Runtime,
-          rated: rated,
-          rotten_tomatoes: rottenTomatoes,
-          metascore: movie.Metascore,
-          imdb_rating: movie.imdbRating
-        });
-      });
-    });
-
-    /**
-     * This method get similar movies based on the movie page
-     *
-     * @param {const} movieID
-     */
-    MovieService.getSimilarMovies(movieID).then((movies) => {
-      const relatedMovies = movies.slice(0, 4);
-      this.setState({ relatedMovies: relatedMovies });
-    });
-
-    /**
-     * This method get movie trailer based on movie id
-     *
-     * @param {const} movieID
-     */
-    MovieService.getMovieVideos(movieID).then((videos) => {
-      var trailerVideo = "";
-      for (const video of videos) {
-        if (video.type === "Trailer" && video.site === "YouTube") {
-          trailerVideo = video;
-          break;
-        }
-      }
-      this.setState({ trailerVideo: trailerVideo });
-    })
-    /**
-     * This method gets movie reviews from Firebase
-     */
-    this.getFirebaseReviews(movieID)
-
-    /**
-     * This method gets movie reviews from TheMovieDB
-     */
-    MovieService.getMovieReviews(movieID).then((reviews) => {
-      const movieReviews = reviews.slice(0, 8);
-      console.log(movieReviews)
-      this.setState({ reviews: movieReviews });
-    });
-
-    /** 
-     * This method gets movie rating from Firebase
-     */
-    MovieFirebaseService.getRating(this, movieID);
-    /*var ratingRef = firebase.database().ref('movies/' + movieID);
-    var refToThis = this;
-    ratingRef.on('value', function (snapshot) {
-      var firebaseRating = snapshot.val();
-      if (firebaseRating) {
-        refToThis.setState({ vote_average: firebaseRating.rating });
-      }
-    });*/
+    MoviePageService.setUpMovieData(this, movieID);
   }
 
   toggleFav() {
-    var refToThis = this;
-    MovieFirebaseService.toggleFav(this, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
-
-    /*firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const poster = this.state.poster;
-        const title = this.state.title;
-        const overview = this.state.overview;
-        const imdb_id = this.state.imdb_id;
-        const id = this.state.movie_id;
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
-          // if it does exist, then we are removing
-          if (exist) {
-            refToThis.setState({ movieInFavorites: false });
-            return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(imdb_id).remove();
-          } else {
-            // if it doesn't exist, we add it to the database
-            this.firebaseref.child('favoriteList').child(imdb_id)
-              .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id });
-            refToThis.setState({ movieInFavorites: true });
-          }
-        });
-
-      } else {
-        this.signInNotification();
-      }
-    });*/
+    MovieFirebaseService.toggleWatchList(this, 'favoritesList', this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
   }
 
   toggleWatched() {
-    var refToThis = this;
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const poster = this.state.poster;
-        const title = this.state.title;
-        const overview = this.state.overview;
-        const imdb_id = this.state.imdb_id;
-        const id = this.state.movie_id;
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
-          // if it does exist, then we are removing
-          if (exist) {
-            refToThis.setState({ movieInWatched: false });
-            return firebase.database().ref('users/' + user.uid + '/watchedList/').child(imdb_id).remove();
-          } else {
-            // if it doesn't exist, we add it to the database
-            this.firebaseref.child('watchedList').child(imdb_id)
-              .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id });
-            refToThis.setState({ movieInWatched: true });
-          }
-        });
-
-      } else {
-        this.signInNotification();
-      }
-    });
+    MovieFirebaseService.toggleWatchList(this, 'watchedList', this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
   }
 
   toggleWatchLater() {
-    var refToThis = this;
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const poster = this.state.poster;
-        const title = this.state.title;
-        const overview = this.state.overview;
-        const imdb_id = this.state.imdb_id;
-        const id = this.state.movie_id;
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
-          // if it does exist, then we are removing
-          if (exist) {
-            refToThis.setState({ movieInWatchLater: false });
-            return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(imdb_id).remove();
-          } else {
-            // if it doesn't exist, we add it to the database
-            this.firebaseref.child('watchLaterList').child(imdb_id)
-              .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id });
-            refToThis.setState({ movieInWatchLater: true });
-          }
-        });
-      } else {
-        this.signInNotification();
-      }
-    });
+    MovieFirebaseService.toggleWatchList(this, 'watchLaterList', this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
   }
 
   handleReviewChange(event) {
@@ -483,30 +315,12 @@ class MoviePage extends Component {
         review: this.state.reviewText
       });
     });
-    this.getFirebaseReviews(this.state.movie_id)
+    //this.getFirebaseReviews(this.state.movie_id)
 
     //window.location.reload();
   }
 
-  //get firebase reviews
-  getFirebaseReviews(movieID) {
-    console.log('here')
-    var reviewRef = firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
-      var tempReviews = []
-      snapshot.forEach((child) => {
-        console.log(child.key)
-        console.log(child.val())
-        tempReviews.push({
-          author: child.key,
-          content: child.val().review
-        })
-        console.log(tempReviews)
-      });
-      var newReviews = this.state.reviews.concat(tempReviews)
-      this.setState({ reviews: newReviews })
-      this.forceUpdate()
-    })
-  }
+  
 
   render() {
     return (
