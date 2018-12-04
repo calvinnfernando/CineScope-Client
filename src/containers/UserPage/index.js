@@ -47,7 +47,7 @@ const Img = styled.img`
 
 const EditListButton = styled.button`
   position: absolute;
-  right: 0px;
+  right: 40px;
 `;
 
 const SmallText = styled.p`
