@@ -187,6 +187,7 @@ class MoviePage extends Component {
       dropdownValue: 0,
       invalidRating: false,
       ratingPostedMessage: false,
+      reviews: [],
       reviewText: "",
       currentUser: "",
       displayName: "",

@@ -84,8 +84,8 @@ class MoviePageService {
          */
         MovieService.getMovieReviews(movieID).then((reviews) => {
             const movieReviews = reviews.slice(0, 8);
-            console.log(movieReviews)
-            refToMoviePage.setState({ reviews: movieReviews });
+            var newReviews = refToMoviePage.state.reviews.concat(movieReviews)
+            refToMoviePage.setState({ reviews: newReviews });
         });
 
         /** 
