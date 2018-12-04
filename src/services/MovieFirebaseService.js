@@ -1,5 +1,8 @@
 import firebase from 'firebase';
 
+/**
+ * The purpose of this class is to access movie data stored inside of Firebase. Functions add to and remove data from Firebase
+ */
 class MovieFirebaseService {
 
     /**
