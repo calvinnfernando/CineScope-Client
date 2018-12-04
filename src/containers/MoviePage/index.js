@@ -324,13 +324,23 @@ class MoviePage extends Component {
       }
       this.setState({ trailerVideo: trailerVideo });
     })
+    /**
+     * This method gets movie reviews from Firebase
+     */
     this.getFirebaseReviews(movieID)
+
+    /**
+     * This method gets movie reviews from TheMovieDB
+     */
     MovieService.getMovieReviews(movieID).then((reviews) => {
       const movieReviews = reviews.slice(0, 8);
       console.log(movieReviews)
       this.setState({ reviews: movieReviews });
     });
 
+    /** 
+     * This method gets movie rating from Firebase
+     */
     MovieFirebaseService.getRating(this, movieID);
     /*var ratingRef = firebase.database().ref('movies/' + movieID);
     var refToThis = this;

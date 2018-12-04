@@ -2,7 +2,6 @@ import firebase from 'firebase';
 
 class MovieFirebaseService {
 
-
     static getCurrentUser = async (refToMoviePage) => {
 
         firebase.auth().onAuthStateChanged(user => {
