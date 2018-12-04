@@ -8,8 +8,8 @@ import MovieFirebaseService from './MovieFirebaseService'
 class MoviePageService {
     static setUpMovieData(refToMoviePage, movieID) {
         /**
-     * This method get single movie data from TMDb
-     */
+         * This method get single movie data from TMDb
+         */
         MovieService.getSingleMovie(movieID).then((movie) => {
             const year = movie.release_date.split("-")[0];
             const imdb_id = movie.imdb_id;
