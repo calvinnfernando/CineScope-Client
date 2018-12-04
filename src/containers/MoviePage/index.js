@@ -142,10 +142,10 @@ const RateStyle = styled.span`
   margin: 0px 2px;
 `;
 
-const SignInNotification = styled.div`
-  position: absolute;
-  top: 8em;
-  left: 50%;
+const SignInNotification = styled.span`
+  position: sticky;
+  top: 4em;
+  left: 35%;
   transform: translate(-50%);
   z-index: 10;
   background-color: #384491;
@@ -223,6 +223,11 @@ class MoviePage extends Component {
     });
   }
   rateMovie() {
+    if (!this.state.currentUser) {
+      this.signInNotification();
+      return;
+    }
+
     if (this.state.dropdownValue == 0) {
       this.setState({ invalidRating: true });
       return;
@@ -531,6 +536,10 @@ class MoviePage extends Component {
   }
 
   uploadReview(event){
+    if (!this.state.currentUser) {
+      this.signInNotification();
+      return;
+    }
     // console.log(this.state.reviewText)
     if (this.state.reviewText === '') {
       this.setState({emptyReview: true});
@@ -577,6 +586,7 @@ class MoviePage extends Component {
       <div>
         <Header />
         <WhiteBoxStyle>
+        <SignInNotification className={this.state.signInNotification ? 'show' : 'none'}>Sign in or create an account to enjoy user functionality!</SignInNotification>
           <MovieInfoStyle className="container">
             <div className="row">
               <MovieLeftStyle className="col-md-4">
@@ -681,8 +691,7 @@ class MoviePage extends Component {
           </MovieInfoStyle>
         </WhiteBoxStyle>
         {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} video={this.state.trailerVideo} />}
-        <SignInNotification className={this.state.signInNotification ? 'show' : 'none'}>Sign in or create an account to enjoy user functionality!</SignInNotification>}
-
+        
       </div>
     );
   }
