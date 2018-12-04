@@ -527,19 +527,20 @@ class MoviePage extends Component {
   handleReviewChange(event) {
     this.setState({reviewText: event.target.value})
   }
+  
+  /**
+   * This method is called when the user tries to perform an action where an account is needed but is not signed in.
+   */
   signInNotification() {
-    console.log('Sign in');
     this.setState({signInNotification: true});
     this.setState({signInNotificationFade: true});
     var refToThis = this;
     setTimeout(function(){
       refToThis.setState({signInNotificationFade: false});
-      console.log('Sign fading out');
       setTimeout(function(){
         refToThis.setState({signInNotification: false});
-        console.log('Sign gone');
       },1000);
-    },3000);
+    },2000);
   }
 
   /**
