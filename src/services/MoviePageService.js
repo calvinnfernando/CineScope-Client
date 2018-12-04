@@ -1,5 +1,7 @@
 import MovieService from './MovieService'
 import FirebaseService from './FirebaseService'
+import showdown from 'showdown'
+import {markdown} from 'markdown'
 
 /**
  * An extra abstraction layer which prevents MoviePage/index.js from having to access MovieService.
@@ -88,6 +90,11 @@ class MoviePageService {
          */
         MovieService.getMovieReviews(movieID).then((reviews) => {
             const movieReviews = reviews.slice(0, 8);
+            for (var movieReview of movieReviews) {
+                // convert markdown to HTML before adding it to our state  
+                var contentHtml = markdown.toHTML(movieReview.content);
+                movieReview.content = contentHtml;
+            }
             var newReviews = refToMoviePage.state.reviews.concat(movieReviews)
             refToMoviePage.setState({ reviews: newReviews });
         });
