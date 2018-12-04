@@ -140,11 +140,11 @@ class UserPage extends Component {
   }
 
   deleteLater(movieID, i) {
-    UserPageService.deleteWatchList(this, 'favoritesList', movieID, i);
+    UserPageService.deleteWatchList(this, 'watchLaterList', movieID, i);
   }
 
   deleteWatched(movieID, i) {
-    UserPageService.deleteWatchList(this, 'favoritesList', movieID, i);
+    UserPageService.deleteWatchList(this, 'watchedList', movieID, i);
   }
 
   componentWillMount() {
