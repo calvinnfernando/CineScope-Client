@@ -1,6 +1,11 @@
 import firebase from 'firebase';
+import MovieFirebaseService from './MovieFirebaseService';
 
 class UserPageService {
+    static getCurrentUser (refToPage) {
+        MovieFirebaseService.getCurrentUser(refToPage);
+    }
+
     static setUserWatchLists(refToPage) {
         const lists = ['favoritesList', 'watchedList', 'watchLaterList'];
         firebase.auth().onAuthStateChanged((user) => {
@@ -33,6 +38,10 @@ class UserPageService {
                 }
             }
         });
+    }
+
+    static deleteWatchList(list, movieID, i) {
+        MovieFirebaseService.toggleWatchList(this, list, 'userPage', movieID, i);
     }
 }
 

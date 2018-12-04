@@ -9,7 +9,7 @@ class MovieFirebaseService {
      * This method returns the user logged in
      * @param refToPage ref to the movie page so its state can be set
      */
-    static getCurrentUser = async (refToPage) => {
+    static getCurrentUser (refToPage) {
 
         firebase.auth().onAuthStateChanged(user => {
             console.log('in here');

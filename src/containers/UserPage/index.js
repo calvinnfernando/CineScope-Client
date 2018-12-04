@@ -13,7 +13,6 @@ import Name from '../../components/Name';
 import MovieCard from '../../components/UserPage/MovieCard';
 
 // services
-import MovieFirebaseService from '../../services/MovieFirebaseService';
 import UserPageService from '../../services/UserPageService';
 
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
@@ -137,19 +136,19 @@ class UserPage extends Component {
   }
 
   deleteFav(movieID, i) {
-    MovieFirebaseService.toggleWatchList(this, 'favoritesList', 'userPage', movieID, i);
+    UserPageService.deleteWatchList('favoritesList', movieID, i);
   }
 
   deleteLater(movieID, i) {
-    MovieFirebaseService.toggleWatchList(this, 'watchLaterList', 'userPage', movieID, i);
+    UserPageService.deleteWatchList('favoritesList', movieID, i);
   }
 
   deleteWatched(movieID, i) {
-    MovieFirebaseService.toggleWatchList(this, 'watchedList', 'userPage', movieID, i);
+    UserPageService.deleteWatchList('favoritesList', movieID, i);
   }
 
   componentWillMount() {
-    MovieFirebaseService.getCurrentUser(this);
+    UserPageService.getCurrentUser(this);
     UserPageService.setUserWatchLists(this);
   }
 
@@ -169,9 +168,8 @@ class UserPage extends Component {
       <ProfileStyle>
         <Header />
 
-        <AuthUserContext.Consumer>
           {
-            authUser => authUser ?
+            this.state.currentUser ?
 
               (
                 <div className="container-fluid row mx-auto">
@@ -256,7 +254,7 @@ class UserPage extends Component {
                 </ErrorMessage>)
 
           }
-        </AuthUserContext.Consumer>
+
       </ProfileStyle>
     );
   }
