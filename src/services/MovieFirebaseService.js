@@ -2,27 +2,27 @@ import firebase from 'firebase';
 
 class MovieFirebaseService {
 
-    
-    /*static getCurrentUser = async () => {
-        
 
-        var userID = await firebase.auth().onAuthStateChanged(user => {
+    static getCurrentUser = async (refToMoviePage) => {
+
+        firebase.auth().onAuthStateChanged(user => {
             console.log('in here');
             if (user) {
-                
-                userID = user.uid;
-                console.log(userID);
-                return userID;
+                refToMoviePage.setState({ currentUser: user.uid })
             } else {
             }
         });
+    }
 
-        console.log('out here')
-        console.log(userID)
-
-        return userID;
-        //console.log(props.firebase.auth.app.firebase_.database().ref('users'));
-    }*/
+    static getRating(refToMoviePage, movieID) {
+        var ratingRef = firebase.database().ref('movies/' + movieID);
+        ratingRef.on('value', function (snapshot) {
+            var firebaseRating = snapshot.val();
+            if (firebaseRating) {
+                refToMoviePage.setState({ vote_average: firebaseRating.rating });
+            }
+        });
+    }
 
     static updateRating(movieID, rating) {
         var ratingRef = firebase.database().ref('movies/' + movieID);
@@ -58,12 +58,42 @@ class MovieFirebaseService {
             rating: newRating,
             numberOfRatings: newNumberOfRatings
         });
-        /*
-        firebase.database().ref('movies/' + movieID).on('value', function (snapshot) {
-            console.log(snapshot.val());
-        });*/
+
     }
 
+    static toggleFav(refToMoviePage, poster, title, overview, imdb_id, id) {
+        
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                // Checking if movie exist or not
+                var firebaseref = firebase.database().ref(`users/${user.uid}`);
+                this.checkIfMovieExist(user.uid, imdb_id, 'favoriteList').then((exist) => {
+                    // if it does exist, then we are removing
+                    if (exist) {
+                        refToMoviePage.setState({ movieInFavorites: false });
+                        return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(imdb_id).remove();
+                    } else {
+                        // if it doesn't exist, we add it to the database
+                        firebaseref.child('favoriteList').child(imdb_id)
+                            .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id });
+                        refToMoviePage.setState({ movieInFavorites: true });
+                    }
+                });
+
+            } else {
+                refToMoviePage.signInNotification();
+            }
+        });
+    }
+
+    /**
+ * This method check if the movie exist in a list
+ */
+    static checkIfMovieExist = async (user_id, movie_id, type) => {
+        var firebaseref = firebase.database().ref(`users/${user_id}`);
+        return firebaseref.child(type).child(movie_id).once('value')
+            .then(snapshot => snapshot.exists());
+    }
 }
 
 export default MovieFirebaseService;

@@ -210,21 +210,6 @@ class MoviePage extends Component {
     this.toggleWatchLater = this.toggleWatchLater.bind(this)
     this.signInNotification = this.signInNotification.bind(this)
 
-    //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
-    //this.movieFirebase = new MovieFirebaseService();
-    
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        //this.firebaseref = firebase.database().ref(`users/${user.uid}`);
-        this.setState({currentUser: user.uid})
-      } else {
-        console.log("Not Signed In");
-      }
-    });
-    //console.log(props.firebase.auth.app.firebase_.database().ref('users')); */
-    //console.log(firebase.database().ref('users').child('A5VVmWlzyjfCkgFCd9OQmSY5QJn2'));
-    //this.props.db.database().ref("users");
-
   }
   // Dropdown stuff
   setMovieRating(rating) {
@@ -266,25 +251,9 @@ class MoviePage extends Component {
   /**
    * This method mounts component initially
    */
+  componentDidMount() {  
 
-
-
-  componentDidMount() {
-
-    /*MovieFirebaseService.getCurrentUser().then((userID) => {
-      console.log('calling get user')
-      console.log(userID)
-      if (userID) {
-        console.log('setting user id')
-        console.log(userID)
-        this.setState({ currentUser: userID });
-      }
-    });*/
-    //this.getCurrentUser();
-    /*var userID = await MovieFirebaseService.getCurrentUser();
-    console.log('OFFICIAL USER ID')
-    console.log(userID)*/
-    
+    MovieFirebaseService.getCurrentUser(this);
 
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
@@ -362,68 +331,22 @@ class MoviePage extends Component {
       this.setState({ reviews: movieReviews });
     });
 
-    var ratingRef = firebase.database().ref('movies/' + movieID);
+    MovieFirebaseService.getRating(this, movieID);
+    /*var ratingRef = firebase.database().ref('movies/' + movieID);
     var refToThis = this;
     ratingRef.on('value', function (snapshot) {
       var firebaseRating = snapshot.val();
       if (firebaseRating) {
         refToThis.setState({ vote_average: firebaseRating.rating });
       }
-    });
-  }
-
-  /**
-   * This method handle adding movie to the fav list in database by
-   * calling MoviePageService
-   *
-   * @param {const} movieID
-   */
-
-  handleAddFav(event) {
-
-    /**
-     * Gets movie reviews based on movie ID
-     */
-    MovieService.getMovieReviews(this.state.movie_id).then((reviews) => {
-      const movieReviews = reviews.slice(0, 8);
-      this.setState({ reviews: movieReviews });
-    });
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const imdb_id = this.state.imdb_id;
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
-          if (exist) {
-            this.setState({ movieInFavorites: true })
-          } else {
-          }
-        });
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
-          if (exist) {
-            this.setState({ movieInWatched: true })
-          } else {
-          }
-        });
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
-          if (exist) {
-            this.setState({ movieInWatchLater: true })
-          } else {
-          }
-        });
-
-      } else {
-      }
-    });
+    });*/
   }
 
   toggleFav() {
     var refToThis = this;
-    firebase.auth().onAuthStateChanged(user => {
+    MovieFirebaseService.toggleFav(this, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id, this.state.movie_id);
+
+    /*firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const poster = this.state.poster;
         const title = this.state.title;
@@ -448,7 +371,7 @@ class MoviePage extends Component {
       } else {
         this.signInNotification();
       }
-    });
+    });*/
   }
 
   toggleWatched() {
@@ -527,14 +450,6 @@ class MoviePage extends Component {
         refToThis.setState({ signInNotification: false });
       }, 1000);
     }, 2000);
-  }
-
-  /**
-   * This method check if the movie exist in a list
-   */
-  checkIfMovieExist = async (movie_id, type) => {
-    return this.firebaseref.child(type).child(movie_id).once('value')
-      .then(snapshot => snapshot.exists());
   }
 
   uploadReview(event) {
