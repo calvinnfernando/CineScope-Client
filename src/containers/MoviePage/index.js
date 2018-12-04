@@ -143,9 +143,9 @@ const RateStyle = styled.span`
 `;
 
 const SignInNotification = styled.span`
-  position: sticky;
+  position: fixed;
   top: 4em;
-  left: 35%;
+  left: 50%;
   transform: translate(-50%);
   z-index: 10;
   background-color: #384491;
@@ -157,6 +157,15 @@ const SignInNotification = styled.span`
 
   &.show {
     opacity: 1;
+  }
+
+  a {
+    color: #999;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: white;
   }
 `;
 
@@ -184,7 +193,8 @@ class MoviePage extends Component {
       movieInFavorites: false,
       movieInWatched: false,
       movieInWatchLater: false,
-      signInNotification: false
+      signInNotification: false,
+      signInNotificationFade: false
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
@@ -520,10 +530,15 @@ class MoviePage extends Component {
   signInNotification() {
     console.log('Sign in');
     this.setState({signInNotification: true});
+    this.setState({signInNotificationFade: true});
     var refToThis = this;
     setTimeout(function(){
-      refToThis.setState({signInNotification: false});
-      console.log('Sign in gone');
+      refToThis.setState({signInNotificationFade: false});
+      console.log('Sign fading out');
+      setTimeout(function(){
+        refToThis.setState({signInNotification: false});
+        console.log('Sign gone');
+      },1000);
     },3000);
   }
 
@@ -585,8 +600,9 @@ class MoviePage extends Component {
     return (
       <div>
         <Header />
+        {this.state.signInNotification && <SignInNotification className={this.state.signInNotificationFade ? 'show' : 'none'}><a href='/login'>Sign in</a> or <a href='/register'>create an account</a> to enjoy user functionality!</SignInNotification>}
         <WhiteBoxStyle>
-        <SignInNotification className={this.state.signInNotification ? 'show' : 'none'}>Sign in or create an account to enjoy user functionality!</SignInNotification>
+        
           <MovieInfoStyle className="container">
             <div className="row">
               <MovieLeftStyle className="col-md-4">
