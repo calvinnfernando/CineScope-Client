@@ -41,7 +41,7 @@ class UserPageService {
     }
 
     static deleteWatchList(refToPage, list, movieID, i) {
-        FirebaseService.toggleWatchList(refToPage, list, 'userPage', movieID, i);
+        FirebaseService.toggleWatchList(refToPage, list, 'userPage', movieID);
         switch (list) {
             case 'favoritesList':
                 refToPage.state.favoritesList.splice(i, 1);
