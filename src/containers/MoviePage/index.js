@@ -154,7 +154,7 @@ const SignInNotification = styled.span`
   padding: 8px 12px;
   border-radius: 8px;
   color: #FFFFFF;
-  transition: 1s;
+  transition: 0.5s;
   opacity: 0;
 
   &.show {
@@ -196,7 +196,7 @@ class MoviePage extends Component {
       movieInWatched: false,
       movieInWatchLater: false,
       signInNotification: false,
-      signInNotificationFade: false
+      signInNotificationFade: false,
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
@@ -284,12 +284,12 @@ class MoviePage extends Component {
     this.setState({ signInNotification: true });
     this.setState({ signInNotificationFade: true });
     var refToThis = this;
-    setTimeout(function () {
-      refToThis.setState({ signInNotificationFade: false });
-      setTimeout(function () {
-        refToThis.setState({ signInNotification: false });
-      }, 1000);
-    }, 2000);
+    setTimeout(function(){
+      refToThis.setState({signInNotificationFade: false});
+      setTimeout(function(){
+        refToThis.setState({signInNotification: false});
+      },500);
+    },1000);
   }
 
   uploadReview() {
