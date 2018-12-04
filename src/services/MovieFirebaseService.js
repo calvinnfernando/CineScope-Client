@@ -137,7 +137,17 @@ class MovieFirebaseService {
                         // Update pages based on what page we are calling this method from 
                         switch (source) {
                             case 'moviePage':
-                                this.updateWatchListExistence(refToPage, movieID);
+                                switch (list) {
+                                    case 'favoritesList':
+                                        refToPage.setState({ movieInFavorites: false });
+                                        break;
+                                    case 'watchedList':
+                                        refToPage.setState({ movieInWatched: false });
+                                        break;
+                                    case 'watchLaterList':
+                                        refToPage.setState({ movieInWatchLater: false });
+                                        break;
+                                }
                                 break;
                             case 'userPage':
                                 const i = otherArgs;
@@ -154,7 +164,17 @@ class MovieFirebaseService {
                         // Update pages based on what page we are calling this method from 
                         switch (source) {
                             case 'moviePage':
-                                this.updateWatchListExistence(refToPage, movieID);
+                                switch (list) {
+                                    case 'favoritesList':
+                                        refToPage.setState({ movieInFavorites: true });
+                                        break;
+                                    case 'watchedList':
+                                        refToPage.setState({ movieInWatched: true });
+                                        break;
+                                    case 'watchLaterList':
+                                        refToPage.setState({ movieInWatchLater: true });
+                                        break;
+                                }
                                 break;
                             case 'userPage':
                                 // will never call from this
