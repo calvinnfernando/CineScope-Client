@@ -1,6 +1,10 @@
 import MovieService from './MovieService'
 import MovieFirebaseService from './MovieFirebaseService'
 
+/**
+ * An extra abstraction layer which prevents MoviePage/index.js from having to access MovieService.
+ */
+
 class MoviePageService {
     static setUpMovieData(refToMoviePage, movieID) {
         /**

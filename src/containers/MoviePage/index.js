@@ -15,8 +15,6 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 
 /* STYLES */
 
-import firebase from 'firebase';
-
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
