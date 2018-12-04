@@ -7,7 +7,6 @@ import RelatedMovies from '../../components/MoviePage/RelatedMovies'
 
 // services
 import MoviePageService from '../../services/MoviePageService'
-import MovieFirebaseService from '../../services/MovieFirebaseService'
 
 import styled from 'styled-components'
 import { Link } from 'react-router-dom';
@@ -222,21 +221,7 @@ class MoviePage extends Component {
     });
   }
   rateMovie() {
-    if (!this.state.currentUser) {
-      this.signInNotification();
-      return;
-    }
-
-    if (this.state.dropdownValue == 0) {
-      this.setState({ invalidRating: true });
-      return;
-    }
-
-    var rating = this.state.dropdownValue;
-    this.setState({ ratingPostedMessage: true });
-
-    MovieFirebaseService.updateRating(this.state.movie_id, rating);
-
+    MoviePageService.rateMovie(this);
   }
   // Trailer stuff
   openTrailer() {
@@ -254,7 +239,7 @@ class MoviePage extends Component {
    */
   componentDidMount() {  
 
-    MovieFirebaseService.getCurrentUser(this);
+    MoviePageService.getCurrentUser(this);
 
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
@@ -263,15 +248,15 @@ class MoviePage extends Component {
   }
 
   toggleFav() {
-    MovieFirebaseService.toggleWatchList(this, 'favoritesList', 'moviePage', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
+    MoviePageService.toggleWatchList(this, 'favoritesList', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   toggleWatched() {
-    MovieFirebaseService.toggleWatchList(this, 'watchedList', 'moviePage', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
+    MoviePageService.toggleWatchList(this, 'watchedList', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   toggleWatchLater() {
-    MovieFirebaseService.toggleWatchList(this, 'watchLaterList', 'moviePage', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
+    MoviePageService.toggleWatchList(this, 'watchLaterList', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   handleReviewChange(event) {
@@ -294,17 +279,7 @@ class MoviePage extends Component {
   }
 
   uploadReview() {
-    if (!this.state.currentUser) {
-      this.signInNotification();
-      return;
-    }
-    // console.log(this.state.reviewText)
-    if (this.state.reviewText === '') {
-      this.setState({ emptyReview: true });
-      return;
-    }
-
-    MovieFirebaseService.uploadReview(this, this.state.reviewText);
+    MoviePageService.uploadReview(this);
   }
 
   render() {

@@ -136,15 +136,15 @@ class UserPage extends Component {
   }
 
   deleteFav(movieID, i) {
-    UserPageService.deleteWatchList('favoritesList', movieID, i);
+    UserPageService.deleteWatchList(this, 'favoritesList', movieID, i);
   }
 
   deleteLater(movieID, i) {
-    UserPageService.deleteWatchList('favoritesList', movieID, i);
+    UserPageService.deleteWatchList(this, 'favoritesList', movieID, i);
   }
 
   deleteWatched(movieID, i) {
-    UserPageService.deleteWatchList('favoritesList', movieID, i);
+    UserPageService.deleteWatchList(this, 'favoritesList', movieID, i);
   }
 
   componentWillMount() {
@@ -168,8 +168,9 @@ class UserPage extends Component {
       <ProfileStyle>
         <Header />
 
+        <AuthUserContext.Consumer>
           {
-            this.state.currentUser ?
+            authUser => authUser ?
 
               (
                 <div className="container-fluid row mx-auto">
@@ -254,7 +255,7 @@ class UserPage extends Component {
                 </ErrorMessage>)
 
           }
-
+        </AuthUserContext.Consumer>
       </ProfileStyle>
     );
   }

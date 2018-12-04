@@ -1,9 +1,9 @@
 import firebase from 'firebase';
-import MovieFirebaseService from './MovieFirebaseService';
+import FirebaseService from './FirebaseService';
 
 class UserPageService {
     static getCurrentUser (refToPage) {
-        MovieFirebaseService.getCurrentUser(refToPage);
+        FirebaseService.getCurrentUser(refToPage);
     }
 
     static setUserWatchLists(refToPage) {
@@ -40,8 +40,25 @@ class UserPageService {
         });
     }
 
-    static deleteWatchList(list, movieID, i) {
-        MovieFirebaseService.toggleWatchList(this, list, 'userPage', movieID, i);
+    static deleteWatchList(refToPage, list, movieID, i) {
+        FirebaseService.toggleWatchList(refToPage, list, 'userPage', movieID, i);
+        switch (list) {
+            case 'favoritesList':
+                refToPage.state.favoritesList.splice(i, 1);
+                let newFavList = refToPage.state.favoritesList;
+                refToPage.setState({ favoritesList: newFavList });
+                break;
+            case 'watchedList':
+                refToPage.state.watchedList.splice(i, 1);
+                let newWatchedList = refToPage.state.watchedList;
+                refToPage.setState({ watchedList: newWatchedList });
+                break;
+            case 'watchLaterList':
+                refToPage.state.laterList.splice(i, 1);
+                let newLaterList = refToPage.state.laterList;
+                refToPage.setState({ laterList: newLaterList });
+                break;
+        }
     }
 }
 

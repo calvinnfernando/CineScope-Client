@@ -3,7 +3,7 @@ import firebase from 'firebase';
 /**
  * The purpose of this class is to access movie data stored inside of Firebase. Functions add to and remove data from Firebase
  */
-class MovieFirebaseService {
+class FirebaseService {
 
     /**
      * This method returns the user logged in
@@ -149,10 +149,6 @@ class MovieFirebaseService {
                                         break;
                                 }
                                 break;
-                            case 'userPage':
-                                const i = otherArgs;
-                                this.updateUserWatchListExistence(refToPage, list, i);
-                                break;
                         }
 
                     } else {
@@ -175,9 +171,6 @@ class MovieFirebaseService {
                                         refToPage.setState({ movieInWatchLater: true });
                                         break;
                                 }
-                                break;
-                            case 'userPage':
-                                // will never call from this
                                 break;
                         }
 
@@ -231,30 +224,6 @@ class MovieFirebaseService {
     }
 
     /**
-     * Sets state based on whether the movies exist
-     */
-    static updateUserWatchListExistence(refToPage, list, i) {
-        switch (list) {
-            case 'favoritesList':
-                refToPage.state.favoritesList.splice(i, 1);
-                let newFavList = refToPage.state.favoritesList;
-                refToPage.setState({ favoritesList: newFavList });
-                break;
-            case 'watchedList':
-                refToPage.state.watchedList.splice(i, 1);
-                let newWatchedList = refToPage.state.watchedList;
-                refToPage.setState({ watchedList: newWatchedList });
-                break;
-            case 'watchLaterList':
-                refToPage.state.laterList.splice(i, 1);
-                let newLaterList = refToPage.state.laterList;
-                refToPage.setState({ laterList: newLaterList });
-                break;
-        }
-
-    }
-
-    /**
     * This method check if the movie exist in a list
     */
     static checkIfMovieExist = async (user_id, type, movie_id) => {
@@ -264,4 +233,4 @@ class MovieFirebaseService {
     }
 }
 
-export default MovieFirebaseService;
+export default FirebaseService;

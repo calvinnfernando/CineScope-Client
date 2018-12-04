@@ -1,11 +1,15 @@
 import MovieService from './MovieService'
-import MovieFirebaseService from './MovieFirebaseService'
+import FirebaseService from './FirebaseService'
 
 /**
  * An extra abstraction layer which prevents MoviePage/index.js from having to access MovieService.
  */
 
 class MoviePageService {
+    static getCurrentUser (refToPage) {
+        FirebaseService.getCurrentUser(refToPage);
+    }
+
     static setUpMovieData(refToMoviePage, movieID) {
         /**
          * This method get single movie data from TMDb
@@ -77,7 +81,7 @@ class MoviePageService {
         /**
          * This method gets movie reviews from Firebase
          */
-        MovieFirebaseService.getReviews(refToMoviePage, movieID);
+        FirebaseService.getReviews(refToMoviePage, movieID);
 
         /**
          * This method gets movie reviews from TheMovieDB
@@ -91,9 +95,44 @@ class MoviePageService {
         /** 
          * This method gets movie rating from Firebase
          */
-        MovieFirebaseService.getRating(refToMoviePage, movieID);
+        FirebaseService.getRating(refToMoviePage, movieID);
 
-        MovieFirebaseService.updateWatchListExistence(refToMoviePage, movieID);
+        FirebaseService.updateWatchListExistence(refToMoviePage, movieID);
+    }
+
+    static toggleWatchList(refToPage, list, movieID, poster, title, overview, imdb_id) {
+        FirebaseService.toggleWatchList(refToPage, list, 'moviePage', movieID, poster, title, overview, imdb_id);
+    }
+
+    static uploadReview(refToPage) {
+        if (!refToPage.state.currentUser) {
+            refToPage.signInNotification();
+            return;
+          }
+          // console.log(this.state.reviewText)
+          if (refToPage.state.reviewText === '') {
+            refToPage.setState({ emptyReview: true });
+            return;
+          }
+      
+          FirebaseService.uploadReview(refToPage, refToPage.state.reviewText);
+    }
+
+    static rateMovie(refToPage) {
+        if (!refToPage.state.currentUser) {
+            refToPage.signInNotification();
+            return;
+          }
+      
+          if (refToPage.state.dropdownValue == 0) {
+            refToPage.setState({ invalidRating: true });
+            return;
+          }
+      
+          var rating = refToPage.state.dropdownValue;
+          refToPage.setState({ ratingPostedMessage: true });
+      
+          FirebaseService.updateRating(refToPage.state.movie_id, rating);
     }
 
 }
