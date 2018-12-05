@@ -1,6 +1,5 @@
 import MovieService from './MovieService'
 import FirebaseService from './FirebaseService'
-import showdown from 'showdown'
 import {markdown} from 'markdown'
 
 /**
