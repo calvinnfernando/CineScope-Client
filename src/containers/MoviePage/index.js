@@ -4,14 +4,15 @@ import TrailerModal from '../../components/MoviePage/TrailerModal'
 import Ratings from '../../components/MoviePage/Ratings'
 import Reviews from '../../components/MoviePage/Reviews'
 import RelatedMovies from '../../components/MoviePage/RelatedMovies'
-import MovieService from '../../services/MovieService.js'
+
+// services
+import MoviePageService from '../../services/MoviePageService'
+
 import styled from 'styled-components'
 import { Link } from 'react-router-dom';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 /* STYLES */
-
-import firebase from 'firebase';
 
 const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
@@ -185,6 +186,7 @@ class MoviePage extends Component {
       dropdownValue: 0,
       invalidRating: false,
       ratingPostedMessage: false,
+      reviews: [],
       reviewText: "",
       currentUser: "",
       displayName: "",
@@ -203,24 +205,10 @@ class MoviePage extends Component {
     this.closeTrailer = this.closeTrailer.bind(this)
     this.handleReviewChange = this.handleReviewChange.bind(this)
     this.uploadReview = this.uploadReview.bind(this)
-    this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
     this.toggleFav = this.toggleFav.bind(this)
     this.toggleWatched = this.toggleWatched.bind(this)
     this.toggleWatchLater = this.toggleWatchLater.bind(this)
     this.signInNotification = this.signInNotification.bind(this)
-
-    //this.firebaseref = firebase.database().ref(`users/${this.props.d}`)
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.firebaseref = firebase.database().ref(`users/${user.uid}`);
-        this.setState({currentUser: user.uid})
-      } else {
-        console.log("Not Signed In");
-      }
-    });
-    console.log(props.firebase.auth.app.firebase_.database().ref('users'));
-    //console.log(firebase.database().ref('users').child('A5VVmWlzyjfCkgFCd9OQmSY5QJn2'));
-    //this.props.db.database().ref("users");
 
   }
   // Dropdown stuff
@@ -233,57 +221,7 @@ class MoviePage extends Component {
     });
   }
   rateMovie() {
-    if (!this.state.currentUser) {
-      this.signInNotification();
-      return;
-    }
-
-    if (this.state.dropdownValue == 0) {
-      this.setState({ invalidRating: true });
-      return;
-    }
-
-    var rating = this.state.dropdownValue;
-    this.setState({ ratingPostedMessage: true });
-
-    var ratingRef = firebase.database().ref('movies/' + this.state.movie_id);
-    var newNumberOfRatings = 0;
-    var newSumOfRatings = 0;
-    ratingRef.on('value', function (snapshot) {
-      var firebaseRating = snapshot.val();
-      if (firebaseRating) {
-        if (firebaseRating.numberOfRatings) {
-          newNumberOfRatings = firebaseRating.numberOfRatings;
-        }
-        else {
-          newNumberOfRatings = 0;
-        }
-        if (firebaseRating.sumOfRatings) {
-          newSumOfRatings = firebaseRating.sumOfRatings;
-        }
-        else {
-          newSumOfRatings = 0;
-        }
-      }
-    });
-
-    // increase the number of ratings so far
-    newNumberOfRatings = newNumberOfRatings + 1;
-    newSumOfRatings = newSumOfRatings + rating;
-
-    var newRating = Math.round(newSumOfRatings / newNumberOfRatings*10)/10; // https://stackoverflow.com/questions/661562/how-to-format-a-float-in-javascript
-
-    firebase.database().ref('movies/' + this.state.movie_id).set({
-      sumOfRatings: newSumOfRatings,
-      rating: newRating,
-      numberOfRatings: newNumberOfRatings
-    });
-
-    firebase.database().ref('movies/' + this.state.movie_id).on('value', function (snapshot) {
-      console.log(snapshot.val());
-    });
-
-
+    MoviePageService.rateMovie(this);
   }
   // Trailer stuff
   openTrailer() {
@@ -299,241 +237,38 @@ class MoviePage extends Component {
   /**
    * This method mounts component initially
    */
-  componentDidMount() {
+  componentDidMount() {  
+
+    MoviePageService.getCurrentUser(this);
+
     const { location } = this.props;
     const movieID = parseInt(location.pathname.split('/')[2]);
 
-    /**
-     * This method get single movie data from TMDb
-     */
-    MovieService.getSingleMovie(movieID).then((movie) => {
-      const year = movie.release_date.split("-")[0];
-      this.setState({
-        movie_id: movieID,
-        title: movie.title,
-        overview: movie.overview,
-        poster: movie.poster_path,
-        year: year,
-        imdb_id: movie.imdb_id
-      });
-
-      /**
-       * This method get single movie data from OMDb
-       */
-      MovieService.getSingleMovieOMDb(this.state.imdb_id).then((movie) => {
-        const ratings = movie.Ratings;
-        var rottenTomatoes = "N/A";
-        for (const source of ratings) {
-          if (source.Source === "Rotten Tomatoes") {
-            rottenTomatoes = source.Value;
-          }
-        }
-        var rated = movie.Rated;
-        if (rated === "N/A" || rated === "NOT RATED") {
-          rated = "Not yet rated";
-        }
-        this.setState({
-          director: movie.Director,
-          actors: movie.Actors,
-          runtime: movie.Runtime,
-          rated: rated,
-          rotten_tomatoes: rottenTomatoes,
-          metascore: movie.Metascore,
-          imdb_rating: movie.imdbRating
-        });
-      });
-    });
-
-    /**
-     * This method get similar movies based on the movie page
-     *
-     * @param {const} movieID
-     */
-    MovieService.getSimilarMovies(movieID).then((movies) => {
-      const relatedMovies = movies.slice(0, 4);
-      this.setState({ relatedMovies: relatedMovies });
-    });
-
-    /**
-     * This method get movie trailer based on movie id
-     *
-     * @param {const} movieID
-     */
-    MovieService.getMovieVideos(movieID).then((videos) => {
-      var trailerVideo = "";
-      for (const video of videos) {
-        if (video.type === "Trailer" && video.site === "YouTube") {
-          trailerVideo = video;
-          break;
-        }
-      }
-      this.setState({ trailerVideo: trailerVideo });
-    })
-    this.getFirebaseReviews(movieID)
-    MovieService.getMovieReviews(movieID).then((reviews) => {
-      const movieReviews = reviews.slice(0, 8);
-      console.log(movieReviews)
-      this.setState({ reviews: movieReviews });
-    });
-
-    var ratingRef = firebase.database().ref('movies/' + movieID);
-    var refToThis = this;
-    ratingRef.on('value', function (snapshot) {
-      var firebaseRating = snapshot.val();
-      if (firebaseRating) {
-        refToThis.setState({vote_average: firebaseRating.rating});
-      }
-    });
-  }
-
-  /**
-   * This method handle adding movie to the fav list in database by
-   * calling MoviePageService
-   *
-   * @param {const} movieID
-   */
-
-  handleAddFav(event) {
-
-    /**
-     * Gets movie reviews based on movie ID
-     */
-    MovieService.getMovieReviews(this.state.movie_id).then((reviews) => {
-      const movieReviews = reviews.slice(0, 8);
-      this.setState({ reviews: movieReviews });
-    });
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const imdb_id = this.state.imdb_id;
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
-          if (exist) {
-            this.setState({movieInFavorites:true})
-          } else {
-          }
-        });
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
-          if (exist) {
-            this.setState({movieInWatched:true})
-          } else {
-          }
-        });
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
-          if (exist) {
-            this.setState({movieInWatchLater:true})
-          } else {
-          }
-        });
-
-      } else {
-      }
-    });
+    MoviePageService.setUpMovieData(this, movieID);
   }
 
   toggleFav() {
-    var refToThis = this;
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const poster = this.state.poster;
-        const title = this.state.title;
-        const overview = this.state.overview;
-        const imdb_id = this.state.imdb_id;
-        const id = this.state.movie_id;
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'favoriteList').then((exist) => {
-          // if it does exist, then we are removing
-          if (exist) {
-            refToThis.setState({movieInFavorites: false});
-            return firebase.database().ref('users/' + user.uid + '/favoriteList/').child(imdb_id).remove();
-          } else {
-            // if it doesn't exist, we add it to the database
-            this.firebaseref.child('favoriteList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
-              refToThis.setState({movieInFavorites: true});
-          }
-        });
-
-      } else {
-        this.signInNotification();
-      }
-    });
+    MoviePageService.toggleWatchList(this, 'favoritesList', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   toggleWatched() {
-    var refToThis = this;
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const poster = this.state.poster;
-        const title = this.state.title;
-        const overview = this.state.overview;
-        const imdb_id = this.state.imdb_id;
-        const id = this.state.movie_id;
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchedList').then((exist) => {
-          // if it does exist, then we are removing
-          if (exist) {
-            refToThis.setState({movieInWatched: false});
-            return firebase.database().ref('users/' + user.uid + '/watchedList/').child(imdb_id).remove();
-          } else {
-            // if it doesn't exist, we add it to the database
-            this.firebaseref.child('watchedList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
-              refToThis.setState({movieInWatched: true});
-          }
-        });
-
-      } else {
-        this.signInNotification();
-      }
-    });
+    MoviePageService.toggleWatchList(this, 'watchedList', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   toggleWatchLater() {
-    var refToThis = this;
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const poster = this.state.poster;
-        const title = this.state.title;
-        const overview = this.state.overview;
-        const imdb_id = this.state.imdb_id;
-        const id = this.state.movie_id;
-
-        // Checking if movie exist or not
-        this.checkIfMovieExist(imdb_id, 'watchLaterList').then((exist) => {
-          // if it does exist, then we are removing
-          if (exist) {
-            refToThis.setState({movieInWatchLater: false});
-            return firebase.database().ref('users/' + user.uid + '/watchLaterList/').child(imdb_id).remove();
-          } else {
-            // if it doesn't exist, we add it to the database
-            this.firebaseref.child('watchLaterList').child(imdb_id)
-              .set({poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: id});
-              refToThis.setState({movieInWatchLater: true});
-          }
-        });
-      } else {
-        this.signInNotification();
-      }
-    });
+    MoviePageService.toggleWatchList(this, 'watchLaterList', this.state.movie_id, this.state.poster, this.state.title, this.state.overview, this.state.imdb_id);
   }
 
   handleReviewChange(event) {
-    this.setState({reviewText: event.target.value})
+    this.setState({ reviewText: event.target.value })
   }
-  
+
   /**
    * This method is called when the user tries to perform an action where an account is needed but is not signed in.
    */
   signInNotification() {
-    this.setState({signInNotification: true});
-    this.setState({signInNotificationFade: true});
+    this.setState({ signInNotification: true });
+    this.setState({ signInNotificationFade: true });
     var refToThis = this;
     setTimeout(function(){
       refToThis.setState({signInNotificationFade: false});
@@ -543,58 +278,8 @@ class MoviePage extends Component {
     },1000);
   }
 
-  /**
-   * This method check if the movie exist in a list
-   */
-  checkIfMovieExist = async(movie_id, type) => {
-    return this.firebaseref.child(type).child(movie_id).once('value')
-      .then(snapshot => snapshot.exists() );
-  }
-
-  uploadReview(event){
-    if (!this.state.currentUser) {
-      this.signInNotification();
-      return;
-    }
-    // console.log(this.state.reviewText)
-    if (this.state.reviewText === '') {
-      this.setState({emptyReview: true});
-      return;
-    }
-    var displayName = ""
-    return firebase.database().ref('/users/' + this.state.currentUser).once('value').then((snapshot) => {
-      displayName = (snapshot.val() && snapshot.val().displayName) || 'Anonymous';
-      this.setState({displayName: displayName})
-      this.setState({ reviewSubmitted: true });
-      this.setState({emptyReview: false});
-    }).then(displayName => {
-      firebase.database().ref('movies/' + this.state.movie_id).child('reviews/' + this.state.displayName).set({
-        review: this.state.reviewText
-      });
-    });
-    this.getFirebaseReviews(this.state.movie_id)
-
-      //window.location.reload();
-  }
-
-  //get firebase reviews
-  getFirebaseReviews(movieID){
-    console.log('here')
-    var reviewRef =  firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
-      var tempReviews = []
-      snapshot.forEach((child) => {
-        console.log(child.key)
-        console.log(child.val())
-        tempReviews.push({
-          author: child.key,
-          content: child.val().review
-        })
-        console.log(tempReviews)
-      });
-      var newReviews = this.state.reviews.concat(tempReviews)
-      this.setState({reviews: newReviews})
-      this.forceUpdate()
-    })
+  uploadReview() {
+    MoviePageService.uploadReview(this);
   }
 
   render() {
@@ -603,7 +288,7 @@ class MoviePage extends Component {
         <Header />
         {this.state.signInNotification && <SignInNotification className={this.state.signInNotificationFade ? 'show' : 'none'}><a href='/login'>Sign in</a> or <a href='/register'>create an account</a> to enjoy user functionality!</SignInNotification>}
         <WhiteBoxStyle>
-        
+
           <MovieInfoStyle className="container">
             <div className="row">
               <MovieLeftStyle className="col-md-4">
@@ -641,42 +326,32 @@ class MoviePage extends Component {
                 <h3>{this.state.year} | {this.state.rated} | {this.state.runtime}</h3>
                 <AddButtonsStyle>
                   {this.state.movieInFavorites ?
-
-                  <RemoveFromFavorites onClick={this.toggleFav}>
-                    + Remove from Favorites
+                    <RemoveFromFavorites onClick={this.toggleFav}>
+                      + Remove from Favorites
                     </RemoveFromFavorites>
-
-                  :
-                  <AddToFavorites onClick={this.toggleFav}>
-                    + Add to Favorites
+                    :
+                    <AddToFavorites onClick={this.toggleFav}>
+                      + Add to Favorites
                     </AddToFavorites>
-
-                }
-
-
-                {this.state.movieInWatched ?
-                <RemoveFromWatchList onClick={this.toggleWatched}>
-                + Remove from Watched
-                </RemoveFromWatchList>
-              :
-              <AddToWatchList onClick={this.toggleWatched}>
-                    + Add to Watched
+                  }
+                  {this.state.movieInWatched ?
+                    <RemoveFromWatchList onClick={this.toggleWatched}>
+                      + Remove from Watched
+                    </RemoveFromWatchList>
+                    :
+                    <AddToWatchList onClick={this.toggleWatched}>
+                      + Add to Watched
                     </AddToWatchList>
-              }
-
-
+                  }
                   {this.state.movieInWatchLater ?
-                  <RemoveFromWatchList onClick={this.toggleWatchLater}>
-                  + Remove from Watch Later
-                  </RemoveFromWatchList>
-                  :
-                  <AddToWatchList onClick={this.toggleWatchLater}>
-                  + Add to Watch Later
-                  </AddToWatchList>
-                }
-
-
-
+                    <RemoveFromWatchList onClick={this.toggleWatchLater}>
+                      + Remove from Watch Later
+                    </RemoveFromWatchList>
+                    :
+                    <AddToWatchList onClick={this.toggleWatchLater}>
+                      + Add to Watch Later
+                    </AddToWatchList>
+                  }
                   <TrailerButton onClick={this.openTrailer}>
                     &#9658; Watch Trailer
                     </TrailerButton>
@@ -698,7 +373,7 @@ class MoviePage extends Component {
             <Reviews reviews={this.state.reviews} />
             <h1>Write a Review</h1>
             <form>
-              <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{width: '100%', height: 200}}/>
+              <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{ width: '100%', height: 200 }} />
               <button type="button" onClick={this.uploadReview}>Submit</button>
             </form>
             {this.state.emptyReview && 'Review cannot be empty.'}
@@ -708,7 +383,7 @@ class MoviePage extends Component {
           </MovieInfoStyle>
         </WhiteBoxStyle>
         {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} video={this.state.trailerVideo} />}
-        
+
       </div>
     );
   }
