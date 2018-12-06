@@ -142,9 +142,9 @@ const RateStyle = styled.span`
   margin: 0px 2px;
 `;
 
-const SignInNotification = styled.div`
-  position: absolute;
-  top: 8em;
+const SignInNotification = styled.span`
+  position: fixed;
+  top: 4em;
   left: 50%;
   transform: translate(-50%);
   z-index: 10;
@@ -152,11 +152,20 @@ const SignInNotification = styled.div`
   padding: 8px 12px;
   border-radius: 8px;
   color: #FFFFFF;
-  transition: 1s;
+  transition: 0.5s;
   opacity: 0;
 
   &.show {
     opacity: 1;
+  }
+
+  a {
+    color: #999;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: white;
   }
 `;
 
@@ -184,16 +193,14 @@ class MoviePage extends Component {
       movieInFavorites: false,
       movieInWatched: false,
       movieInWatchLater: false,
-      signInNotification: false
+      signInNotification: false,
+      signInNotificationFade: false,
     }
     this.setMovieRating = this.setMovieRating.bind(this)
     this.rateMovie = this.rateMovie.bind(this)
     this.toggle = this.toggle.bind(this)
     this.openTrailer = this.openTrailer.bind(this)
     this.closeTrailer = this.closeTrailer.bind(this)
-    this.handleAddFav = this.handleAddFav.bind(this)
-    // this.handleAddWatched = this.handleAddWatched.bind(this)
-    // this.handleAddWatchLater = this.handleAddWatchLater.bind(this)
     this.handleReviewChange = this.handleReviewChange.bind(this)
     this.uploadReview = this.uploadReview.bind(this)
     this.getFirebaseReviews = this.getFirebaseReviews.bind(this)
@@ -226,6 +233,11 @@ class MoviePage extends Component {
     });
   }
   rateMovie() {
+    if (!this.state.currentUser) {
+      this.signInNotification();
+      return;
+    }
+
     if (this.state.dropdownValue == 0) {
       this.setState({ invalidRating: true });
       return;
@@ -233,15 +245,6 @@ class MoviePage extends Component {
 
     var rating = this.state.dropdownValue;
     this.setState({ ratingPostedMessage: true });
-
-    /*MovieService.getSessionId().then((id) => {
-      console.log(id);
-      const rating = this.state.dropdownValue;
-      const movieID = this.state.movie_id;
-      MovieService.postRating(rating, movieID, id).then(() => {
-        this.setState({ ratingPostedMessage: true });
-      });
-    });*/
 
     var ratingRef = firebase.database().ref('movies/' + this.state.movie_id);
     var newNumberOfRatings = 0;
@@ -311,7 +314,6 @@ class MoviePage extends Component {
         overview: movie.overview,
         poster: movie.poster_path,
         year: year,
-        vote_average: movie.vote_average,
         imdb_id: movie.imdb_id
       });
 
@@ -487,11 +489,6 @@ class MoviePage extends Component {
           }
         });
 
-        //this.setState({movieInFavorites: true});
-        //    console.log('Movie in Favorite set to true' + this.state.movieInFavorites);
-
-        this.firebaseref.child('watchedList').child(imdb_id)
-          .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id });
       } else {
         this.signInNotification();
       }
@@ -530,14 +527,20 @@ class MoviePage extends Component {
   handleReviewChange(event) {
     this.setState({reviewText: event.target.value})
   }
+  
+  /**
+   * This method is called when the user tries to perform an action where an account is needed but is not signed in.
+   */
   signInNotification() {
-    console.log('Sign in');
     this.setState({signInNotification: true});
+    this.setState({signInNotificationFade: true});
     var refToThis = this;
     setTimeout(function(){
-      refToThis.setState({signInNotification: false});
-      console.log('Sign in gone');
-    },3000);
+      refToThis.setState({signInNotificationFade: false});
+      setTimeout(function(){
+        refToThis.setState({signInNotification: false});
+      },500);
+    },1000);
   }
 
   /**
@@ -549,6 +552,10 @@ class MoviePage extends Component {
   }
 
   uploadReview(event){
+    if (!this.state.currentUser) {
+      this.signInNotification();
+      return;
+    }
     // console.log(this.state.reviewText)
     if (this.state.reviewText === '') {
       this.setState({emptyReview: true});
@@ -594,7 +601,9 @@ class MoviePage extends Component {
     return (
       <div>
         <Header />
+        {this.state.signInNotification && <SignInNotification className={this.state.signInNotificationFade ? 'show' : 'none'}><a href='/login'>Sign in</a> or <a href='/register'>create an account</a> to enjoy user functionality!</SignInNotification>}
         <WhiteBoxStyle>
+        
           <MovieInfoStyle className="container">
             <div className="row">
               <MovieLeftStyle className="col-md-4">
@@ -699,8 +708,7 @@ class MoviePage extends Component {
           </MovieInfoStyle>
         </WhiteBoxStyle>
         {this.state.displayTrailer && <TrailerModal closeTrailer={this.closeTrailer} video={this.state.trailerVideo} />}
-        <SignInNotification className={this.state.signInNotification ? 'show' : 'none'}>Sign in or create an account to enjoy user functionality!</SignInNotification>}
-
+        
       </div>
     );
   }
