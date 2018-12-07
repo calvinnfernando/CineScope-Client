@@ -43,7 +43,7 @@ class MovieCard extends Component {
     super(props);
 
     this.state = {
-      selected: false
+      selected: false,
     };
     this.toggleSelect = this.toggleSelect.bind(this);
 
@@ -57,33 +57,33 @@ class MovieCard extends Component {
     }
   }
 
+  componentDidMount() {
+    const movieID = this.props.movie.id;
+    var inMovieSelections = this.props.movieSelections.find((movie) => {
+      return movie.id === movieID;
+    });
+    this.setState({ selected: inMovieSelections, movieSelections: this.props.movieSelections });
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    var inMovieSelections = nextProps.movieSelections.find((movie) => {
+      const movieID = nextProps.movie.id;
+      return movie.id === movieID;
+    });
+    return { selected: inMovieSelections };
+  }
+
   render() {
-    if (this.state.selected) {
-      return (
-
-        <MovieCardStyle onClick={() => { this.props.selectMovie(this.props.movie); this.toggleSelect(); }}>
-          <SelectedMovieStyle>
-            <img className="card-img-top movie-img"
-              src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.props.movie.poster_path}`}
-              onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="300" />
-
-            <MovieCardOverlay>
-              <MovieCardText>{this.props.movie.title}</MovieCardText>
-            </MovieCardOverlay>
-          </SelectedMovieStyle>
-        </MovieCardStyle>
-
-      );
-    }
     return (
       <MovieCardStyle onClick={() => { this.props.selectMovie(this.props.movie); this.toggleSelect(); }}>
-        <img className="card-img-top movie-img"
-          src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.props.movie.poster_path}`}
-          onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="300" />
-        <MovieCardOverlay>
-          <MovieCardText>{this.props.movie.title}</MovieCardText>
-        </MovieCardOverlay>
-
+        <div className={this.state.selected ? 'card-border' : 'none'}>
+          <img className="card-img-top movie-img"
+            src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${this.props.movie.poster_path}`}
+            onError={(e) => { e.target.src = "https://i.imgur.com/SeLMJwk.png" }} alt="" width="200" height="300" />
+          <MovieCardOverlay>
+            <MovieCardText>{this.props.movie.title}</MovieCardText>
+          </MovieCardOverlay>
+        </div>
       </MovieCardStyle>
     );
   }

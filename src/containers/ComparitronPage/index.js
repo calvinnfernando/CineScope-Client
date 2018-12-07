@@ -104,6 +104,7 @@ class ComparitronPage extends Component {
     }
 
     this.setState({ movieSelections: movieSelections });
+    //this.setState({ chartSelections: [] });
   }
 
   removeMovie(item) {
@@ -119,6 +120,7 @@ class ComparitronPage extends Component {
     this.setState({
       movieSelections: movieSelections
     });
+    //this.setState({ chartSelections: [] });
   }
 
   handleChartSelection(event) {
@@ -168,7 +170,7 @@ class ComparitronPage extends Component {
               </ul>
             </form>
             <ComparitronMovieHolder className="movie-holder">
-              <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
+              <ComparitronMovieList movies={this.state.movies} movieSelections={this.state.movieSelections} selectMovie={this.selectMovie} />
             </ComparitronMovieHolder>
           </Sidebars>
           <MainContent className="scroll">
