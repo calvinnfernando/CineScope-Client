@@ -5,6 +5,7 @@ const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
   border-radius: 20px;
+  padding: 0% 3%;
 `;
 
 const MovieInfoStyle = styled.div`
@@ -158,16 +159,16 @@ const SignInNotification = styled.span`
 `;
 
 const RateDiv = styled.div`
-  marginTop: 15;
+  margin-top: 15px;
 `;
 
 const OverviewP = styled.p`
-  marginBottom: "2rem";
+  margin-bottom: 2rem;
 `;
 
 const TextAreaStyle = styled.textarea`
-  width: '100%';
-  height: 200;
+  width: 100%;
+  height: 200px;
 `;
 
 export { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, WhiteBoxStyle, MovieInfoStyle, 
