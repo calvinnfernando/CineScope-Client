@@ -49,27 +49,6 @@ const EditListButton = styled.button`
   right: 40px;
 `;
 
-const SmallText = styled.p`
-  font-size: 0.8em;
-  margin-left: 15px;
-  margin-bottom: 5px;
-`;
-
-const HighlightsButton = styled.button`
-  position: relative;
-  margin-top: 13px;
-  width: 100px;
-  height: 50px;
-`;
-
-const WatchlistsButton = styled.button`
-  position: relative;
-  margin-top: 13px;
-  margin-left: 10px;
-  width: 100px;
-  height: 50px;
-`;
-
 const MovieList = styled.div`
 `;
 

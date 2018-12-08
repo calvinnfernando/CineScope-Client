@@ -4,7 +4,6 @@ import { compose } from 'recompose';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
-import * as ROLES from '../../constants/roles';
 import styled from 'styled-components';
 
 import { Form, FullScreen } from '../LoginPage';
@@ -85,7 +84,6 @@ class SignUpFormBase extends Component {
       email,
       passwordOne,
       passwordTwo,
-      isAdmin,
       error,
     } = this.state;
 

@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import MovieList from './MovieList';
 import MovieService from '../../services/MovieService';
-import {getScrollDownPercentage} from '../../services/scrollHelper';
+import styled from 'styled-components';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
+const TitleLogo = styled.div`
+    text-align: center;
+    font-family: 'Lobster', 'Times New Roman';
+    font-weight: bold;
+    color: #211059;
+    font-size: 3em;
+    text-shadow: 2px 4px rgba(66, 31, 107, 0.2);
+}`;
 
 class Movies extends Component {
 
@@ -50,18 +59,16 @@ class Movies extends Component {
     nextPage(event) {
         const nextPage = this.state.currentPage + 1;
         MovieService.getSearchMovies(this.state.query, nextPage)
-            .then((movies) => this.state.movies = movies)
             .then((newMovies) => this.setState({movies: newMovies}));
-        this.setState({currentPage: this.state.currentPage + 1});
+        this.setState({currentPage: nextPage});
     }
 
     previousPage(event) {
       if (this.state.currentPage !== 1) {
-      const nextPage = this.state.currentPage - 1;
-      MovieService.getSearchMovies(this.state.query, nextPage)
-          .then((movies) => this.state.movies = movies)
+      const previousPage = this.state.currentPage - 1;
+      MovieService.getSearchMovies(this.state.query, previousPage)
           .then((newMovies) => this.setState({movies: newMovies}));
-      this.setState({currentPage: this.state.currentPage - 1});
+      this.setState({currentPage: previousPage});
       }
     }
 
@@ -84,21 +91,23 @@ class Movies extends Component {
         return (
             <div className="jumbotron jumbotron-fluid">
               <div className="container-fluid">
-                <p className="h1" align="center">MOVIES</p>
-                <div className="col-sm-12 text-right">
-                  <Button onClick={this.nextPage}>Next Page</Button>
-                  <Button onClick={this.previousPage}>Previous Page</Button>
-                  <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle caret>Sort</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem onClick={this.mostPopular}>Most Popular</DropdownItem>
-                      <DropdownItem onClick={this.leastPopular}>Least Popular</DropdownItem>
-                      <DropdownItem onClick={this.a_zSorting}>Alphabetical (A-Z)</DropdownItem>
-                      <DropdownItem onClick={this.z_aSorting}>Alphabetical (Z-A)</DropdownItem>
-                      <DropdownItem onClick={this.newest}>Newest</DropdownItem>
-                      <DropdownItem onClick={this.oldest}>Oldest</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
+              <div className="col-sm-12 text-right">
+                <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                  <DropdownToggle caret>Sort</DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={this.mostPopular}>Most Popular</DropdownItem>
+                    <DropdownItem onClick={this.leastPopular}>Least Popular</DropdownItem>
+                    <DropdownItem onClick={this.a_zSorting}>Alphabetical (A-Z)</DropdownItem>
+                    <DropdownItem onClick={this.z_aSorting}>Alphabetical (Z-A)</DropdownItem>
+                    <DropdownItem onClick={this.newest}>Newest</DropdownItem>
+                    <DropdownItem onClick={this.oldest}>Oldest</DropdownItem>
+                  </DropdownMenu>
+                </ButtonDropdown>
+              </div>
+                <TitleLogo>All Movies</TitleLogo>
+                <div className="col-sm-12">
+                  <Button style={{float: 'left'}} onClick={this.previousPage}>&#8592; Previous Page</Button>
+                  <Button style={{float: 'right'}} onClick={this.nextPage}>Next Page &#8594;</Button>
                 </div>
                 <div className="col-sm-12 mt-4">
                   <input className="form-control" onInput={this.handleInput} type="text" placeholder="Search" aria-label="Search movie title" />
@@ -108,6 +117,10 @@ class Movies extends Component {
                   <div className="col-sm-12 text-center">
                       <MovieList sortOption={this.state.sortOption} movies={this.state.movies}/>
                   </div>
+              </div>
+              <div className="col-sm-12">
+                <Button style={{float: 'left'}} onClick={this.previousPage}>&#8592; Previous Page</Button>
+                <Button style={{float: 'right'}} onClick={this.nextPage}>Next Page &#8594;</Button>
               </div>
             </div>
         );

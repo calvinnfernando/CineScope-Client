@@ -237,7 +237,7 @@ class MoviePage extends Component {
   /**
    * This method mounts component initially
    */
-  componentDidMount() {  
+  componentDidMount() {
 
     MoviePageService.getCurrentUser(this);
 
@@ -300,7 +300,7 @@ class MoviePage extends Component {
                   <h4>Average rating: {this.state.vote_average}/10</h4>
                   <RateStyle>Rate This Movie: </RateStyle>
                   <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle caret>{this.state.dropdownValue == 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
+                    <DropdownToggle caret>{this.state.dropdownValue === 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={() => this.setMovieRating(1)}>1</DropdownItem>
                       <DropdownItem onClick={() => this.setMovieRating(2)}>2</DropdownItem>
@@ -327,7 +327,7 @@ class MoviePage extends Component {
                 <AddButtonsStyle>
                   {this.state.movieInFavorites ?
                     <RemoveFromFavorites onClick={this.toggleFav}>
-                      + Remove from Favorites
+                      - Remove from Favorites
                     </RemoveFromFavorites>
                     :
                     <AddToFavorites onClick={this.toggleFav}>
@@ -336,7 +336,7 @@ class MoviePage extends Component {
                   }
                   {this.state.movieInWatched ?
                     <RemoveFromWatchList onClick={this.toggleWatched}>
-                      + Remove from Watched
+                      - Remove from Watched
                     </RemoveFromWatchList>
                     :
                     <AddToWatchList onClick={this.toggleWatched}>
@@ -345,7 +345,7 @@ class MoviePage extends Component {
                   }
                   {this.state.movieInWatchLater ?
                     <RemoveFromWatchList onClick={this.toggleWatchLater}>
-                      + Remove from Watch Later
+                      - Remove from Watch Later
                     </RemoveFromWatchList>
                     :
                     <AddToWatchList onClick={this.toggleWatchLater}>
@@ -353,21 +353,23 @@ class MoviePage extends Component {
                     </AddToWatchList>
                   }
                   <TrailerButton onClick={this.openTrailer}>
-                    &#9658; Watch Trailer
+                    &#9654; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
-                <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
+                <small style={{ fontWeight: 'bold' }}>Director:</small>
+                <small> {this.state.director} | </small>
+                <small style={{ fontWeight: 'bold' }}>Actors:</small>
+                <small> {this.state.actors} </small>
+                <p style={{ fontWeight: 'bold', marginTop: 10, marginBottom: 0}}>Overview</p>
                 <p style={{ marginBottom: "2rem" }}>{this.state.overview}</p>
-
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
-                    Open Movie in Comparitron
+                    Open Comparitron
                     </CompareButtonStyle>
                 </Link>
               </MovieRightStyle>
             </div>
             <hr></hr>
-            {/* Must replace the props with real data */}
             <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews reviews={this.state.reviews} />

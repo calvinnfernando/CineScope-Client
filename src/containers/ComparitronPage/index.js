@@ -43,7 +43,7 @@ const MainContent = styled.div`
   text-align: center;
 `;
 
-
+// UNUSED RIGHT NOW
 const MovieSelection = styled.li`
   border-radius: 15px;
   border-color: transparent;
@@ -113,6 +113,8 @@ class ComparitronPage extends Component {
       if (el.id === item.id) {
         movieSelections.splice(i, 1);
         return true;
+      } else {
+        return false;
       }
     });
 
@@ -131,6 +133,8 @@ class ComparitronPage extends Component {
         chartSelections.splice(i, 1);
         document.getElementById(event.target.id).style.borderColor = "transparent";
         return true;
+      } else {
+        return false;
       }
     });
 
