@@ -43,24 +43,6 @@ const MainContent = styled.div`
   text-align: center;
 `;
 
-// UNUSED RIGHT NOW
-const MovieSelection = styled.li`
-  border-radius: 15px;
-  border-color: transparent;
-  border-width: 1px;
-  border-style: solid;
-  background-color: #fff;
-  font-family: Calibri;
-  font-size: 17px;
-  width: 100%;
-  margin-top: 5px;
-  cursor: pointer;
-  outline: none !important;
-  list-style-type: none;
-  text-align: left;
-  padding-left: 15px;
-`;
-
 const ComparitronMovieHolder = styled.div`
   background-color: #fff;
   border-radius: 15px;
@@ -171,7 +153,7 @@ class ComparitronPage extends Component {
               <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
               </ul>
             </form>
-            <ComparitronMovieHolder className="movie-holder">
+            <ComparitronMovieHolder className="movie-holder scroll">
               <ComparitronMovieList movies={this.state.movies} selectMovie={this.selectMovie} />
             </ComparitronMovieHolder>
           </Sidebars>

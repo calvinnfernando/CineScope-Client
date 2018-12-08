@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Kanit|Lobster');
-
 .navbar-style {
     background-color: #ffcc5c;
 }
@@ -43,37 +41,21 @@
 }
 
 /* width */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
 .scroll::-webkit-scrollbar {
     width: 10px;
 }
 
 /* Track */
-::-webkit-scrollbar-track {
-    background: #eae5ff;
-}
-
 .scroll::-webkit-scrollbar-track {
-    background: #eae5ff;
+    background: #c9ddff;
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
-    background: #827e91;
-}
-
 .scroll::-webkit-scrollbar-thumb {
-    background: #827e91;
+    background: #6da5ff;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #645799;
-}
-
 .scroll::-webkit-scrollbar-thumb:hover {
-    background: #645799;
+    background: #4b60ea;
 }

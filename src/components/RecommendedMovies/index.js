@@ -7,8 +7,8 @@ import styled from 'styled-components';
 import firebase from 'firebase';
 
 const RecommendedText = styled.div`
-    font-family: 'Josefin Sans', sans-serif;
-    text-align: left;
+    font-family: 'Roboto Slab', serif;
+    text-align: center;
     color: #FFFFFF;
     margin: 10px;
     h2 {
@@ -96,8 +96,8 @@ class RecommendedMovies extends Component {
               activePosition={'center'}
 
               chevronWidth={24}
-              rightChevron={<span style={{ color: '#FFFFFF' }}> &gt; </span>}
-              leftChevron={<span style={{ color: '#FFFFFF' }}> &lt; </span>}
+              rightChevron={<span style={{ color: '#FFFFFF', fontSize: 60 }}> &#8250; </span>}
+              leftChevron={<span style={{ color: '#FFFFFF', fontSize: 60 }}> &#8249; </span>}
               outsideChevron={false}
             >
               {moviesArray}

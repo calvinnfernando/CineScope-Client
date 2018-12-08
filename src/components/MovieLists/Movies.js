@@ -6,11 +6,11 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } fr
 
 const TitleLogo = styled.div`
     text-align: center;
-    font-family: 'Lobster', 'Times New Roman';
+    font-family: 'Roboto Slab', serif;
     font-weight: bold;
-    color: #211059;
+    color: #000;
     font-size: 3em;
-    text-shadow: 2px 4px rgba(66, 31, 107, 0.2);
+    text-shadow: 0px 2px rgba(66, 31, 107, 0.2);
 }`;
 
 class Movies extends Component {

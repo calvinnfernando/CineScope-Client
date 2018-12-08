@@ -373,7 +373,7 @@ class MoviePage extends Component {
             <Ratings rottenTomatoes={this.state.rotten_tomatoes} metacritic={this.state.metascore} imdbRating={this.state.imdb_rating} />
             <hr></hr>
             <Reviews reviews={this.state.reviews} />
-            <h1>Write a Review</h1>
+            <h2>Write a Review</h2>
             <form>
               <textarea type="text" textmode="MultiLine" value={this.state.reviewText} onChange={this.handleReviewChange} style={{ width: '100%', height: 200 }} />
               <button type="button" onClick={this.uploadReview}>Submit</button>
