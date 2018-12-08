@@ -8,7 +8,7 @@ import RelatedMovies from '../../components/MoviePage/RelatedMovies'
 // services
 import MoviePageService from '../../services/MoviePageService'
 
-import styled from 'styled-components'
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
