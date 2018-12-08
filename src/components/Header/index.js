@@ -9,21 +9,11 @@ import {
 } from 'reactstrap';
 
 import MenuButton from './MenuButton.js';
-import styled from 'styled-components';
 import logo from '../img/logo.svg';
 import { AuthUserContext } from '../Sessions';
+import {LogoStyle, AccountIconStyle} from '../../styles/components/Header/HeaderStyles'
+import HeaderStylesInline from '../../styles/components/Header/HeaderStylesInline'
 
-const LogoStyle = styled.div`
-margin: 10px auto;
-img {
-    height: 60px;
-    max-width: 100%;
-}
-`;
-
-const AccountIconStyle = styled.div`
-padding: 10px;
-`;
 
 class Header extends React.Component {
 
@@ -46,7 +36,7 @@ class Header extends React.Component {
         return (
             <div>
                 {/* Setting the color and setting display adjustments */}
-                <Navbar style={{backgroundColor: '#ffcc5c'}} light expand="md">
+                <Navbar style={HeaderStylesInline.background} light expand="md">
                     {/*Logo; redirects back to main page*/}
                     <LogoStyle className="col-md-2">
                         <a href="/"><img src={logo} alt='CineScope' /></a>
@@ -56,13 +46,13 @@ class Header extends React.Component {
                     {/*Navbar contents*/}
                     <Collapse className="col-md-8" isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <NavItem style={HeaderStylesInline.nav}>
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
-                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <NavItem style={HeaderStylesInline.nav}>
                                 <NavLink href="/all-movies">All Movies</NavLink>
                             </NavItem>
-                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <NavItem style={HeaderStylesInline.nav}>
                                 <NavLink href="/Comparitron">Comparitron</NavLink>
                             </NavItem>
                         </Nav>
