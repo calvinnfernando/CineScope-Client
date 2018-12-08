@@ -1,75 +1,17 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { Navbar } from 'reactstrap';
 import ComparitronMovieList from '../../components/CompareMovies/ComparitronMovieList';
 import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
 import ReviewCompareList from '../../components/CompareMovies/ReviewCompareList';
-import ComparitronStyles from '../../styles/containers/Comparitron'
+import ComparitronStyles from '../../styles/containers/Comparitron/Comparitron'
+import LogoStyle from '../../styles/containers/Comparitron/LogoStyle'
+import Container from '../../styles/containers/Comparitron/Container'
+import Sidebars from '../../styles/containers/Comparitron/Sidebars'
+import MainContent from '../../styles/containers/Comparitron/MainContent'
+import ComparitronMovieHolder from '../../styles/containers/Comparitron/ComparitronMovieHolder'
 
 import '../../styles/components/comparitron.css';
-
-
-const LogoStyle = styled.div`
-  img {
-	   height: 60px;
-  }
-`;
-
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const Sidebars = styled.div`
-  position: relative;
-  padding-right: 15px;
-  padding-left: 15px;
-  flex: 1;
-  align-items: center;
-  background-color: #ffeead;
-  text-align: center;
-  height: 100vh;
-`;
-
-const MainContent = styled.div`
-  position: relative;
-  padding-right: 15px;
-  padding-left: 15px;
-  flex: 3;
-  height: 100vh;
-  background-color: white;
-  overflow-y: scroll;
-  text-align: center;
-`;
-
-
-const MovieSelection = styled.li`
-  border-radius: 15px;
-  border-color: transparent;
-  border-width: 1px;
-  border-style: solid;
-  background-color: #fff;
-  font-family: Calibri;
-  font-size: 17px;
-  width: 100%;
-  margin-top: 5px;
-  cursor: pointer;
-  outline: none !important;
-  list-style-type: none;
-  text-align: left;
-  padding-left: 15px;
-`;
-
-const ComparitronMovieHolder = styled.div`
-  background-color: #fff;
-  border-radius: 15px;
-  width: 100%;
-  height: 82%;
-  overflow-y: scroll;
-`;
-
 
 class ComparitronPage extends Component {
   constructor(props) {
