@@ -11,10 +11,7 @@ import ComparitronPage from './containers/ComparitronPage';
 
 import { withAuthentication } from './components/Sessions';
 
-import firebase from 'firebase';
-
 const App = (fprops) => (
-	console.log(fprops),
 	<Switch>
 		<Route exact path="/" component={HomePage}/>
 		<Route path="/login" component={LoginPage}/>

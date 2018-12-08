@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Header from '../../components/Header';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
-import * as ROLES from '../../constants/roles';
 import styled from 'styled-components';
 
-import { Form, FullScreen } from '../LoginPage';
+import { Form, FullScreen, TitleLogo } from '../LoginPage';
 
 const Error = styled.div`
   display: block;
@@ -18,8 +18,9 @@ const Error = styled.div`
 `;
 
 const SignUpPage = () => (
-  <FullScreen className="container-fluid">
-    <h1>SignUp</h1>
+  <FullScreen className="container-fluid" style={{ paddingRight: '0', paddingLeft: '0'}}>
+    <Header />
+    <TitleLogo>Register</TitleLogo>
     <SignUpForm />
   </FullScreen>
 );
@@ -85,7 +86,6 @@ class SignUpFormBase extends Component {
       email,
       passwordOne,
       passwordTwo,
-      isAdmin,
       error,
     } = this.state;
 

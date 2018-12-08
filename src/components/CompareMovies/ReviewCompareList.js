@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import ComparitronMovieList from './ComparitronMovieList';
-import MovieService from '../../services/MovieService';
 import ReviewCompare from './ReviewCompare';
 
-class ReviewCompareList extends Component{
-  constructor(props) {
-    super(props);
-  }
-
+class ReviewCompareList extends Component {
+  
   render(){
 
 		console.log('In Review Compare List');

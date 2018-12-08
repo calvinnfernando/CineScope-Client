@@ -24,7 +24,7 @@ const ProfileStyle = styled.div`
 
 const Profile = styled.div`
   border: 1px solid #999999;
-  background-color: #787878;
+  background-color: #e9ecef;
   margin-bottom: 12px;
   min-width: 768px;
 `;
@@ -41,41 +41,24 @@ const Img = styled.img`
   height: 168px;
   position: relative;
   margin-top: -100px;
+  margin-left: 20px;
+  margin-bottom: 15px;
   border: 5px solid #787878;
 `;
 
 const EditListButton = styled.button`
-  position: absolute;
-  right: 40px;
-`;
-
-const SmallText = styled.p`
-  font-size: 0.8em;
-  margin-left: 15px;
-  margin-bottom: 5px;
-`;
-
-const HighlightsButton = styled.button`
   position: relative;
-  margin-top: 13px;
-  width: 100px;
-  height: 50px;
-`;
-
-const WatchlistsButton = styled.button`
-  position: relative;
-  margin-top: 13px;
-  margin-left: 10px;
-  width: 100px;
-  height: 50px;
+  float: right;
+  margin: 0px 15px;
 `;
 
 const MovieList = styled.div`
+  padding: 5px 15px;
 `;
 
 const Box = styled.div`
-  margin: 7px 0px 7px 0px;
-  background-color: #787878;
+  margin: 7px 0px 10px 0px;
+  background-color: #e9ecef;
   border: 1px solid #999999;
   box-sizing: border-box;
   padding: 5px;
@@ -111,10 +94,18 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const ListTitle = styled.div`
+const ListTitle = styled.span`
   text-align: center;
   font-Weight: bold;
-  color: #FFFFFF;
+  color: #222;
+  font-family: 'Roboto';
+`;
+
+const NoMovies = styled.div`
+  text-align: center;
+  font-Weight: bold;
+  color: #888;
+  font-family: 'Roboto';
 `;
 
 class UserPage extends Component {
@@ -174,81 +165,84 @@ class UserPage extends Component {
 
               (
                 <div className="container-fluid row mx-auto">
-                <div className="col-2"></div>
-                <div className="col-8">
-                  <Profile>
-                    <div>
-                      <Banner src={wallpaper} />
-                      <div className="container-fluid row">
-                        <Img src={profilepic} />
-                        <Name />
+                  <div className="col-2"></div>
+                  <div className="col-8">
+                    <Profile>
+                      <div>
+                        <Banner src={wallpaper} />
+                        <div className="container-fluid row">
+                          <Img src={profilepic} />
+                          <Name />
+                        </div>
+                      </div>
+                    </Profile>
+
+                    {/* start of main body */}
+                    <div className="row">
+                      <div className="left-div col">
+                        <Box>
+                          <Title>
+                            <span><Icon src={heart} alt='favorites' /></span>
+                            <ListTitle>Favorites:</ListTitle>
+                            <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                              this.setState({ editFav: (this.state.editFav) ? false : true });
+                            }}>
+                              {(this.state.editFav) ? "Done" : "Edit"}
+                            </EditListButton>
+                          </Title>
+                          {favoriteMovies.length !== 0 ?
+                            <MovieList className='row text-center'>
+                              {favoriteMovies}
+                            </MovieList> :
+                            <NoMovies>No movies in Favorites list</NoMovies>
+                          }
+                        </Box>
+
+                        <Box>
+                          <Title>
+                            <span><Icon src={watchLater} alt='watched' /></span>
+                            <ListTitle>Watch Later:</ListTitle>
+                            <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                              this.setState({ editLater: (this.state.editLater) ? false : true });
+                            }}>
+                              {(this.state.editLater) ? "Done" : "Edit"}
+                            </EditListButton>
+                          </Title>
+                          {watchLaterMovies.length !== 0 ?
+                            <MovieList className='row text-center'>
+                              {watchLaterMovies}
+                            </MovieList> :
+                            <NoMovies>No movies in Watch Later list</NoMovies>
+                          }
+                        </Box>
+
+                        <Box>
+                          <Title>
+                            <div>
+                              <span><Icon src={watched} alt='watched' /></span>
+                              <ListTitle>Watched:</ListTitle>
+                              <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                                this.setState({ editWatched: (this.state.editWatched) ? false : true });
+                              }}>{(this.state.editWatched) ? "Done" : "Edit"}
+                              </EditListButton>
+                            </div>
+
+
+                          </Title>
+                          {watchedMovies.length !== 0 ?
+                            <MovieList className='row text-center'>
+                              {watchedMovies}
+                            </MovieList> :
+                            <NoMovies>No movies in Watched list</NoMovies>
+                          }
+                        </Box>
                       </div>
                     </div>
-                  </Profile>
-
-                  {/* start of main body */}
-                  <div className="row">
-                    <div className="left-div col">
-                      <Box>
-                        <Title>
-                          <Icon src={heart} alt='heart' />
-                          Favorites:
-                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                            this.setState({ editFav: (this.state.editFav) ? false : true });
-                          }}>
-                            {(this.state.editFav) ? "Done" : "Edit"}
-                          </EditListButton>
-                        </Title>
-                        {favoriteMovies.length !== 0 ?
-                        <MovieList className='row'>
-                          {favoriteMovies}
-                        </MovieList> :
-                        <ListTitle>No movies in Favorites list</ListTitle>
-                      }
-                      </Box>
-
-                      <Box>
-                        <Title>
-                          <Icon src={watchLater} alt='watchLater' />
-                          Watch Later:
-                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                            this.setState({ editLater: (this.state.editLater) ? false : true });
-                          }}>
-                            {(this.state.editLater) ? "Done" : "Edit"}
-                          </EditListButton>
-                        </Title>
-                        {watchLaterMovies.length !== 0 ?
-                        <MovieList className='row'>
-                          {watchLaterMovies}
-                        </MovieList> :
-                        <ListTitle>No movies in Watch Later list</ListTitle>
-                      }
-                      </Box>
-
-                      <Box>
-                        <Title>
-                          <Icon src={watched} alt='watched' />
-                          Watched:
-                          <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                            this.setState({ editWatched: (this.state.editWatched) ? false : true });
-                          }}>
-                            {(this.state.editWatched) ? "Done" : "Edit"}
-                          </EditListButton>
-                        </Title>
-                        {watchedMovies.length !== 0 ?
-                        <MovieList className='row'>
-                          {watchedMovies}
-                        </MovieList> :
-                        <ListTitle>No movies in Watched list</ListTitle>
-                      }
-                      </Box>
-                    </div>
-                  </div>
 
                   </div>
-                {/* end of main body */}
-                <div className="col-2"></div>
-              </div> )
+                  {/* end of main body */}
+                  <div className="col-2"></div>
+                </div>)
 
               : (<ErrorMessage>
                 Please <a href="/register">create an account</a> to view your profile.

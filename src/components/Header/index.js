@@ -23,6 +23,15 @@ img {
 
 const AccountIconStyle = styled.div`
 padding: 10px;
+font-size: 24px;
+font-family: 'Roboto Slab';
+a {
+    color: #555;
+}
+a:hover {
+    color: #222;
+    text-decoration: none;
+}
 `;
 
 class Header extends React.Component {
@@ -48,7 +57,7 @@ class Header extends React.Component {
                 {/* Setting the color and setting display adjustments */}
                 <Navbar style={{backgroundColor: '#ffcc5c'}} light expand="md">
                     {/*Logo; redirects back to main page*/}
-                    <LogoStyle className="col-md-2">
+                    <LogoStyle>
                         <a href="/"><img src={logo} alt='CineScope' /></a>
                     </LogoStyle>
                     {/*Compresses navbar buttons into a toggler if the window is too small*/}
@@ -56,13 +65,13 @@ class Header extends React.Component {
                     {/*Navbar contents*/}
                     <Collapse className="col-md-8" isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <NavItem style={{ fontFamily: 'Roboto Slab', fontSize: 30, fontWeight: 'bold' }}>
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
-                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <NavItem style={{ fontFamily: 'Roboto Slab', fontSize: 30, fontWeight: 'bold' }}>
                                 <NavLink href="/all-movies">All Movies</NavLink>
                             </NavItem>
-                            <NavItem style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <NavItem style={{ fontFamily: 'Roboto Slab', fontSize: 30, fontWeight: 'bold' }}>
                                 <NavLink href="/Comparitron">Comparitron</NavLink>
                             </NavItem>
                         </Nav>
