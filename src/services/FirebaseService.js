@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import {markdown} from 'markdown';
 
 /**
  * The purpose of this class is to access movie data stored inside of Firebase. Functions add to and remove data from Firebase
@@ -86,16 +87,16 @@ class FirebaseService {
         firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
             var tempReviews = []
             snapshot.forEach((child) => {
-                console.log(child.key)
-                console.log(child.val())
+                // convert markdown to HTML before adding it to our state  
+                var contentHtml = markdown.toHTML(child.val().review);
+
                 tempReviews.push({
                     author: child.key,
-                    content: child.val().review
+                    content: contentHtml
                 })
-                console.log(tempReviews)
             });
-            var newReviews = refToPage.state.reviews.concat(tempReviews)
-            refToPage.setState({ reviews: newReviews })
+            var newReviews = refToPage.state.reviews.concat(tempReviews);
+            refToPage.setState({ reviews: newReviews });
         })
     }
 
