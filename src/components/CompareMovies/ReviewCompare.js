@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import MovieService from '../../services/MovieService';
 import { Pie, Bar } from 'react-chartjs-2';
 import { ChartStyle } from '../../styles/components/CompareMovies/reviewcompare';
@@ -63,9 +62,9 @@ class ReviewCompare extends Component {
 
 		// Rotten tomatoes
 		const allRottenTomatoesPies = [];
-		for (var index in this.state.rotten_tomatoes) {
-			var rating = parseInt(this.state.rotten_tomatoes[index]);
-			var otherRating = 100 - rating;
+		for (let index in this.state.rotten_tomatoes) {
+			let rating = parseInt(this.state.rotten_tomatoes[index]);
+			let otherRating = 100 - rating;
 			const data = {
 				labels: ['Liked it', 'Disliked it'],
 				datasets: [{
@@ -82,8 +81,8 @@ class ReviewCompare extends Component {
 		// Imdb
 		const imdbLabels = [];
 		const imdbRatings = [];
-		for (var index in this.state.imdb) {
-			var rating = parseInt(this.state.imdb[index]);
+		for (let index in this.state.imdb) {
+			let rating = parseInt(this.state.imdb[index]);
 			imdbRatings.push(rating);
 			imdbLabels.push(index);
 		}
@@ -99,8 +98,8 @@ class ReviewCompare extends Component {
 		// Metacritic
 		const metascoreLabels = [];
 		const metascoreRatings = [];
-		for (var index in this.state.metascore) {
-			var rating = parseInt(this.state.metascore[index]);
+		for (let index in this.state.metascore) {
+			let rating = parseInt(this.state.metascore[index]);
 			metascoreRatings.push(rating);
 			metascoreLabels.push(index);
 		}
@@ -116,8 +115,8 @@ class ReviewCompare extends Component {
 		// Box Office
 		const boxOfficeLabels = [];
 		const boxOfficeRatings = [];
-		for (var index in this.state.box_office) {
-			var rating = parseInt(this.state.box_office[index]);
+		for (let index in this.state.box_office) {
+			let rating = parseInt(this.state.box_office[index]);
 			boxOfficeRatings.push(rating);
 			boxOfficeLabels.push(index);
 		}

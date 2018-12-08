@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MovieList from './MovieList';
 import MovieService from '../../services/MovieService';
-import {getScrollDownPercentage} from '../../services/scrollHelper';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class Movies extends Component {

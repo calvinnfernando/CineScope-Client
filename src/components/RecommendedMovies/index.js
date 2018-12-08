@@ -31,7 +31,7 @@ class RecommendedMovies extends Component {
           })
           .then(() => {
             console.log(this.state.query.length);
-            if (this.state.query.length == 0) {
+            if (this.state.query.length === 0) {
               MovieService.getPopularMovies().then((movies) => {
                 this.setState({ movies: movies, activeItemIndex: 0 });
               })

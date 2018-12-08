@@ -130,7 +130,7 @@ class MoviePageService {
             return;
           }
       
-          if (refToPage.state.dropdownValue == 0) {
+          if (refToPage.state.dropdownValue === 0) {
             refToPage.setState({ invalidRating: true });
             return;
           }
