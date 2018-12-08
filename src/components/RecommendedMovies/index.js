@@ -3,6 +3,7 @@ import ItemsCarousel from 'react-items-carousel';
 import MovieCard from '../MovieLists/MovieCard';
 import MovieService from '../../services/MovieService';
 import '../../styles/components/movieCard.css';
+import firebase from 'firebase' 
 import RecommendedText from '../../styles/components/RecommendedMovies/RecommendedText'
 
 class RecommendedMovies extends Component {
