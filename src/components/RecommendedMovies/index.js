@@ -3,17 +3,7 @@ import ItemsCarousel from 'react-items-carousel';
 import MovieCard from '../MovieLists/MovieCard';
 import MovieService from '../../services/MovieService';
 import '../../styles/components/movieCard.css';
-import styled from 'styled-components';
-import firebase from 'firebase';
-
-const RecommendedText = styled.div`
-    text-align: left;
-    color: #FFFFFF;
-    margin: 10px;
-    h2 {
-        font-size: 24px;
-    }
-`;
+import RecommendedText from '../../styles/components/RecommendedMovies/RecommendedText'
 
 class RecommendedMovies extends Component {
   constructor() {

@@ -1,11 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { AuthUserContext } from '../Sessions';
-
-const NameStyle = styled.h3`
-max-width: 30%;
-margin: auto;
-`;
+import NameStyle from '../../styles/components/Name/NameStyle'
 
 const Name = () => (
   <AuthUserContext.Consumer>
