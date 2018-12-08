@@ -5,6 +5,7 @@ import ComparitronMovieList from '../../components/CompareMovies/ComparitronMovi
 import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
 import ReviewCompareList from '../../components/CompareMovies/ReviewCompareList';
+import ComparitronStyles from '../../styles/containers/Comparitron'
 
 import '../../styles/components/comparitron.css';
 
@@ -158,13 +159,13 @@ class ComparitronPage extends Component {
             <form id="addItemForm" onSubmit={this.handleSubmit.bind(this)}>
               <p className="select-text">SELECT MOVIES</p>
               <input
-                style={{ borderRadius: 20, borderWidth: 0, outline: "none", paddingLeft: 15, width: "100%" }}
+                style={ComparitronStyles.input}
                 type="search"
                 placeholder="Enter a movie"
                 value={this.state.movieInput}
                 onChange={event => this.setState({ movieInput: event.target.value })} />
                 {/* Kept in for padding */}
-              <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
+              <ul style={ComparitronStyles.list}>
               </ul>
             </form>
             <ComparitronMovieHolder className="movie-holder">
@@ -186,10 +187,10 @@ class ComparitronPage extends Component {
             <button className="review-selection" id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</button>*/}
             <hr></hr>
             <p className="select-text">SELECTED MOVIES</p>
-            <ul style={{ paddingInlineStart: 0 }}>
+            <ul style={ComparitronStyles.listPadding}>
               {this.state.movieSelections.map(item => (
                 <div className="movie-selection" key={item.title}>
-                  <span style={{ cursor: "pointer", color: "#dedede", fontSize: 17 }} onClick={() => this.removeMovie(item)}>X</span>
+                  <span style={ComparitronStyles.movieSelection} onClick={() => this.removeMovie(item)}>X</span>
                   &nbsp; &nbsp; {item.title}
                 </div>
               ))}
