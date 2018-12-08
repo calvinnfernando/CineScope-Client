@@ -146,7 +146,7 @@ class MoviePage extends Component {
                   <h4>Average rating: {this.state.vote_average}/10</h4>
                   <RateStyle>Rate This Movie: </RateStyle>
                   <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle caret>{this.state.dropdownValue == 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
+                    <DropdownToggle caret>{this.state.dropdownValue === 0 ? '-' : this.state.dropdownValue}</DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={() => this.setMovieRating(1)}>1</DropdownItem>
                       <DropdownItem onClick={() => this.setMovieRating(2)}>2</DropdownItem>
