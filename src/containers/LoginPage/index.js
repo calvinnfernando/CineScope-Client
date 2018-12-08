@@ -51,7 +51,7 @@ class SignInFormBase extends Component {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
-  
+
   onSubmit = event => {
     const { email, password } = this.state;
     this.props.firebase
@@ -76,28 +76,28 @@ class SignInFormBase extends Component {
 		return (
       <Form onSubmit={this.onSubmit}>
         <div className="d-flex flex-column p-5">
-          <input 
-            type="text" 
-            className="form-control w-100 mb-2" 
+          <input
+            type="text"
+            className="form-control w-100 mb-2"
             name="email"
             onChange={this.onChange}
             placeholder="Enter your email"
             />
-          <input 
+          <input
             type="password"
             name="password"
             onChange={this.onChange}
             className="form-control w-100 mb-2"
             placeholder="Enter your password"
             />
-          <input 
-            type="submit" 
+          <input
+            type="submit"
             className="form-control w-100 mb-4"
             value="Log in"
             />
           {SignUpLink()}
           {
-            error && <Error>Email or password you enter does not match our record. Please retry.</Error>
+            error && <Error>The email or password you typed is incorrect.<br/>Please try again.</Error>
           }
         </div>
       </Form>
