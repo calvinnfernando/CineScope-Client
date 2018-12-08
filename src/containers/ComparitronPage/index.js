@@ -69,6 +69,33 @@ const ComparitronMovieHolder = styled.div`
   overflow-y: scroll;
 `;
 
+const FullNotification = styled.span`
+  position: fixed;
+  top: 4em;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 10;
+  background-color: #384491;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #FFFFFF;
+  transition: 0.5s;
+  opacity: 0;
+
+  &.show {
+    opacity: 1;
+  }
+
+  a {
+    color: #999;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: white;
+  }
+`;
+
 
 class ComparitronPage extends Component {
   constructor(props) {
@@ -77,9 +104,12 @@ class ComparitronPage extends Component {
       movieSelections: [],
       chartSelections: [],
       movies: [],
-      movieInput: ''
+      movieInput: '',
+      fullNotification: false,
+      fullNotificationFade: false
     }
     this.selectMovie = this.selectMovie.bind(this)
+    this.fullNotification = this.fullNotification.bind(this)
   }
 
   handleSubmit(event) {
@@ -90,8 +120,25 @@ class ComparitronPage extends Component {
     })
   }
 
+  fullNotification() {
+    this.setState({ fullNotification: true });
+    this.setState({ fullNotificationFade: true });
+    var refToThis = this;
+    setTimeout(function(){
+      refToThis.setState({fullInNotificationFade: false});
+      setTimeout(function(){
+        refToThis.setState({fullNotification: false});
+      },500);
+    },1000);
+  }
+
   selectMovie(movie) {
     var movieSelections = this.state.movieSelections;
+
+    if (movieSelections.length === 5) {
+      this.fullNotification();
+      return;
+    }
 
     var movieExists = movieSelections.findIndex((el, i) => {
       return el.id === movie.id;
@@ -104,7 +151,6 @@ class ComparitronPage extends Component {
     }
 
     this.setState({ movieSelections: movieSelections });
-    //this.setState({ chartSelections: [] });
   }
 
   removeMovie(item) {
@@ -156,6 +202,7 @@ class ComparitronPage extends Component {
           <h1 className="comparitron-logo">Comparitron</h1>
         </Navbar>
         <Container>
+        {this.state.fullNotification && <FullNotification className={this.state.fullNotificationFade ? 'show' : 'none'}>Please select up to a maximum of 5 movies.</FullNotification>}
           <Sidebars>
             <form id="addItemForm" onSubmit={this.handleSubmit.bind(this)}>
               <p className="select-text">SELECT MOVIES</p>
