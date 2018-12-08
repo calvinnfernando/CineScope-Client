@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import firebase from 'firebase';
 
 const RecommendedText = styled.div`
+    font-family: 'Josefin Sans', sans-serif;
     text-align: left;
     color: #FFFFFF;
     margin: 10px;

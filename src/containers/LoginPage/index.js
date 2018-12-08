@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import styled from 'styled-components';
+import Header from '../../components/Header';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -18,12 +19,21 @@ const Form = styled.form`
   background-color: rgba(211,211,211,0.5);
 
   position: absolute;
-  top:0;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
 
   margin: auto;
+  margin-top: 220px;
+`;
+
+const TitleLogo = styled.div`
+    text-align: center;
+    font-family: 'Lobster', 'Verdana';
+    color: #FFFFFF;
+    font-size: 5em;
+    text-shadow: 2px 4px rgba(66, 31, 107, 0.2);
 `;
 
 const Error = styled.div`
@@ -35,7 +45,9 @@ const Error = styled.div`
 `;
 
 const LoginPage = () => (
-  <FullScreen className="container-fluid">
+  <FullScreen className="container-fluid" style={{ paddingRight: '0', paddingLeft: '0'}}>
+    <Header />
+    <TitleLogo>Login</TitleLogo>
     <SignInForm />
   </FullScreen>
 );
@@ -112,4 +124,4 @@ const SignInForm = compose(
 
 export default LoginPage;
 
-export { SignInForm, FullScreen, Form };
+export { SignInForm, FullScreen, Form, TitleLogo };

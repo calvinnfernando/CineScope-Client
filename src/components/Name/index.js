@@ -5,6 +5,8 @@ import { AuthUserContext } from '../Sessions';
 const NameStyle = styled.h3`
 max-width: 30%;
 margin: auto;
+color: #FFFFFF;
+font-family: 'Josefin Sans', sans-serif;
 `;
 
 const Name = () => (

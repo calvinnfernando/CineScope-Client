@@ -170,8 +170,8 @@ class UserPage extends Component {
                     <div className="left-div col">
                       <Box>
                         <Title>
-                          <Icon src={heart} alt='heart' />
-                          Favorites:
+                        <span><Icon src={heart} alt='favorites' /></span>
+                        <span style={{fontFamily: 'Josefin Sans', color: '#FFFFFF'}}>Favorites:</span>
                           <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                             this.setState({ editFav: (this.state.editFav) ? false : true });
                           }}>
@@ -179,7 +179,7 @@ class UserPage extends Component {
                           </EditListButton>
                         </Title>
                         {favoriteMovies.length !== 0 ?
-                        <MovieList className='row'>
+                        <MovieList className='row text-center'>
                           {favoriteMovies}
                         </MovieList> :
                         <ListTitle>No movies in Favorites list</ListTitle>
@@ -188,8 +188,8 @@ class UserPage extends Component {
 
                       <Box>
                         <Title>
-                          <Icon src={watchLater} alt='watchLater' />
-                          Watch Later:
+                        <span><Icon src={watchLater} alt='watched' /></span>
+                        <span style={{fontFamily: 'Josefin Sans', color: '#FFFFFF'}}>Watch Later:</span>
                           <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                             this.setState({ editLater: (this.state.editLater) ? false : true });
                           }}>
@@ -197,7 +197,7 @@ class UserPage extends Component {
                           </EditListButton>
                         </Title>
                         {watchLaterMovies.length !== 0 ?
-                        <MovieList className='row'>
+                        <MovieList className='row text-center'>
                           {watchLaterMovies}
                         </MovieList> :
                         <ListTitle>No movies in Watch Later list</ListTitle>
@@ -206,8 +206,10 @@ class UserPage extends Component {
 
                       <Box>
                         <Title>
-                          <Icon src={watched} alt='watched' />
-                          Watched:
+                          <div>
+                          <span><Icon src={watched} alt='watched' /></span>
+                          <span style={{fontFamily: 'Josefin Sans', color: '#FFFFFF'}}>Watched:</span>
+                          </div>
                           <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
                             this.setState({ editWatched: (this.state.editWatched) ? false : true });
                           }}>
@@ -215,7 +217,7 @@ class UserPage extends Component {
                           </EditListButton>
                         </Title>
                         {watchedMovies.length !== 0 ?
-                        <MovieList className='row'>
+                        <MovieList className='row text-center'>
                           {watchedMovies}
                         </MovieList> :
                         <ListTitle>No movies in Watched list</ListTitle>
