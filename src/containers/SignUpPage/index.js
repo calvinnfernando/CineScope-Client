@@ -4,18 +4,11 @@ import { compose } from 'recompose';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
-import * as ROLES from '../../constants/roles';
-import styled from 'styled-components';
 
 import { Form, FullScreen } from '../LoginPage';
 
-const Error = styled.div`
-  display: block;
-  background-color: rgba(255, 0, 0, 0.2);
-  border-radius: 5px;
-  text-align: center;
-  padding: 5px;
-`;
+// styles
+import { Error } from '../../styles/containers/SignUpPage';
 
 const SignUpPage = () => (
   <FullScreen className="container-fluid">
@@ -85,7 +78,6 @@ class SignUpFormBase extends Component {
       email,
       passwordOne,
       passwordTwo,
-      isAdmin,
       error,
     } = this.state;
 

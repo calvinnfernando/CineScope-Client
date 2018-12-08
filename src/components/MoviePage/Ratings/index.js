@@ -27,14 +27,20 @@ class Ratings extends Component {
                         <h3>Metacritic</h3>
                         <RatingStyle>
                             <MetacriticIcon>{this.props.metacritic}</MetacriticIcon>
-                            <RatingTextStyle><h4>Metascore</h4></RatingTextStyle>
+                            {this.props.metacritic && this.props.metacritic !== 'N/A' ? (
+                            <RatingTextStyle><h4>Metascore</h4></RatingTextStyle> ) :
+                            (<RatingTextStyle><h4>{'No Metascore available'}</h4></RatingTextStyle>
+                            )}
                         </RatingStyle>
                     </div>
                     <div className="col-md-4">
                         <h3>IMDb</h3>
                         <RatingStyle>
                             <ImdbIcon />
-                            <RatingTextStyle><h4>{this.props.imdbRating}/10 stars</h4></RatingTextStyle>
+                            {this.props.imdbRating && this.props.imdbRating !== 'N/A' ? (
+                            <RatingTextStyle><h4>{this.props.imdbRating}/10 stars</h4></RatingTextStyle> ) :
+                            (<RatingTextStyle><h4>{'No rating available'}</h4></RatingTextStyle>
+                            )}
                         </RatingStyle>
                     </div>
                 </RatingsStyle>
