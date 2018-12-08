@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import MovieService from '../../services/MovieService';
 import { Pie, Bar } from 'react-chartjs-2';
-
-const ChartStyle = styled.div`
-	margin: 20px auto;
-`;
+import { ChartStyle } from '../../styles/components/CompareMovies/reviewcompare';
 
 class ReviewCompare extends Component {
 	constructor(props) {
