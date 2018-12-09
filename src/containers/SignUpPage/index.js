@@ -6,10 +6,8 @@ import Header from '../../components/Header';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 
-import { Form, FullScreen, TitleLogo } from '../LoginPage';
-
 // styles
-import { Error } from '../../styles/containers/SignUpPage';
+import { Error, FullScreen, Form, TitleLogo } from '../../styles/containers/SignUpPage';
 
 const SignUpPage = () => (
   <FullScreen className="container-fluid" style={{ paddingRight: '0', paddingLeft: '0'}}>
