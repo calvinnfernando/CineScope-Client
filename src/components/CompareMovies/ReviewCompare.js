@@ -22,8 +22,8 @@ class ReviewCompare extends Component {
 	}
 
 	componentDidMount() {
-		const moviesArray = this.props.movies;
-		this.setState({ movies: moviesArray })
+		//const moviesArray = this.props.movies;
+		//this.setState({ movies: moviesArray })
 		this.setData();
 	}
 
