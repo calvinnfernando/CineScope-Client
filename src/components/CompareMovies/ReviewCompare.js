@@ -28,6 +28,12 @@ class ReviewCompare extends Component {
 	}
 
 	UNSAFE_componentWillReceiveProps() {
+    this.setState({
+      movieTitles: [],
+			imdb: {},
+			metascore: {},
+			rotten_tomatoes: {}
+    })
 		this.setData();
 		this.renderGraphs(this.props.chartType);
 	}
