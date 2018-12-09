@@ -1,9 +1,5 @@
 import styled from 'styled-components';
 
-const SelectedMovieStyle = styled.div`
-  outline: 5px solid #8370d3;
-`;
-
 const MovieCardStyle = styled.div`
 margin: 15px auto;
 width: 60%;
@@ -36,5 +32,5 @@ color: white;
 `;
 
 export {
-	SelectedMovieStyle, MovieCardStyle, MovieCardOverlay, MovieCardText
+	MovieCardStyle, MovieCardOverlay, MovieCardText
 };

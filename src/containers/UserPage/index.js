@@ -16,9 +16,7 @@ import UserPageService from '../../services/UserPageService';
 
 import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
-// styles
-import { Profile, ProfileStyle, Banner, Img, EditListButton, MovieList, Box,
-  Title, Icon, ErrorMessage, ListTitle, NoMovies } from '../../styles/containers/UserPage';
+import { Profile, ProfileStyle, Banner, Img, EditListButton, MovieList, Box, Title, Icon, ErrorMessage, ListTitle, NoMovies } from '../../styles/containers/UserPage.js'
 
 class UserPage extends Component {
   constructor(props) {
@@ -130,15 +128,12 @@ class UserPage extends Component {
 
                         <Box>
                           <Title>
-                            <div>
-                              <span><Icon src={watched} alt='watched' /></span>
-                              <ListTitle>Watched:</ListTitle>
-                              <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
-                                this.setState({ editWatched: (this.state.editWatched) ? false : true });
-                              }}>{(this.state.editWatched) ? "Done" : "Edit"}
-                              </EditListButton>
-                            </div>
-
+                            <span><Icon src={watched} alt='watched' /></span>
+                            <ListTitle>Watched:</ListTitle>
+                            <EditListButton type="button" className="btn btn-dark btn-sm" onClick={() => {
+                              this.setState({ editWatched: (this.state.editWatched) ? false : true });
+                            }}>{(this.state.editWatched) ? "Done" : "Edit"}
+                            </EditListButton>
 
                           </Title>
                           {watchedMovies.length !== 0 ?
