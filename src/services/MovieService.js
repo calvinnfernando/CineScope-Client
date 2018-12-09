@@ -84,7 +84,6 @@ class MovieService {
     }
 
     static getRecommendedMovies = async (query, page = 1) => {
-        console.log(query);
         try {
             var res = await loadMoviesData("recommended", query, page);
             return res;
