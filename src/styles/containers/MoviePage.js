@@ -5,7 +5,6 @@ const WhiteBoxStyle = styled.div`
   margin: 10px 10%;
   background-color: #FFFFFF;
   border-radius: 20px;
-  padding: 0% 3%;
 `;
 
 const MovieInfoStyle = styled.div`
