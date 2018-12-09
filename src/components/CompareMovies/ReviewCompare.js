@@ -76,11 +76,13 @@ class ReviewCompare extends Component {
 	}
 
 	renderGraphs(chartType) {
-
+		// Used in all chart types
+		var index;
+		var rating;
 		// Rotten tomatoes
 		const allRottenTomatoesPies = [];
-		for (var index in this.state.rotten_tomatoes) {
-			var rating = parseInt(this.state.rotten_tomatoes[index]);
+		for (index in this.state.rotten_tomatoes) {
+			rating = parseInt(this.state.rotten_tomatoes[index]);
 			var otherRating = 100 - rating;
 			const data = {
 				labels: ['Liked it', 'Disliked it'],
@@ -98,8 +100,10 @@ class ReviewCompare extends Component {
 		// Imdb
 		const imdbLabels = [];
 		const imdbRatings = [];
+
 		for (var index in this.state.imdb) {
 			var rating = parseFloat(this.state.imdb[index]);
+
 			imdbRatings.push(rating);
 			imdbLabels.push(index);
 		}
@@ -115,8 +119,8 @@ class ReviewCompare extends Component {
 		// Metacritic
 		const metascoreLabels = [];
 		const metascoreRatings = [];
-		for (var index in this.state.metascore) {
-			var rating = parseInt(this.state.metascore[index]);
+		for (index in this.state.metascore) {
+			rating = parseInt(this.state.metascore[index]);
 			metascoreRatings.push(rating);
 			metascoreLabels.push(index);
 		}
@@ -126,23 +130,6 @@ class ReviewCompare extends Component {
 				label: 'Metascore',
 				backgroundColor: 'rgba(255, 173, 114, 0.5)',
 				data: metascoreRatings
-			}]
-		}
-
-		// Box Office
-		const boxOfficeLabels = [];
-		const boxOfficeRatings = [];
-		for (var index in this.state.box_office) {
-			var rating = parseInt(this.state.box_office[index]);
-			boxOfficeRatings.push(rating);
-			boxOfficeLabels.push(index);
-		}
-		const boxOfficeData = {
-			labels: boxOfficeLabels,
-			datasets: [{
-				label: 'Box Office Revenue',
-				backgroundColor: 'rgba(204, 112, 249, 0.5)',
-				data: boxOfficeRatings
 			}]
 		}
 
@@ -192,35 +179,6 @@ class ReviewCompare extends Component {
 						}} />
 					</div>
 				</ChartStyle>
-			);
-		}
-		else if (chartType === "Box Office") {
-			return (
-				<ChartStyle>
-					<h2>Box Office</h2>
-					<div>
-					<Bar data={boxOfficeData} options={{
-							scales: {
-								yAxes: [{
-									ticks: {
-										beginAtZero: true,
-										max: 100
-									}
-								}]
-							}
-						}} />
-					</div>
-				</ChartStyle>
-			);
-		}
-		else if (chartType === "Overview") {
-			return (
-				<div>
-					<h1>Overview</h1>
-					<div>
-
-					</div>
-				</div>
 			);
 		}
 	}

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import ComparitronMovieList from './ComparitronMovieList';
-import MovieService from '../../services/MovieService';
 import ReviewCompare from './ReviewCompare';
+
 
 class ReviewCompareList extends Component{
   constructor(props) {

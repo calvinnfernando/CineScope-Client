@@ -41,10 +41,10 @@ class Reviews extends Component {
             );
         }
         const reviewsToDisplay = reviews.map(review => {
-            return (<Review key={review.id}>
+            return (<Review key={review.author}>
                 <hr />
                 <ReviewAuthor>Reviewed by <b>{review.author}</b></ReviewAuthor>
-                <ReviewText>{review.content}</ReviewText>
+                <ReviewText dangerouslySetInnerHTML={{__html: review.content}} />
 
             </Review>);
         });

@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import {markdown} from 'markdown';
 
 /**
  * The purpose of this class is to access movie data stored inside of Firebase. Functions add to and remove data from Firebase
@@ -20,7 +21,7 @@ class FirebaseService {
         });
     }
 
-    /** 
+    /**
      * This method returns the rating for a movie
      * @param movieID the ID of the movie to get a rating for
      * @param refToPage ref to the movie page so that its state can be set
@@ -86,16 +87,16 @@ class FirebaseService {
         firebase.database().ref().child('/movies/' + movieID + '/reviews').once('value').then((snapshot) => {
             var tempReviews = []
             snapshot.forEach((child) => {
-                console.log(child.key)
-                console.log(child.val())
+                // convert markdown to HTML before adding it to our state
+                var contentHtml = markdown.toHTML(child.val().review);
+
                 tempReviews.push({
                     author: child.key,
-                    content: child.val().review
+                    content: contentHtml
                 })
-                console.log(tempReviews)
             });
-            var newReviews = refToPage.state.reviews.concat(tempReviews)
-            refToPage.setState({ reviews: newReviews })
+            var newReviews = refToPage.state.reviews.concat(tempReviews);
+            refToPage.setState({ reviews: newReviews });
         })
     }
 
@@ -114,12 +115,12 @@ class FirebaseService {
     }
 
     /**
-     * Adds or removes movie from firebase and performs other actions related to the page 
+     * Adds or removes movie from firebase and performs other actions related to the page
      * @param {*} refToPage reference to React component to update
      * @param {string} list 'favoritesList', 'watchedList', or 'watchLaterList', the list to add or remove from
      * @param {string} source 'moviePage' or 'userPage', the page we are calling from
      * @param {*} movieID id of the movie to add or remove (the TMDb one, not IMDb)
-     * @param {*} otherArgs other args passed in depending on where function is being called from. If it's 'moviePage', 
+     * @param {*} otherArgs other args passed in depending on where function is being called from. If it's 'moviePage',
      * we must pass in poster, title, overview, imdb_id in that order. If it's userPage, pass in i, the index in the
      * list
      */
@@ -134,10 +135,14 @@ class FirebaseService {
                     if (exist) {
                         firebase.database().ref('users/' + user.uid + `/${list}/`).child(movieID).remove();
 
-                        // Update pages based on what page we are calling this method from 
+                        // Update pages based on what page we are calling this method from
                         switch (source) {
+                            default:
+                                break;
                             case 'moviePage':
                                 switch (list) {
+                                    default:
+                                        break;
                                     case 'favoritesList':
                                         refToPage.setState({ movieInFavorites: false });
                                         break;
@@ -157,10 +162,14 @@ class FirebaseService {
                         firebaseref.child(list).child(movieID)
                             .set({ poster: poster, title: title, overview: overview, imdb_id: imdb_id, id: movieID });
 
-                        // Update pages based on what page we are calling this method from 
+                        // Update pages based on what page we are calling this method from
                         switch (source) {
+                            default:
+                                break;
                             case 'moviePage':
                                 switch (list) {
+                                    default:
+                                        break;
                                     case 'favoritesList':
                                         refToPage.setState({ movieInFavorites: true });
                                         break;
@@ -194,6 +203,8 @@ class FirebaseService {
                     this.checkIfMovieExist(user.uid, list, movieID).then((exist) => {
                         if (exist) {
                             switch (list) {
+                                default:
+                                    break;
                                 case 'favoritesList':
                                     refToPage.setState({ movieInFavorites: true });
                                     break;
@@ -206,6 +217,8 @@ class FirebaseService {
                             }
                         } else {
                             switch (list) {
+                                default:
+                                    break;
                                 case 'favoritesList':
                                     refToPage.setState({ movieInFavorites: false });
                                     break;

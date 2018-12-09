@@ -14,7 +14,6 @@ const withAuthentication = Component => {
     }
 
     componentDidMount() {
-      console.log("DIDMOUNT BITCH");
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           if (authUser) {
@@ -22,7 +21,7 @@ const withAuthentication = Component => {
               .once('value')
               .then(snapshot => {
                 const dbUser = snapshot.val();
-    
+
                 // default empty roles
                 if (dbUser && !dbUser.roles) {
                   dbUser.roles = [];

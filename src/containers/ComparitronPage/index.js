@@ -43,24 +43,6 @@ const MainContent = styled.div`
   text-align: center;
 `;
 
-
-const MovieSelection = styled.li`
-  border-radius: 15px;
-  border-color: transparent;
-  border-width: 1px;
-  border-style: solid;
-  background-color: #fff;
-  font-family: Calibri;
-  font-size: 17px;
-  width: 100%;
-  margin-top: 5px;
-  cursor: pointer;
-  outline: none !important;
-  list-style-type: none;
-  text-align: left;
-  padding-left: 15px;
-`;
-
 const ComparitronMovieHolder = styled.div`
   background-color: #fff;
   border-radius: 15px;
@@ -160,6 +142,8 @@ class ComparitronPage extends Component {
       if (el.id === item.id) {
         movieSelections.splice(i, 1);
         return true;
+      } else {
+        return false;
       }
     });
 
@@ -179,6 +163,8 @@ class ComparitronPage extends Component {
         chartSelections.splice(i, 1);
         document.getElementById(event.target.id).style.borderColor = "transparent";
         return true;
+      } else {
+        return false;
       }
     });
 
@@ -216,8 +202,10 @@ class ComparitronPage extends Component {
               <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
               </ul>
             </form>
+
             <ComparitronMovieHolder className="movie-holder">
               <ComparitronMovieList movies={this.state.movies} movieSelections={this.state.movieSelections} selectMovie={this.selectMovie} />
+
             </ComparitronMovieHolder>
           </Sidebars>
           <MainContent className="scroll">

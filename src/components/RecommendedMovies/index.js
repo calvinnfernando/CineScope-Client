@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import firebase from 'firebase';
 
 const RecommendedText = styled.div`
-    text-align: left;
+    font-family: 'Roboto Slab', serif;
+    text-align: center;
     color: #FFFFFF;
     margin: 10px;
     h2 {
@@ -40,7 +41,7 @@ class RecommendedMovies extends Component {
           })
           .then(() => {
             console.log(this.state.query.length);
-            if (this.state.query.length == 0) {
+            if (this.state.query.length === 0) {
               MovieService.getPopularMovies().then((movies) => {
                 this.setState({ movies: movies, activeItemIndex: 0 });
               })
@@ -82,12 +83,6 @@ class RecommendedMovies extends Component {
         <div className="d-flex flex-row mt-2">
           <div className="col-sm-12">
             <ItemsCarousel
-              // Placeholder configurations
-              enablePlaceholder
-              numberOfPlaceholderItems={5}
-              minimumPlaceholderTime={1000}
-              placeholderItem={<div style={{ height: 300, width: 200, background: '#343a40' }}></div>}
-
               // Carousel configurations
               numberOfCards={4}
               gutter={12}
@@ -101,8 +96,8 @@ class RecommendedMovies extends Component {
               activePosition={'center'}
 
               chevronWidth={24}
-              rightChevron={<span style={{ color: '#FFFFFF' }}> &gt; </span>}
-              leftChevron={<span style={{ color: '#FFFFFF' }}> &lt; </span>}
+              rightChevron={<span style={{ color: '#FFFFFF', fontSize: 60 }}> &#8250; </span>}
+              leftChevron={<span style={{ color: '#FFFFFF', fontSize: 60 }}> &#8249; </span>}
               outsideChevron={false}
             >
               {moviesArray}

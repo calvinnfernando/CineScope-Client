@@ -16,6 +16,8 @@ class UserPageService {
                         snapshot.forEach(child => {
                             if (child.val()) {
                                 switch (list) {
+                                    default:
+                                        break;
                                     case 'favoritesList':
                                         refToPage.setState({
                                             favoritesList: refToPage.state.favoritesList.concat([child.val()]),
@@ -43,6 +45,8 @@ class UserPageService {
     static deleteWatchList(refToPage, list, movieID, i) {
         FirebaseService.toggleWatchList(refToPage, list, 'userPage', movieID);
         switch (list) {
+            default:
+                break;
             case 'favoritesList':
                 refToPage.state.favoritesList.splice(i, 1);
                 let newFavList = refToPage.state.favoritesList;
