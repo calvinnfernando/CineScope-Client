@@ -138,7 +138,7 @@ class ComparitronPage extends Component {
               </ul>
             </form>
 
-            <ComparitronMovieHolder className="movie-holder">
+            <ComparitronMovieHolder className="movie-holder scroll">
               <ComparitronMovieList movies={this.state.movies} movieSelections={this.state.movieSelections} selectMovie={this.selectMovie} />
 
             </ComparitronMovieHolder>
