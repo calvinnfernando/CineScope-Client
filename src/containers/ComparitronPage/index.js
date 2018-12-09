@@ -10,6 +10,7 @@ import Container from '../../styles/containers/Comparitron/Container'
 import Sidebars from '../../styles/containers/Comparitron/Sidebars'
 import MainContent from '../../styles/containers/Comparitron/MainContent'
 import ComparitronMovieHolder from '../../styles/containers/Comparitron/ComparitronMovieHolder'
+import FullNotification from '../../styles/containers/Comparitron/FullNotification'
 
 import '../../styles/components/comparitron.css';
 

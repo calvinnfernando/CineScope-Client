@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
+import Header from '../../components/Header';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { SignUpLink } from '../SignUpPage';
 import FullScreen from '../../styles/containers/Login/FullScreen'
 import Form from '../../styles/containers/Login/Form'
 import Error from '../../styles/containers/Login/Error'
+import TitleLogo from '../../styles/containers/Login/TitleLogo'
 
 const LoginPage = () => (
   <FullScreen className="container-fluid" style={{ paddingRight: '0', paddingLeft: '0'}}>

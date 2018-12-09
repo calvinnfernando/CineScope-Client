@@ -79,4 +79,11 @@ const ListTitle = styled.div`
   color: #FFFFFF;
 `;
 
-export { Profile, ProfileStyle, Banner, Img, EditListButton, MovieList, Box, Title, Icon, ErrorMessage, ListTitle };
+const NoMovies = styled.div`
+  text-align: center;
+  font-Weight: bold;
+  color: #888;
+  font-family: 'Roboto';
+`;
+
+export { Profile, ProfileStyle, Banner, Img, EditListButton, MovieList, Box, Title, Icon, ErrorMessage, ListTitle, NoMovies };
