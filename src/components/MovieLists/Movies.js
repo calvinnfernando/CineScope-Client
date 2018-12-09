@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
 import MovieList from './MovieList';
 import MovieService from '../../services/MovieService';
-import styled from 'styled-components';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
-const TitleLogo = styled.div`
-    text-align: center;
-    font-family: 'Roboto Slab', serif;
-    font-weight: bold;
-    color: #000;
-    font-size: 3em;
-    text-shadow: 0px 2px rgba(66, 31, 107, 0.2);
-}`;
+import {TitleLogo} from '../../styles/components/MoviesList/MoviesListStyles'
+import Styles from '../../styles/components/MoviesList/MoviesList'
 
 class Movies extends Component {
 
@@ -106,8 +98,8 @@ class Movies extends Component {
               </div>
                 <TitleLogo>All Movies</TitleLogo>
                 <div className="col-sm-12">
-                  <Button style={{float: 'left'}} onClick={this.previousPage}>&#8592; Previous Page</Button>
-                  <Button style={{float: 'right'}} onClick={this.nextPage}>Next Page &#8594;</Button>
+                  <Button style={Styles.floatLeft} onClick={this.previousPage}>&#8592; Previous Page</Button>
+                  <Button style={Styles.floatRight} onClick={this.nextPage}>Next Page &#8594;</Button>
                 </div>
                 <div className="col-sm-12 mt-4">
                   <input className="form-control" onInput={this.handleInput} type="text" placeholder="Search" aria-label="Search movie title" />
@@ -119,8 +111,8 @@ class Movies extends Component {
                   </div>
               </div>
               <div className="col-sm-12">
-                <Button style={{float: 'left'}} onClick={this.previousPage}>&#8592; Previous Page</Button>
-                <Button style={{float: 'right'}} onClick={this.nextPage}>Next Page &#8594;</Button>
+                <Button style={Styles.floatLeft} onClick={this.previousPage}>&#8592; Previous Page</Button>
+                <Button style={Styles.floatRight} onClick={this.nextPage}>Next Page &#8594;</Button>
               </div>
             </div>
         );

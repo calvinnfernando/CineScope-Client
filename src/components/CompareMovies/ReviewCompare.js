@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import MovieService from '../../services/MovieService';
 import { Pie, Bar } from 'react-chartjs-2';
-
-const ChartStyle = styled.div`
-	margin: 20px auto;
-`;
+import { ChartStyle } from '../../styles/components/CompareMovies/reviewcompare';
 
 class ReviewCompare extends Component {
 	constructor(props) {
@@ -86,9 +82,9 @@ class ReviewCompare extends Component {
 		var rating;
 		// Rotten tomatoes
 		const allRottenTomatoesPies = [];
-		for (index in this.state.rotten_tomatoes) {
-			rating = parseInt(this.state.rotten_tomatoes[index]);
-			var otherRating = 100 - rating;
+		for (let index in this.state.rotten_tomatoes) {
+			let rating = parseInt(this.state.rotten_tomatoes[index]);
+			let otherRating = 100 - rating;
 			const data = {
 				labels: ['Liked it', 'Disliked it'],
 				datasets: [{
@@ -105,10 +101,8 @@ class ReviewCompare extends Component {
 		// Imdb
 		const imdbLabels = [];
 		const imdbRatings = [];
-
-		for (var index in this.state.imdb) {
-			var rating = parseFloat(this.state.imdb[index]);
-
+		for (let index in this.state.imdb) {
+			let rating = parseInt(this.state.imdb[index]);
 			imdbRatings.push(rating);
 			imdbLabels.push(index);
 		}
@@ -124,8 +118,8 @@ class ReviewCompare extends Component {
 		// Metacritic
 		const metascoreLabels = [];
 		const metascoreRatings = [];
-		for (index in this.state.metascore) {
-			rating = parseInt(this.state.metascore[index]);
+		for (let index in this.state.metascore) {
+			let rating = parseInt(this.state.metascore[index]);
 			metascoreRatings.push(rating);
 			metascoreLabels.push(index);
 		}
@@ -135,6 +129,23 @@ class ReviewCompare extends Component {
 				label: 'Metascore',
 				backgroundColor: 'rgba(255, 173, 114, 0.5)',
 				data: metascoreRatings
+			}]
+		}
+
+		// Box Office
+		const boxOfficeLabels = [];
+		const boxOfficeRatings = [];
+		for (let index in this.state.box_office) {
+			let rating = parseInt(this.state.box_office[index]);
+			boxOfficeRatings.push(rating);
+			boxOfficeLabels.push(index);
+		}
+		const boxOfficeData = {
+			labels: boxOfficeLabels,
+			datasets: [{
+				label: 'Box Office Revenue',
+				backgroundColor: 'rgba(204, 112, 249, 0.5)',
+				data: boxOfficeRatings
 			}]
 		}
 

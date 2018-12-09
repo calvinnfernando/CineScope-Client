@@ -1,27 +1,6 @@
 import React, { Component } from 'react';
-import styled from 'styled-components'
-
-const RelatedMoviesStyle = styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    a, a:hover {
-        text-decoration: none;
-        color: #777;
-    }
-
-`;
-
-const RelatedMovieStyle = styled.div`
-    width: 25%;
-    font-size: 24px;
-    text-align: center;
-
-    img {
-        max-width: 50%;
-    }
-`;
+import RelatedMovieStyle from '../../../styles/components/MoviePage/RelatedMovieStyle'
+import RelatedMoviesStyle from '../../../styles/components/MoviePage/RelatedMoviesStyle'
 
 class RelatedMovies extends Component {
 

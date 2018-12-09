@@ -1,83 +1,18 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { Navbar } from 'reactstrap';
 import ComparitronMovieList from '../../components/CompareMovies/ComparitronMovieList';
 import MovieService from '../../services/MovieService';
 import logo from '../../components/img/logo.svg';
 import ReviewCompareList from '../../components/CompareMovies/ReviewCompareList';
+import ComparitronStyles from '../../styles/containers/Comparitron/Comparitron'
+import LogoStyle from '../../styles/containers/Comparitron/LogoStyle'
+import Container from '../../styles/containers/Comparitron/Container'
+import Sidebars from '../../styles/containers/Comparitron/Sidebars'
+import MainContent from '../../styles/containers/Comparitron/MainContent'
+import ComparitronMovieHolder from '../../styles/containers/Comparitron/ComparitronMovieHolder'
+import FullNotification from '../../styles/containers/Comparitron/FullNotification'
 
 import '../../styles/components/comparitron.css';
-
-
-const LogoStyle = styled.div`
-  img {
-	   height: 60px;
-  }
-`;
-
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const Sidebars = styled.div`
-  position: relative;
-  padding-right: 15px;
-  padding-left: 15px;
-  flex: 1;
-  align-items: center;
-  background-color: #ffeead;
-  text-align: center;
-  height: 100vh;
-`;
-
-const MainContent = styled.div`
-  position: relative;
-  padding-right: 15px;
-  padding-left: 15px;
-  flex: 3;
-  height: 100vh;
-  background-color: white;
-  overflow-y: scroll;
-  text-align: center;
-`;
-
-const ComparitronMovieHolder = styled.div`
-  background-color: #fff;
-  border-radius: 15px;
-  width: 100%;
-  height: 82%;
-  overflow-y: scroll;
-`;
-
-const FullNotification = styled.span`
-  position: fixed;
-  top: 4em;
-  left: 50%;
-  transform: translate(-50%);
-  z-index: 10;
-  background-color: #384491;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: #FFFFFF;
-  transition: 0.5s;
-  opacity: 0;
-
-  &.show {
-    opacity: 1;
-  }
-
-  a {
-    color: #999;
-  }
-
-  a:hover {
-    text-decoration: none;
-    color: white;
-  }
-`;
-
 
 class ComparitronPage extends Component {
   constructor(props) {
@@ -193,13 +128,13 @@ class ComparitronPage extends Component {
             <form id="addItemForm" onSubmit={this.handleSubmit.bind(this)}>
               <p className="select-text">SELECT MOVIES</p>
               <input
-                style={{ borderRadius: 20, borderWidth: 0, outline: "none", paddingLeft: 15, width: "100%" }}
+                style={ComparitronStyles.input}
                 type="search"
                 placeholder="Enter a movie"
                 value={this.state.movieInput}
                 onChange={event => this.setState({ movieInput: event.target.value })} />
                 {/* Kept in for padding */}
-              <ul style={{ paddingTop: 5, paddingRight: 5, marginLeft: 0, display: "inline-flex", float: "left", flexWrap: "wrap" }}>
+              <ul style={ComparitronStyles.list}>
               </ul>
             </form>
 
@@ -223,10 +158,10 @@ class ComparitronPage extends Component {
             <button className="review-selection" id="Overview" onClick={this.handleChartSelection.bind(this)}>Overview</button>*/}
             <hr></hr>
             <p className="select-text">SELECTED MOVIES</p>
-            <ul style={{ paddingInlineStart: 0 }}>
+            <ul style={ComparitronStyles.listPadding}>
               {this.state.movieSelections.map(item => (
                 <div className="movie-selection" key={item.title}>
-                  <span style={{ cursor: "pointer", color: "#dedede", fontSize: 17 }} onClick={() => this.removeMovie(item)}>X</span>
+                  <span style={ComparitronStyles.movieSelection} onClick={() => this.removeMovie(item)}>X</span>
                   &nbsp; &nbsp; {item.title}
                 </div>
               ))}
