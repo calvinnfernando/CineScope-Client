@@ -7,7 +7,7 @@ const ProfileStyle = styled.div`
 
 const Profile = styled.div`
   border: 1px solid #999999;
-  background-color: #787878;
+  background-color: #e9ecef;
   margin-bottom: 12px;
   min-width: 768px;
 `;
@@ -24,27 +24,31 @@ const Img = styled.img`
   height: 168px;
   position: relative;
   margin-top: -100px;
+  margin-left: 20px;
+  margin-bottom: 15px;
   border: 5px solid #787878;
 `;
 
 const EditListButton = styled.button`
-  position: absolute;
-  right: 40px;
+  position: relative;
+  float: right;
+  margin: 0px 15px;
 `;
 
 const MovieList = styled.div`
+  padding: 5px 15px;
 `;
 
 const Box = styled.div`
-  margin: 7px 0px 7px 0px;
-  background-color: #787878;
+  margin: 7px 0px 10px 0px;
+  background-color: #e9ecef;
   border: 1px solid #999999;
   box-sizing: border-box;
   padding: 5px;
   min-width: 768px;
 `;
 
-const Title = styled.p`
+const Title = styled.div`
   font-size: 1.1em;
   margin-left: 15px;
   margin-top: 10px;
@@ -73,10 +77,11 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const ListTitle = styled.div`
+const ListTitle = styled.span`
   text-align: center;
   font-Weight: bold;
-  color: #FFFFFF;
+  color: #222;
+  font-family: 'Roboto';
 `;
 
 const NoMovies = styled.div`

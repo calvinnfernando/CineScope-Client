@@ -5,12 +5,7 @@ const Form = styled.form`
   width: 500px;
   background-color: rgba(211,211,211,0.5);
 
-  position: absolute;
-  top:0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
+  text-align: center;
   margin: auto;
 `;
 

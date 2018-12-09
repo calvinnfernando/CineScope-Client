@@ -29,7 +29,6 @@ class ReviewCompare extends Component {
 	}
 
 	setData() {
-		console.log(this.props.movies);
 		this.props.movies.forEach((movie) => {
 			var newMovieTitles = this.state.movieTitles;
 			newMovieTitles.push(movie.title);
@@ -72,9 +71,6 @@ class ReviewCompare extends Component {
 	}
 
 	renderGraphs(chartType) {
-		// Used in all chart types
-		var index;
-		var rating;
 		// Rotten tomatoes
 		const allRottenTomatoesPies = [];
 		for (let index in this.state.rotten_tomatoes) {
@@ -97,7 +93,7 @@ class ReviewCompare extends Component {
 		const imdbLabels = [];
 		const imdbRatings = [];
 		for (let index in this.state.imdb) {
-			let rating = parseInt(this.state.imdb[index]);
+			let rating = parseFloat(this.state.imdb[index]);
 			imdbRatings.push(rating);
 			imdbLabels.push(index);
 		}
@@ -127,7 +123,7 @@ class ReviewCompare extends Component {
 			}]
 		}
 
-		// Box Office
+		/*// Box Office
 		const boxOfficeLabels = [];
 		const boxOfficeRatings = [];
 		for (let index in this.state.box_office) {
@@ -142,7 +138,7 @@ class ReviewCompare extends Component {
 				backgroundColor: 'rgba(204, 112, 249, 0.5)',
 				data: boxOfficeRatings
 			}]
-		}
+		}*/
 
 		if (chartType === "Rotten Tomatoes") {
 			return (
