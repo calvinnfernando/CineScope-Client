@@ -5,17 +5,9 @@ import Header from '../../components/Header';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
-import styled from 'styled-components';
 
-import { Form, FullScreen, TitleLogo } from '../LoginPage';
-
-const Error = styled.div`
-  display: block;
-  background-color: rgba(255, 0, 0, 0.2);
-  border-radius: 5px;
-  text-align: center;
-  padding: 5px;
-`;
+// styles
+import { Error, FullScreen, Form, TitleLogo } from '../../styles/containers/SignUpPage';
 
 const SignUpPage = () => (
   <FullScreen className="container-fluid" style={{ paddingRight: '0', paddingLeft: '0'}}>
