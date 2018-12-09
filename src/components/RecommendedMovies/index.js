@@ -30,32 +30,27 @@ class RecommendedMovies extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoriteList').orderByKey();
+        const favoritesRef = firebase.database().ref().child('users/' + user.uid + '/favoritesList').orderByKey();
         favoritesRef.once('value')
           .then((snapshot) => {
             snapshot.forEach(child => {
-              if (child.val()) {
-                this.setState({query: this.state.query.concat([child.val().id])});
-              }
-            });
+              this.setState({
+                query: this.state.query.concat([child.val()])
+              });
+            })
           })
           .then(() => {
-            console.log(this.state.query.length);
             if (this.state.query.length === 0) {
               MovieService.getPopularMovies().then((movies) => {
                 this.setState({ movies: movies, activeItemIndex: 0 });
               })
             } else {
-              this.setState({ movies: [], activeItemIndex: 0 });
-              var eachElementSize = Math.ceil( 10 / this.state.query.length );
-              for (var i = 0; i < this.state.query.length; i += 1) {
-                MovieService.getRecommendedMovies(this.state.query[i]).then((movies) => {
-                  this.setState({
-                    movies: this.state.movies.concat(movies.slice(0,eachElementSize)),
-                    activeItemIndex: 0
-                  });
+              MovieService.getRecommendedMovies(this.state.query[Math.floor((Math.random() * 100) % this.state.query.length)].id).then((movies) => {
+                this.setState({
+                  movies: movies,
+                  activeItemIndex: 0
                 });
-              }
+              });
             }
           });
       } else {
