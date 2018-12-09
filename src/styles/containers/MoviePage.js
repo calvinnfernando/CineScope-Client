@@ -161,6 +161,12 @@ const RateDiv = styled.div`
   margin-top: 15px;
 `;
 
+const OverviewPTitle = styled.p`
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 0px;
+`;
+
 const OverviewP = styled.p`
   margin-bottom: 2rem;
 `;
@@ -173,4 +179,4 @@ const TextAreaStyle = styled.textarea`
 export { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, WhiteBoxStyle, MovieInfoStyle, 
 	MoviePosterStyle, MovieLeftStyle, MovieRightStyle, AddButtonsStyle, AddToFavorites, AddToWatchList,
 	RemoveFromFavorites, RemoveFromWatchList, TrailerButton, CompareButtonStyle, RateStyle, SignInNotification,
-  RateDiv, OverviewP, TextAreaStyle };
+  RateDiv, OverviewPTitle, OverviewP, TextAreaStyle };

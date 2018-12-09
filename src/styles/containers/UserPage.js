@@ -24,6 +24,8 @@ const Img = styled.img`
   height: 168px;
   position: relative;
   margin-top: -100px;
+  margin-left: 20px;
+  margin-bottom: 15px;
   border: 5px solid #787878;
 `;
 
@@ -38,7 +40,7 @@ const MovieList = styled.div`
 `;
 
 const Box = styled.div`
-  margin: 7px 0px 7px 0px;
+  margin: 7px 0px 10px 0px;
   background-color: #e9ecef;
   border: 1px solid #999999;
   box-sizing: border-box;
@@ -46,7 +48,7 @@ const Box = styled.div`
   min-width: 768px;
 `;
 
-const Title = styled.p`
+const Title = styled.div`
   font-size: 1.1em;
   margin-left: 15px;
   margin-top: 10px;
@@ -75,7 +77,7 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const ListTitle = styled.div`
+const ListTitle = styled.span`
   text-align: center;
   font-Weight: bold;
   color: #222;

@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, WhiteBoxStyle, MovieInfoStyle,
   MoviePosterStyle, MovieLeftStyle, MovieRightStyle, AddButtonsStyle, AddToFavorites, AddToWatchList,
   RemoveFromFavorites, RemoveFromWatchList, TrailerButton, CompareButtonStyle, RateStyle, SignInNotification,
-  RateDiv, OverviewP, TextAreaStyle } from '../../styles/containers/MoviePage';
+  RateDiv, OverviewPTitle, OverviewP, TextAreaStyle } from '../../styles/containers/MoviePage';
 
 /* CLASS */
 
@@ -202,12 +202,12 @@ class MoviePage extends Component {
                     &#9654; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
-                  <small style={{ fontWeight: 'bold' }}>Director:</small>
+                  <small><b>Director:</b></small>
                   <small> {this.state.director} | </small>
-                  <small style={{ fontWeight: 'bold' }}>Actors:</small>
+                  <small><b>Actors:</b></small>
                   <small> {this.state.actors} </small>
-                  <p style={{ fontWeight: 'bold', marginTop: 10, marginBottom: 0}}>Overview</p>
-                  <p style={{ marginBottom: "2rem" }}>{this.state.overview}</p>
+                  <OverviewPTitle>Overview</OverviewPTitle>
+                  <OverviewP>{this.state.overview}</OverviewP>
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
                     Open Comparitron
