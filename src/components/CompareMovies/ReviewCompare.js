@@ -23,23 +23,22 @@ class ReviewCompare extends Component {
 
 	componentDidMount() {
 		const moviesArray = this.props.movies;
-		this.setState({movies: moviesArray})
+		this.setState({ movies: moviesArray })
 		this.setData();
 	}
 
-	UNSAFE_componentWillReceiveProps() {
-    this.setState({
-      movieTitles: [],
+	UNSAFE_componentWillReceiveProps(newProps) {
+		this.setState({
+			movieTitles: [],
 			imdb: {},
 			metascore: {},
 			rotten_tomatoes: {}
-    })
+		})
 		this.setData();
 		this.renderGraphs(this.props.chartType);
 	}
 
 	setData() {
-		console.log(this.props.movies);
 		this.props.movies.forEach((movie) => {
 			var newMovieTitles = this.state.movieTitles;
 			newMovieTitles.push(movie.title);
@@ -100,7 +99,7 @@ class ReviewCompare extends Component {
 					]
 				}]
 			}
-			allRottenTomatoesPies.push(<div><Pie data={data} /><h4 style={{color: 'gray', marginBottom: '40px'}}>{index}</h4></div>);
+			allRottenTomatoesPies.push(<div><Pie data={data} /><h4 style={{ color: 'gray', marginBottom: '40px' }}>{index}</h4></div>);
 		}
 
 		// Imdb
@@ -173,7 +172,7 @@ class ReviewCompare extends Component {
 				<ChartStyle>
 					<h2>Metacritic</h2>
 					<div>
-					<Bar data={metacriticData} options={{
+						<Bar data={metacriticData} options={{
 							scales: {
 								yAxes: [{
 									ticks: {
