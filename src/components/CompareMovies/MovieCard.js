@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../../styles/components/movieCard.css';
 
 import {
-	SelectedMovieStyle, MovieCardStyle, MovieCardOverlay, MovieCardText
+	MovieCardStyle, MovieCardOverlay, MovieCardText
 } from '../../styles/components/CompareMovies/moviecard';
 
 class MovieCard extends Component {

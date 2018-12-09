@@ -202,9 +202,12 @@ class MoviePage extends Component {
                     &#9654; Watch Trailer
                     </TrailerButton>
                 </AddButtonsStyle>
-                <small>Director: {this.state.director} | Actors: {this.state.actors} </small>
-                <OverviewP>{this.state.overview}</OverviewP>
-
+                  <small style={{ fontWeight: 'bold' }}>Director:</small>
+                  <small> {this.state.director} | </small>
+                  <small style={{ fontWeight: 'bold' }}>Actors:</small>
+                  <small> {this.state.actors} </small>
+                  <p style={{ fontWeight: 'bold', marginTop: 10, marginBottom: 0}}>Overview</p>
+                  <p style={{ marginBottom: "2rem" }}>{this.state.overview}</p>
                 <Link to="/Comparitron">
                   <CompareButtonStyle>
                     Open Comparitron
