@@ -18,7 +18,7 @@ import { AuthUserContext, withAuthentication } from '../../components/Sessions';
 
 // styles
 import { Profile, ProfileStyle, Banner, Img, EditListButton, MovieList, Box,
-  Title, Icon, ErrorMessage, ListTitle } from '../../styles/containers/UserPage';
+  Title, Icon, ErrorMessage, ListTitle, NoMovies } from '../../styles/containers/UserPage';
 
 class UserPage extends Component {
   constructor(props) {
