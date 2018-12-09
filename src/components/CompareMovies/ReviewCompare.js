@@ -17,9 +17,23 @@ class ReviewCompare extends Component {
 			metascore: {},
 			rotten_tomatoes: {}
 		}
+
+		this.setData = this.setData.bind(this);
 	}
 
 	componentDidMount() {
+		const moviesArray = this.props.movies;
+		this.setState({movies: moviesArray})
+		this.setData();
+	}
+
+	UNSAFE_componentWillReceiveProps() {
+		this.setData();
+		this.renderGraphs(this.props.chartType);
+	}
+
+	setData() {
+		console.log(this.props.movies);
 		this.props.movies.forEach((movie) => {
 			var newMovieTitles = this.state.movieTitles;
 			newMovieTitles.push(movie.title);
@@ -28,7 +42,6 @@ class ReviewCompare extends Component {
 			MovieService.getSingleMovie(movie.id).then((movieData) => {
 				imdb_id = movieData.imdb_id;
 				MovieService.getSingleMovieOMDb(imdb_id).then((movieData) => {
-					console.log(movieData);
 
 					const ratings = movieData.Ratings;
 					var rottenTomatoes = "N/A";
@@ -87,8 +100,10 @@ class ReviewCompare extends Component {
 		// Imdb
 		const imdbLabels = [];
 		const imdbRatings = [];
-		for (index in this.state.imdb) {
-			rating = parseInt(this.state.imdb[index]);
+
+		for (var index in this.state.imdb) {
+			var rating = parseFloat(this.state.imdb[index]);
+
 			imdbRatings.push(rating);
 			imdbLabels.push(index);
 		}
@@ -170,9 +185,6 @@ class ReviewCompare extends Component {
 
 
 	render() {
-		console.log(this.state.rotten_tomatoes)
-		console.log(this.state.imdb)
-		console.log(this.state.metascore)
 		return (
 			<div>
 				{this.renderGraphs(this.props.chartType)}

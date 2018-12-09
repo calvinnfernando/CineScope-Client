@@ -3,7 +3,7 @@ import MovieCard from './MovieCard';
 import PropTypes from 'prop-types';
 
 const MovieList = (props) => {
-  const moviesArray = props.movies.map(movie => (<MovieCard key={movie.id} movie={movie} selectMovie={props.selectMovie} />));
+  const moviesArray = props.movies.map(movie => (<MovieCard key={movie.id} movie={movie} movieSelections={props.movieSelections} selectMovie={props.selectMovie} />));
    return (
     <div>
       {moviesArray}

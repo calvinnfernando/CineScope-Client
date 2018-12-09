@@ -26,3 +26,6 @@
   color: transparent;
 }
 
+.card-border {
+  outline: 5px solid #8370d3; 
+}
