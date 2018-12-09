@@ -93,7 +93,7 @@ class ReviewCompare extends Component {
 		const imdbLabels = [];
 		const imdbRatings = [];
 		for (let index in this.state.imdb) {
-			let rating = parseInt(this.state.imdb[index]);
+			let rating = parseFloat(this.state.imdb[index]);
 			imdbRatings.push(rating);
 			imdbLabels.push(index);
 		}
